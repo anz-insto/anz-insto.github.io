@@ -2,7 +2,7 @@
 Documentation for ANZ Fileactive API offering.
 
 ## Contribution
-Details on how to contribute fixes or improvements to the Developer Portal coming soon...
+Details on how to contribute fixes and improvements to the Developer Portal coming soon...
 
 ## Prequisites
  - [Ruby > 2.0](https://www.ruby-lang.org/en/documentation/installation)
@@ -10,7 +10,7 @@ Details on how to contribute fixes or improvements to the Developer Portal comin
  - Jekyll (& bundler) `gem install jekyll bundler`
  - [Redoc CLI](https://redocly.com/docs/redoc/deployment/cli)
 
-Running the Developer Portal locally
+## Running the Developer Portal locally
 1. Clone this repository
 1. Open a terminal in the repository folder then run the following:
 ```bash
