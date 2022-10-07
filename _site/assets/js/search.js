@@ -168,7 +168,7 @@ $(document).ready(function () {
             }
             else {
                 resultDetails.forEach(function (result) {
-                    var searchitem = '<li class="search-item"><a href="/gcis/docs' 
+                    var searchitem = '<li class="search-item"><a href="/' 
                                         + result.url 
                                         + '"><span class="search-heading">' 
                                         + result.title 
