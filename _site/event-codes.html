@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/png" href="/gcis/docs/assets/img/icon/ANZ_DIGITAL_favicon_flat_16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/gcis/docs/assets/img/icon/ANZ_DIGITAL_favicon_flat_32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/gcis/docs/assets/img/icon/ANZ_DIGITAL_favicon_flat_64.png" sizes="64x64">
+<link rel="icon" type="image/png" href="/gcis/docs/assets/img/icon/ANZ_DIGITAL_favicon_flat_128.png" sizes="128x128">
+<link rel="icon" type="image/png" href="/gcis/docs/assets/img/icon/ANZ_DIGITAL_favicon_flat_512.png" sizes="512x512">
+
+    <title>Event and Error Codes</title>
+    <link rel="stylesheet" href="/gcis/docs/assets/css/styles.css">
+</head>
+
+    <body class="td-section d-flex flex-column min-vh-100">
+        <a name="top"></a>
+        <header>
+  <nav class="navbar navbar-dark navbar-expand-md fixed-top flex-column flex-md-row td-navbar">
+    <div class="container-fluid col-12 px-md-20 mx-auto">
+
+        <a class="navbar-brand" href="/gcis/docs/">
+          <img title="anz logo" alt="anz logo - go to homepage" src="/gcis/docs/assets/img/anz-logo-small.png" />
+
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+          <div class="td-navbar-nav-scroll collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mt-2 mt-lg-0">
+              
+                <li class="nav-item mr-4 mb-2 mb-lg-0">
+                  <a class="nav-link" href="/gcis/docs/#api-catalogue" target="_self"><span>API Catalogue</span></a>
+                </li>
+              
+                <li class="nav-item mr-4 mb-2 mb-lg-0">
+                  <a class="nav-link" href="/gcis/docs/#faq" target="_self"><span>FAQ</span></a>
+                </li>
+              
+            </ul>
+          </div>
+          <div class="navbar-nav d-none d-lg-block ml-md-auto">
+            <input type="search" id="search" class="form-control td-search-input" placeholder="Search this site…" aria-label="Search this site…" autocomplete="off">
+            </div>
+          <ul class="search-results col-12 col-md-6 col-xl-3"></ul>
+    </div>
+  </nav>
+</header>
+
+
+        <div class="container-fluid td-outer">
+            <main role="main">
+                <div class="row mx-0 hero-row">
+                    <div id="split-hero" class="col-12 px-0 mx-auto anz-body-container">
+                
+                        <h1 id="page-title">Event and Error Codes</h1>
+                        <p><p>Fileactive API event and error codes</p>
+</p>
+                
+                    </div>
+                </div>
+                <div class="row flex-xl-nowrap mx-auto min-vh-100 anz-body-container">   
+                    
+                        <div class="d-none d-xl-block col-xl-3 toc-container d-print-none fixed-left">
+    <nav id="toc-nav">
+        <a href="#top"><span id="toc-title">Event and Error Codes</span></a>
+        <ul id="toc-content">
+        <!-- Links will be appended here-->
+        </ul>
+    </nav>
+</div>
+                        <div class="col-12 col-xl-9 px-0">
+                    
+
+
+                <h3 id="general-api-event-codes">General API Event Codes</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Event Code</th>
+      <th style="text-align: left">Name</th>
+      <th style="text-align: center">HTTP <br /> Response</th>
+      <th style="text-align: left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">EC000_001</td>
+      <td style="text-align: left">Internal Server Error</td>
+      <td style="text-align: center">500</td>
+      <td style="text-align: left">Internal Server Error, please contact support.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC000_002</td>
+      <td style="text-align: left">Unauthorized</td>
+      <td style="text-align: center">401</td>
+      <td style="text-align: left">The request is not authorized</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC000_003</td>
+      <td style="text-align: left">Validation Failure</td>
+      <td style="text-align: center">400</td>
+      <td style="text-align: left">The request failed validation</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC000_004</td>
+      <td style="text-align: left">Resource Not Found</td>
+      <td style="text-align: center">404</td>
+      <td style="text-align: left">The requested resource is not found</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC000_005</td>
+      <td style="text-align: left">Method Not Allowed</td>
+      <td style="text-align: center">405</td>
+      <td style="text-align: left">The requested HTTP method is not allowed</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC000_006</td>
+      <td style="text-align: left">Unsupported Media Type</td>
+      <td style="text-align: center">405</td>
+      <td style="text-align: left">Content-Type provided is not supported</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC000_007</td>
+      <td style="text-align: left">Invalid Content</td>
+      <td style="text-align: center">400</td>
+      <td style="text-align: left">Invalid secured payload</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="payments">Payments</h2>
+<h3 id="payment-event-codes">Payment Event Codes</h3>
+
+<p>Validation failures relating to payment submissions. The codes and status are returned in a Payment Status response message.</p>
+
+<p><strong>Event Code Ranges</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Range Start</th>
+      <th style="text-align: left">Range End</th>
+      <th style="text-align: left">Usage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">EC004_101</td>
+      <td style="text-align: left">EC004_199</td>
+      <td style="text-align: left">Group level error</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_201</td>
+      <td style="text-align: left">EC004_299</td>
+      <td style="text-align: left">Payment level error</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_301</td>
+      <td style="text-align: left">EC004_399</td>
+      <td style="text-align: left">Transaction level error</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Payment Event Code List</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Event Code</th>
+      <th style="text-align: center">Status Code</th>
+      <th style="text-align: center">Status Reason Code</th>
+      <th style="text-align: left">Status Reason Code Description</th>
+      <th style="text-align: left">Error Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"> </td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">NARR</td>
+      <td style="text-align: left">Narrative</td>
+      <td style="text-align: left">Reason is provided as narrative information in the additional reason information.<br />Generic error which will be returned where no external reason code is available.<br />For rejections from downstream applications additional_information will contain proprietary rejection code and reason in format:<br />(&lt;rejection code&gt;) &lt;rejection reason&gt;<br />I.e “(1234) Insufficient funds”</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_101</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">TD03</td>
+      <td style="text-align: left">InvalidPayment</td>
+      <td style="text-align: left">Schema validation failed against the payment schema, error details [Missing or invalid X-Message-Id]</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_102</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">TD03</td>
+      <td style="text-align: left">DuplicatePayment</td>
+      <td style="text-align: left">Duplicate payment received (supplied X-Message-Id value: [X-Message-Id]</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_103</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">TD03</td>
+      <td style="text-align: left">CryptoFailure</td>
+      <td style="text-align: left">Failed to decrypt and verify the message</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_104</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">TD03</td>
+      <td style="text-align: left">SchemaValidation</td>
+      <td style="text-align: left">Schema validation failed against the payment schema, error details [{errorDetail}]</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_105</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">DT02</td>
+      <td style="text-align: left">PaymentProcessingFailed</td>
+      <td style="text-align: left">Payment processing failed, please re-submit and try again</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_106</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">DT02</td>
+      <td style="text-align: left">InvalidCreationDate</td>
+      <td style="text-align: left">creation_date_time is too far in the past (greater than 24 hours), or in the future</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_107</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">BC01</td>
+      <td style="text-align: left">InvalidPaymentInformationCount</td>
+      <td style="text-align: left">The number of payment_information elements should not be more than 1 per request</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_108</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">AM10</td>
+      <td style="text-align: left">InvalidControlSum</td>
+      <td style="text-align: left">Sum of instructed amounts does not equal the control sum.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_109</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">AM18</td>
+      <td style="text-align: left">InvalidNumberOfTransactions</td>
+      <td style="text-align: left">Number of transactions is invalid or missing.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_110</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">TD03</td>
+      <td style="text-align: left">SchemaValidation</td>
+      <td style="text-align: left">Echo any parser error message.<br />I.e.<br />Property with the name ‘&lt;json key&gt;’ already exists in the current JSON object. Path ‘&lt;json key&gt;’, line &lt;#&gt;, position &lt;#&gt;.<br />Property with the name ‘payment_information’ already exists in the current JSON object. Path ‘payment_information’, line 32, position 30.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_201</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">AC02</td>
+      <td style="text-align: left">InvalidDebtorAccountNumber</td>
+      <td style="text-align: left">Where:<br />{max_account_length} = Integer. Maximum length allowed for account number for country/ payment type<br />Error Message:<br />Debtor Account Number format is invalid for country and payment type. Value exceeds maximum length of {max_account_length} (supplied value: [{debtor_account_identification}])</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_202</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">TC01</td>
+      <td style="text-align: left">InvalidTransactionCount</td>
+      <td style="text-align: left">The number of credit_transfer_transaction_information elements should not be more than 1000 per payment_information element</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_203</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">AM03</td>
+      <td style="text-align: left">NotAllowedCurrency</td>
+      <td style="text-align: left">Where:<br />{currency} = List of values provided against instructed_amount.currency<br />Error Message:<br />Payment type only allows for single currency in batch. Provided currencies: [{currency}]</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_204</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">DU02</td>
+      <td style="text-align: left">DuplicatePaymentInformationID</td>
+      <td style="text-align: left">Payment Information ID must be unique per payment (supplied value: [{payment_information_identification}])</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_205</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">CH16</td>
+      <td style="text-align: left">ElementContentFormallyIncorrect</td>
+      <td style="text-align: left">Where:<br />{max_length} = Maximum allowed length for payment type<br />Error Message:<br />Payment Information ID exceeds maximum allowed length for country and payment type. Value exceeds maximum length of {max_length} (supplied value: [{payment_information_identification}])</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_301</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">AC03</td>
+      <td style="text-align: left">CreditorAccountRule</td>
+      <td style="text-align: left">creditor_account_proxy is invalid for CountryCode: [{countryCode}] and PaymentType: [{paymentType}]</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_302</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">AM03</td>
+      <td style="text-align: left">NotAllowedCurrency</td>
+      <td style="text-align: left">Where:<br />{allowed currencies} = an array of currency codes valid for the country/ payment type<br />{currency} = value of instructed_amount.currency<br />Error Message:<br />“Invalid currency for payment type. Instructed amount currency must be one of [{allowed currencies}] (supplied value: \[{currency}\])”</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_303</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">DU05</td>
+      <td style="text-align: left">DuplicateInstructionID</td>
+      <td style="text-align: left">Instruction ID must be unique within a batch (supplied value: [{instruction_identification}])</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_304</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">AC03</td>
+      <td style="text-align: left">InvalidCreditorAccountNumber</td>
+      <td style="text-align: left">Either creditor_account_identification or creditor_account_proxy may be present, but not both</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_305</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">CH16</td>
+      <td style="text-align: left">ElementContentFormallyIncorrect</td>
+      <td style="text-align: left">Where:<br />{max_length} = Maximum allowed length for payment type<br />Error Message:<br />Instruction Identification exceeds maximum allowed length for country and payment type. Value exceeds maximum length of {max_length} (supplied value: [{instruction_identification}])</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="npp-event-codes">NPP Event Codes</h3>
+
+<p>Below event codes are used to indicate Payment validation failures. The codes and status are returned in a Payment Status response message</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Event Code</th>
+      <th style="text-align: center">transaction_<br />status</th>
+      <th style="text-align: center">transaction_status_<br />reason_code</th>
+      <th style="text-align: left">transaction_status_<br />description</th>
+      <th style="text-align: left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">EC004_001</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">TD03</td>
+      <td style="text-align: left">EC004_001-InvalidPayment</td>
+      <td style="text-align: left">Schema validation failed against the payment schema, error details [Missing or invalid X-Message-Id]</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_002</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">TD03</td>
+      <td style="text-align: left">EC004_002-DuplicatePayment</td>
+      <td style="text-align: left">Duplicate payment received (supplied X-Message-Id value: [X-Message-Id]</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_003</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">TD03</td>
+      <td style="text-align: left">EC004_003-InvalidPayment</td>
+      <td style="text-align: left">Schema validation failed against the payment schema, error details [{errorDetail}]</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_004</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">TD03</td>
+      <td style="text-align: left">EC004_004-CryptoFailure</td>
+      <td style="text-align: left">Failed to decrypt and verify the message</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_005</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">TD03</td>
+      <td style="text-align: left">EC004_005-SchemaValidation</td>
+      <td style="text-align: left">Schema validation failed against the payment schema, <code class="language-plaintext highlighter-rouge">PaymentSubmissionResource</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_006</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">AC03</td>
+      <td style="text-align: left">EC004_006-CreditorAccountRule</td>
+      <td style="text-align: left">/CreditorAliasValue or /CreditorAccountIdentification must be present</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_007</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">AC03</td>
+      <td style="text-align: left">EC004_007-CreditorAccountRule</td>
+      <td style="text-align: left">If /CreditorAccountType is present then /CreditorAccountIdentification must be present</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_008</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">AC03</td>
+      <td style="text-align: left">EC004_008-CreditorAccountRule</td>
+      <td style="text-align: left">If /CreditorAliasType is present then /CreditorAliasValue must be present</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_009</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">AC13</td>
+      <td style="text-align: left">EC004_009-DebtorAccountRule</td>
+      <td style="text-align: left">/DebtorAccountType AND /DebtorAccountIdentification must be present</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_010</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">DT02</td>
+      <td style="text-align: left">EC004_010-CreationDateRule</td>
+      <td style="text-align: left">Creation date and time (UTC) is too far in the past (greater than 24 hours), or is future dated</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_011</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">DT01</td>
+      <td style="text-align: left">EC004_011-RequestedDateRule</td>
+      <td style="text-align: left">Requested Execution Date is in the past or invalid</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_012</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">DT01</td>
+      <td style="text-align: left">EC004_012-RequestedDateRule</td>
+      <td style="text-align: left">Requested Execution Date is in the future or invalid</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_013</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">AM12</td>
+      <td style="text-align: left">EC004_013-InstructedAmountRule</td>
+      <td style="text-align: left">Amount field does not match a two decimal place format.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_014</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">AM06</td>
+      <td style="text-align: left">EC004_014-TooLowAmount</td>
+      <td style="text-align: left">Instructed amount must be equal or greater than <code class="language-plaintext highlighter-rouge">$0.01</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_015</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">AM03</td>
+      <td style="text-align: left">EC004_015-CurrencyRule</td>
+      <td style="text-align: left">Instructed amount must be in <code class="language-plaintext highlighter-rouge">AUD</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_016</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">AC02</td>
+      <td style="text-align: left">EC004_016-InvalidDebtorAccountNumber</td>
+      <td style="text-align: left">Account numbers for NPP can only contain numeric values</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_017</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">AC08</td>
+      <td style="text-align: left">EC004_017-InvalidBranchCode</td>
+      <td style="text-align: left">Debtor BSB must be a minimum of 6 numeric digits, including leading zeroes</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_018</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">AC03</td>
+      <td style="text-align: left">EC004_018-InvalidCreditorAccountNumber</td>
+      <td style="text-align: left">Account numbers for NPP can only contain numeric values</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_019</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">AC08</td>
+      <td style="text-align: left">EC004_019-InvalidBranchCode</td>
+      <td style="text-align: left">Creditor BSB must be a minimum of 6 numeric digits, including leading zeroes</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_020</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">AC14</td>
+      <td style="text-align: left">EC004_020-InvalidCreditorAccountType</td>
+      <td style="text-align: left">Valid values are: <code class="language-plaintext highlighter-rouge">AIIN</code> and <code class="language-plaintext highlighter-rouge">BBAN</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_021</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">AC13</td>
+      <td style="text-align: left">EC004_021-InvalidDebtorAccountType</td>
+      <td style="text-align: left">Valid values are: <code class="language-plaintext highlighter-rouge">AIIN</code> and <code class="language-plaintext highlighter-rouge">BBAN</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_022</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">AC13</td>
+      <td style="text-align: left">EC004_022-InvalidEndToEndId</td>
+      <td style="text-align: left">EndToEnd Identification is missing or invalid</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_023</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">FF04</td>
+      <td style="text-align: left">EC004_023-InvalidServiceLevelCode</td>
+      <td style="text-align: left">Service Level must be <code class="language-plaintext highlighter-rouge">npp.clear.01-x2p1</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_024</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">DT02</td>
+      <td style="text-align: left">EC004_024-InvalidCreationDate</td>
+      <td style="text-align: left">Creation date must be of ISODateTime format (UTC Expressed: YYYY-MM-DDThh:mm:ss.sssZ)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_026</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">DT02</td>
+      <td style="text-align: left">EC004_026-PaymentProcessingFailed</td>
+      <td style="text-align: left">Payment processing failed, please re-submit and try again</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC004_027</td>
+      <td style="text-align: center">RJCT</td>
+      <td style="text-align: center">DT02</td>
+      <td style="text-align: left">EC004_027-InvalidAlias</td>
+      <td style="text-align: left">Alias value is invalid as per Alias Type.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="receivables">Receivables</h2>
+
+<h3 id="account-statement-event-codes">Account Statement Event Codes</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Code</th>
+      <th style="text-align: left">Name</th>
+      <th style="text-align: left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">EC20001</td>
+      <td style="text-align: left">Account Id not found</td>
+      <td style="text-align: left">Account Id: ‘{0}’ not found</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC20003</td>
+      <td style="text-align: left">Error retrieving account statement</td>
+      <td style="text-align: left">Error retrieving account statement for account id: ‘{0}’</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC20005</td>
+      <td style="text-align: left">Internal error</td>
+      <td style="text-align: left">An unknown error has occurred, please contact support and quote requestKey: ‘{0}’</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="markets">Markets</h2>
+
+<h3 id="fx-event-codes">FX Event Codes</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Event Code</th>
+      <th style="text-align: left">Name</th>
+      <th style="text-align: center">HTTP <br /> Response</th>
+      <th style="text-align: left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">EC014_001</td>
+      <td style="text-align: left">Invalid Request</td>
+      <td style="text-align: center">400</td>
+      <td style="text-align: left">Schema validation failed against the request payload schema error details [{0}]<br />{0} = error message from parser, schema check, missing or invalid headers etc. Enclosed in square brackets</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC014_002</td>
+      <td style="text-align: left">Duplicate Request</td>
+      <td style="text-align: center">400</td>
+      <td style="text-align: left">Duplicate request received (supplied X-Message-Id value: [{0}]<br />{0} = Duplicate X-Message-Id value. Enclosed in square brackets</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC014_003</td>
+      <td style="text-align: left">Internal Error</td>
+      <td style="text-align: center">500</td>
+      <td style="text-align: left">Internal Server Error, please contact support.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">EC014_004</td>
+      <td style="text-align: left">Service Unavailable</td>
+      <td style="text-align: center">503</td>
+      <td style="text-align: left">Service Unavailable</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+                    </div>            
+                </div>  
+
+            </main>
+        </div>
+
+        <footer class="py-5 row d-print-none mx-0 w-100">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12 col-sm-4 text-center py-2 order-sm-2 mx-auto ">
+        <small>© 2022 Australia and New Zealand Banking Group Limited (ANZ) 2022 ABN 11 005 357 522. All Rights Reserved</small>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+    </body>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
+<script src="/gcis/docs/assets/js/lunr.js"></script>
+<script src="/gcis/docs/assets/js/search.js"></script>
+    <script>
+    $(document).ready(function() {
+    
+        const toc = $('#toc-content');
+        const scrollOffset = 100;
+
+        // Select each header
+        sections = $('h2');
+            $.each(sections, function(idx, v) {
+                section = $(v);
+                var div_id = $(section).attr('id');
+                var div_text = section.text().split('¶')[0];
+                var parent = $("#" + div_id)
+                var content = '<li id="toc-top-' + div_id + '" class="toc-li-top"><a class="toc-nav-link toc-top" href="#' + div_id + '" title="' + div_text +'">' + div_text +'</a></li>';
+                $(toc).append(content);
+    
+                // Add section code to subnavigation
+                var children = $('<nav class="toc-nav-mid"><ul class="toc-ul-mid"></nav></ul>')
+                var contenders = $("#" + div_id).nextUntil("h2");
+                $.each(contenders, function(idx, contender){
+                    if($(contender).is('h3')) {
+                       var contender_id = $(contender).attr('id');
+                       var contender_text = $(contender).text().split('¶')[0];
+                       var content = '<li class="toc-li-mid"><a class="toc-nav-link toc-mid" href="#' + contender_id + '" title="' + contender_text +'">' + contender_text +'</a></li>';
+                       children.append(content);
+                    }
+                    else if($(contender).is('.faq-card')) {
+                        var questions = $(contender).find('h4');
+                        $.each(questions, function(idx, question) {
+                            var contender_id = $(question).attr('id');
+                            var contender_text = $(question).text().split('¶')[0];
+                            var content = '<li class="toc-li-faq"><a class="toc-nav-link toc-faq" href="#' + contender_id + '" title="' + contender_text +'">' + contender_text +'</a></li>';
+                            children.append(content);
+                        });
+                    }
+                })
+                $("#toc-top-" + div_id).append(children);
+                $('.toc-faq').on('click', function(event) {
+                    const id = $(this).attr('href').substring(1);
+                    $('div[aria-labelledby=' + id + ']').collapse('show');
+                });
+            });
+            $(document).on('click', 'a[href^="#"].toc-nav-link', function (event) {
+                event.preventDefault();
+                $('html, body').animate({
+                    scrollTop: $($.attr(this, 'href')).offset().top - scrollOffset
+                }, 100);
+            });
+        });
+    </script>
+</html>

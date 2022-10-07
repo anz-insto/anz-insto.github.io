@@ -1,0 +1,540 @@
+openapi: 3.0.1
+info:
+  title: Fileactive Real Time Notification API
+  description: |-
+    Fileactive Real Time Notification API.
+
+    It is important for customers using the NPP Real Time Payment Notification service to
+    check for duplicate notifications. Duplicate notifications can arise when
+    there're system or network issues followed by automated or manual retries. ANZ
+    recommends duplicate checking be based on the transaction identifier
+    `account_servicer_reference` . Performing this check will ensure multiple
+    instances of the same notification are not processed more than once.
+  version: 1.0.1
+servers:
+  - url: 'https://api.uat.example.com/v1.0'
+    description: UAT Environment
+  - url: 'https://api.example.com.au/v1.0'
+    description: Production Environment
+paths:
+  /npp/payment-notification:
+    post:
+      tags: 
+        - payment-notification
+      description: >-
+        API publishes a notification when settled funds sent via NPP are credited to a
+        customers ANZ bank account.
+      parameters:
+        - name: x-Message-Id
+          in: header
+          description: >-
+            Duplicate check using point to point reference, as assigned by the instructing party, and sent to the next party in the chain to unambiguously identify the message <br><br>
+            
+            Refer to `account_servicer_reference` for transaction level duplicate checking
+          schema:
+            type: string
+            format: uuid
+            example: a690be37-9caf-44e4-bae1-475b50a8cb18
+          required: true
+        - name: apikey
+          in: header
+          description: >-
+            The webhook includes a `apikey` header, the header name and value can be customised based on the customer requirements.  The purpose of this header is for the consumer to validate the request is sent with an exampled `apikey` in order to authenticate ANZ as the sending party.  If the `apikey` is not valid, the consumer should return a HTTP `401 Unauthorized` response.
+          schema:
+            type: string
+            example: c343809b-f236-45e6-a7c6-8f0fa9d4d63b
+          required: true
+        - name: x-Notification-Signature
+          in: header
+          description: >-
+            The webhook includes a `x-Notification-Signature` header, the consumer is required to verify the signature validates against the relevant ANZ public key which is issued to the customer during onboarding.
+          schema:
+            type: string
+            example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZXNzYWdlX2lkZW50aWZpZXIiOiI4OEJFRDJBNzM3NzU0MzlBOUQzNTI3M0M5Q0QyMDlEQSIsImNyZWF0aW9uX2RhdGVfdGltZSI6IjIwMjEtMTAtMTlUMDU6MDc6MzkuMzUwMzM5OCswMDowMCIsIm5vdGlmaWNhdGlvbiI6W3siaWRlbnRpZmljYXRpb24iOiJERDNDNEYxRDNENDI0M0REQUQ4QTkwNTc4OTBCN0EzRSIsImNyZWF0aW9uX2RhdGVfdGltZSI6IjIwMjEtMTAtMTlUMDU6MDc6MzkuMzUwMzQ4NSswMDowMCIsImFjY291bnRfaWRlbnRpZmljYXRpb24iOiIxNDgxNDgwMDAwMDAxMDAiLCJhY2NvdW50X2lzc3VlciI6IjE0ODE0OCIsImVudHJ5IjpbeyJlbnRyeV9yZWZlcmVuY2UiOiJyZWZlcmVuY2UgZW50ZXJlZCBpbiBjaGFubmVsIDEiLCJhbW91bnQiOnsiQGN1cnJlbmN5IjoiQVVEIiwiJCI6IjExMDAuMDAifSwiY3JlZGl0X2RlYml0X2luZGljYXRvciI6IkNSRFQiLCJzdGF0dXMiOiJCT09LIiwiYm9va2luZ19kYXRlIjoiMjAyMS0wNy0xN1QyMDoyNDoyOCsxMDowMCIsInZhbHVlX2RhdGUiOiIyMDIxLTA3LTE3VDIwOjI0OjI1KzEwOjAwIiwiZG9tYWluIjoiUE1OVCIsImZhbWlseSI6IlJDRFQiLCJzdWJfZmFtaWx5X2NvZGUiOiJTRFZBIiwiZW50cnlfZGV0YWlscyI6W3sidHJhbnNhY3Rpb25fZGV0YWlscyI6W3siYWNjb3VudF9zZXJ2aWNlcl9yZWZlcmVuY2UiOiJQVE0wMDAwNjg5MjQwODAwIiwiZW5kX3RvX2VuZF9pZGVudGlmaWNhdGlvbiI6InJlZmVyZW5jZSBlbnRlcmVkIGluIGNoYW5uZWwgMSIsInVldHIiOiJjMTdjZDFlZC01MzlhLTRjNGUtODBmYy00ZTU3MDI0NTQ0OWQiLCJ0cmFuc2FjdGlvbl9pZGVudGlmaWNhdGlvbiI6IjdhNmQ0MTAwLTMwOWEtMTFlYy04MmUwLTMxMjI1ZmUzOGNmYyIsInByb3ByaWV0YXJ5Ijp7InByb3ByaWV0YXJ5X3R5cGUiOiJTZXJ2aWNlTGV2ZWwiLCJwcm9wcmlldGFyeV9yZWZlcmVuY2UiOiIifSwiYW1vdW50Ijp7IkBjdXJyZW5jeSI6IkFVRCIsIiQiOiIxMTAwLjAwIn0sImNyZWRpdF9kZWJpdF9pbmRpY2F0b3IiOiJDUkRUIiwiYW1vdW50X2RldGFpbHMiOnsiaW5zdHJ1Y3RlZF9hbW91bnQiOnsiQGN1cnJlbmN5IjoiQVVEIiwiJCI6IjExMDAuMDAifSwidHJhbnNhY3Rpb25fYW1vdW50Ijp7IkBjdXJyZW5jeSI6IkFVRCIsIiQiOiIxMTAwLjAwIn19LCJkZWJ0b3JfbmFtZSI6IkFuZHJhcyBBcmF0byIsImNyZWRpdG9yX25hbWUiOiJIb2xkZW4gSG9sZGluZ3MiLCJjcmVkaXRvcl9hY2NvdW50X2lkZW50aWZpY2F0aW9uIjoiMTQ4MTQ4MDAwMDAwMTAwIiwiY3JlZGl0b3JfYWNjb3VudF9pc3N1ZXIiOiIxNDgxNDgiLCJjcmVkaXRvcl9hY2NvdW50X3Byb3h5Ijp7InR5cGUiOiJFTUFMIiwiaWRlbnRpZmljYXRpb24iOiJucHAtY29ycG9yYXRlLXJ0bi10ZXN0aW5nQGFuei5jb20ifSwicmVtaXR0YW5jZV9pbmZvcm1hdGlvbl91bnN0cnVjdHVyZWQiOlsi8J-RqOKAjfCfkanigI3wn5Gn4oCN8J-RpkxvcmVtIGlwc3VtIGRvbG9yIHNpdCBhbWV0LCBjb25zZWN0ZXR1ciBhZGlwaXNjaW5nIGVsaXQsIHNlZCBkbyBlaXVzbW9kIHRlbXBvciBpbmNpZGlkdW50IHV0IGxhYm9yZSBldCBkb2xvcmUgbWFnbmEgYWxpcXVhLiBVdCBlbmltIGEiLCJkIG1pbmltIHZlbmlhbSwgcXVpcyBub3N0cnVkIGV4ZXJjaXRhdGlvbiB1bGxhbWNvIGxhYm9yaXMgbmlzaSB1dCBhbGlxdWlwIGV4IGVhIGNvbW1vZG8gY29uc2VxdWF0LiBEdWlzIGF1dGUgaXJ1cmUgZG9sb3IgaW4gcmVwcmVoZW5kZXJpdCBpIl19XX1dfV19XX0.UQ1YQmeMWp867wHExjhDfMWzYsXDxLIyVAy-pjQvaB38_WoQFLt4_Q4NdxJEil2gTuxM1seAmjGG3d6lqD7Ao_xlA60OG5LfNdFnbRBStgicMqMfDKHi_nUXXAmazRGkqkOd6PQaZsd1BcYz1EDfoo7NVfL9MCvFFbRmongBfseXmN1BsSQP5lfKZ2mINItYSbBUKukODSwBCiUF79C7qbH3HsMOapPGNclX02ldV82sbs3KZbl_ztS92HRq6_vb_AnbWy1K4Ef9HHqiFaO04xCc7xUptDw-7zcjTfbCNU5mlrV6mMzzgJGkuRWyX48L5v36Ri0gCupGqFo0tUXq3Q
+          required: true
+      requestBody:
+        description: Notification to customer of an NPP payment
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/bank_to_customer_debit_credit_notification'
+        required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/200Received'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          description: Unauthorized
+          content: {}
+        '403':
+          description: Forbidden
+          content: {}
+        '408':
+          description: Request Timeout
+          content: {}
+        '429':
+          description: Too Many Requests
+          content: {}
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          description: Service Unavailable
+          content: {}
+        '504':
+          description: Gateway Timeout
+          content: {}
+components:
+  responses:
+    200Received:
+      description: OK - Notification Received
+      content: 
+        application/json:
+          schema:
+            $ref: '#/components/schemas/success'
+    400BadRequest:
+      description: Bad Request
+      content: 
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/error_response'
+            example:
+                - status: "400"
+                  title: Bad Request
+                  detail: Missing account identification
+    500InternalServerError:
+      description: Internal Server Error
+      content: 
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/error_response'
+            example:
+              - status: "500"
+                title: Internal Server Error
+                detail: Server failure
+  schemas:
+    bank_to_customer_debit_credit_notification:
+      type: object
+      required:
+        - message_identifier
+        - creation_date_time
+        - notification
+      properties:
+        message_identifier:
+          type: string
+          minLength: 1
+          maxLength: 35
+          description: Point to point reference, as assigned by the account servicing institution, and sent to the account owner or the party authorised to receive the message, to unambiguously identify the message.
+          example: A690BE379CAF44E4BAE1475B50A8CB18
+        creation_date_time:
+          allOf:  
+          - $ref: '#/components/schemas/iso_date_time'
+          description: UTC Date/Time the message was generated ISODateTime YYYY-MM-DDTHH:MM:SSZ
+          example: '2021-07-17T15:49:16.8784355+00:00'
+        notification:
+          type: array
+          minItems: 1
+          description: Only a single notification per message will be provided
+          items:
+            type: object
+            required:
+              - identification
+              - account_identification
+            properties:
+              identification:
+                type: string
+                minLength: 1
+                maxLength: 35
+                description: Unique identifier generated by ANZ to identify the notification.
+                example: E9DCF5C496C64B1EB55EB748F5792E21
+              creation_date_time:
+                allOf:
+                - $ref: '#/components/schemas/iso_date_time'
+                description: >
+                  UTC Date/Time the message was generated ISODateTime YYYY-MM-DDTHH:MM:SSZ
+                example: '2021-07-17T15:49:16.8784355+00:00'
+              account_identification:
+                type: string
+                minLength: 1
+                maxLength: 34
+                description: Account identification assigned by an institution, includes BSB
+                example: '014814800000010'
+              account_issuer:
+                type: string
+                minLength: 1
+                maxLength: 35
+                description: Entity that assigns the identification
+                example: '014814'
+              entry:
+                $ref: '#/components/schemas/entry'
+    amount:
+      type: object
+      required:
+        - '@currency'
+        - $
+      properties:
+        '@currency':
+          type: string
+          pattern: '^[A-Z]{3,3}$'
+          description: >
+            A code allocated to a currency by a Maintenance Agency under an
+            international identification scheme, as described in the latest edition
+            of the international standard ISO 4217 "Codes for the representation of
+            currencies and funds"
+          example: AUD
+        $:
+          type: string
+          maxLength: 19
+          description: >-
+            A number of monetary units specified in an active or a historic
+            currency where the unit of currency is explicit and compliant with
+            ISO 4217.
+          example: '1100.00'
+    credit_debit_indicator:
+      type: string
+      description: >
+        Indicates whether the entry is a credit or a debit entry: CRDT = Credit, DBIT = Debit.
+        Value will be "CRDT"
+      example: CRDT
+      enum:
+        - CRDT
+        - DBIT
+    entry:
+      type: array
+      description: Only one entry will be provided per notification
+      items:
+          type: object
+          required:
+            - amount
+            - credit_debit_indicator
+            - status
+          properties:
+            entry_reference:
+              type: string
+              minLength: 1
+              maxLength: 35
+              description: Reference entered in the initiating party channel. Defaults to "NOTPROVIDED"
+              example: INV0123
+            amount:
+              $ref: '#/components/schemas/amount'
+            credit_debit_indicator:
+              allOf:
+                - $ref: '#/components/schemas/credit_debit_indicator'
+            status:
+              type: string
+              description: >
+                Status of an entry on the books of the account servicer. Value will be "BOOK" 
+              example: BOOK
+              enum:
+                - BOOK
+                - PNDG
+                - INFO
+            booking_date:
+              allOf:
+              - $ref: '#/components/schemas/iso_date'
+              description: >
+                Date when an entry is posted to an account on the account servicer's books	
+              example: '2021-07-17'
+            value_date:
+              allOf:
+              - $ref: '#/components/schemas/iso_date'
+              description: >
+                Date at which assets become available to the account owner in case of a credit 
+                entry, or cease to be available to the account owner in case of a debit entry.
+              example: '2021-07-17'
+            domain:
+              type: string
+              description: >
+                Specifies the business area of the underlying transaction. Value will be "PMNT"	
+              example: PMNT 
+              enum:
+                - PMNT       
+            family:
+              type: string
+              description: >
+                Specifies the family and the sub-family of the bank transaction code. Value will be "RCDT"	
+              example: RCDT
+              enum:
+                - ICDT
+                - RCDT
+            sub_family_code:
+              type: string
+              description: >
+                Specifies the sub-product family within a specific family.
+                Value will be "SDVA" (Same Day Value Credit Transfer)
+              example: SDVA
+              enum:
+                - SDVA
+            entry_details:
+              type: array
+              description: Only one entry details will be provided per notification
+              items: 
+                type: object
+                properties:
+                  transaction_details:
+                    $ref: '#/components/schemas/transaction_details'
+    iso_date:
+      type: string
+      description: >
+        'A particular point in the progression of time in a calendar year
+        expressed in the YYYY-MM-DD format. This representation is defined in
+        XML Schema Part Datatypes Second Edition - W3C Recommendation 28 October
+        2004 which is aligned with ISO 8601.'
+      pattern: >-
+        ^(?:[1-9]\\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)$            
+    iso_date_time:
+      pattern: >-
+        ^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.[0-9]+)?(?:Z|[+-][01]\d:[0-5]\d)?$
+      type: string
+      description: >-
+        A particular point in the progression of time defined by a mandatory
+        date and a mandatory time component, expressed in either UTC time format
+        (YYYY-MM-DDThh:mm:ss.sssZ), local time with UTC offset format
+        (YYYY-MM-DDThh:mm:ss.sss+/-hh:mm), or local time format
+        (YYYY-MM-DDThh:mm:ss.sss). These representations are defined in 'XML
+        Schema Part 2: Datatypes Second Edition - W3C Recommendation 28 October
+        2004' which is aligned with ISO 8601.
+          Note on the time format:
+          1) beginning / end of calendar day
+          00:00:00 = the beginning of a calendar day
+          24:00:00 = the end of a calendar day
+          2) fractions of second in time format
+          Decimal fractions of seconds may be included. In this case, the involved parties shall agree on the maximum number of digits that are allowed.
+    related_parties:
+      type: object
+      description: Set of elements used to identify the parties related to the underlying transaction. 
+      properties:
+        debtor_account_identification:
+          type: string
+          minLength: 1
+          maxLength: 34
+          description: Debtor account identification. Will be masked for most customers
+          example: '000006789'
+        debtor_account_issuer:
+          type: string
+          minLength: 1
+          maxLength: 35
+          description: Debtor account issuer. Will be masked for most customers
+          example: '000123'   
+        creditor_account_identification:
+          type: string
+          minLength: 1
+          maxLength: 34
+          description: >
+            Creditor account identification. Will be ARM account when available, 
+            otherwise will be posting account 
+          example: '845780010'
+        creditor_account_issuer:
+          type: string
+          minLength: 1
+          maxLength: 35
+          description: >
+            Creditor account issuer. Will be ARM BSB when available,
+            otherwise will be posting account BSB
+          example: '012654'
+        creditor_account_proxy:
+          type: object
+          required:
+            - proxy_type
+            - proxy_identification
+          properties:
+            proxy_type:
+              type: string
+              example: TELI
+              enum:
+                - AUBN
+                - EMAL
+                - ORGN
+                - TELI
+            proxy_identification:
+              type: string
+              minLength: 1
+              maxLength: 2048
+              description: Creditor account proxy identifier value.
+              example: '+61403736550'
+    transaction_details:
+      type: array
+      description: Only one transaction will be provided per notification
+      items:
+        type: object
+        properties:
+          account_servicer_reference:
+            type: string
+            minLength: 1
+            maxLength: 35
+            description: >
+              Unique reference as assigned by the account servicing institution to 
+              unambiguously identify the entry <br> <br>
+
+              It is important for customers using the NPP Real Time Payment Notification service to
+              check for duplicate notifications. Duplicate notifications can arise when
+              there're system or network issues followed by automated or manual retries. ANZ
+              recommends duplicate checking be based on the transaction identifier
+              `account_servicer_reference` . Performing this check will ensure multiple
+              instances of the same notification are not processed more than once.
+            example: PTM0000689240800
+          end_to_end_identification:
+            type: string
+            minLength: 1
+            maxLength: 35
+            description: Reference entered in the initiating party channel. Defaults to "NOTPROVIDED"
+            example: INV0123
+          uetr:
+            allOf:
+            - $ref: '#/components/schemas/uuid_vs_identifier'
+            description: > 
+              Universally unique identifier to provide an end-to-end reference of a payment transaction.
+            example: 189a2c88-1deb-419c-b571-412f9ff12bf9
+          transaction_identification:
+            type: string
+            minLength: 1
+            maxLength: 35
+            description: > 
+              Unique identification as assigned by ANZ (for outward) or counter party FI for inward	
+            example: CTBAAUSNXXXN20220510000000085259970
+          proprietary:
+            type: object
+            required:
+              - proprietary_type
+              - proprietary_reference
+            description: Proprietary reference related to the underlying transaction.
+            properties:
+              proprietary_type:
+                type: string
+                minLength: 1
+                maxLength: 35
+                description: >
+                  Identifies the type of reference reported. Used to indicate the type of NPP payment.
+                  Value will be "ServiceLevel" 
+                example: ServiceLevel
+              proprietary_reference:
+                type: string
+                minLength: 1
+                maxLength: 35
+                description: >
+                  Proprietary reference specification related to the underlying transaction. <br>
+                  "x2p1" is the Osko Overlay service <br>
+                  "sct" is the Single Credit Transfer service <br>
+                  "catsct" is the Category Purpose Payments service <br>
+                  "04" is the service version number
+                example: x2p1.04
+          amount:
+            $ref: '#/components/schemas/amount'
+          credit_debit_indicator:
+            allOf:
+              - $ref: '#/components/schemas/credit_debit_indicator'
+          amount_details:
+            type: object
+            properties:
+              instructed_amount:
+                $ref: '#/components/schemas/amount'
+              transaction_amount:
+                $ref: '#/components/schemas/amount'
+          debtor_name:
+            type: string
+            minLength: 1
+            maxLength: 140
+            description: Debtor (payer) account name. Defaults to "NOTPROVIDED" 
+            example: Andras Arato
+          creditor_name:
+            type: string
+            minLength: 1
+            maxLength: 140
+            description: Creditor (payer) account name. Defaults to "NOTPROVIDED"
+            example: Holden Holdings
+          related_parties:
+            $ref: '#/components/schemas/related_parties' 
+          remittance_information:
+            type: object
+            properties:
+              unstructured:
+                type: array
+                description: >-
+                  Information supplied to enable the matching/reconciliation of an entry 
+                  with the items that the payment is intended to settle, such as commercial 
+                  invoices in an accounts' receivable system, in an unstructured form.
+                example: ['👨‍👩‍👧‍👦My remittance info','INV0123']
+                items:
+                  type: string
+                  minLength: 1
+                  maxLength: 140
+                minItems: 1
+                maxItems: 2
+          return_information:
+            type: array
+            description: Only a single return reason will be provided for returned payments
+            items:
+              type: object
+              properties:
+                reason:
+                  type: object
+                  description: Refer to list of Return Reason Codes for possible values
+                  required:
+                    - code
+                  properties:
+                    code:
+                      type: string
+                      example: FOCR
+                      minLength: 1
+                      maxLength: 4
+                additional_information:
+                  type: array
+                  description: >-
+                    Additional information as to why payment was returned
+                  example: ['Additional Information text 1', 'Additional Information text 2']
+                  items:
+                    type: string
+                    minLength: 1
+                    maxLength: 105
+    uuid_vs_identifier:
+      type: string
+      format: uuid
+      description: Universally Unique Identifier (UUID) version 4, as described in IETC RFC 4122 "Universally Unique Identifier (UUID) URN Namespace.
+      pattern: '[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}'  
+    success:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Customer defined message key for support purposes
+          example: a27f873f-663e-49c2-a688-10fd1c5ffe11
+        status:
+          type: string
+          description: Customer defined message status, e.g. "Notification Received"
+          example: Notification Received
+    error_response:
+      type: array
+      description: Generic error response that returns one or more errors.
+      items:
+        type: object
+        required:
+        - status
+        - title
+        - detail
+        properties:
+          status:
+            type: string
+            description: HTTP status code associated with this error
+          title:
+            type: string
+            description: Short description associated with this error
+          detail:
+            type: string
+            description: A detailed description associated with this error
+tags:
+  - name: Payment Notification
+    description: >-
+        API publishes a notification when settled funds sent via NPP are credited to a
+        customers ANZ bank account.
+  - name: bank_to_customer_debit_credit_notification
+    description: <SchemaDefinition schemaRef="#/components/schemas/bank_to_customer_debit_credit_notification" />
+    x-displayName: BankToCustomerDebitCreditNotification
+x-tagGroups:
+  - name: Paths
+    tags: 
+      - Payment Notification
+  - name: Models
+    tags: 
+      - bank_to_customer_debit_credit_notification

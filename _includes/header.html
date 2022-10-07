@@ -1,0 +1,28 @@
+<header>
+  <nav class="navbar navbar-dark navbar-expand-md fixed-top flex-column flex-md-row td-navbar">
+    <div class="container-fluid col-12 px-md-20 mx-auto">
+
+        <a class="navbar-brand" href="{{ site.baseurl }}/">
+          <img title="anz logo" alt="anz logo - go to homepage" src="{{ site.baseurl }}/assets/img/anz-logo-small.png" />
+
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+          <div class="td-navbar-nav-scroll collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mt-2 mt-lg-0">
+              {% for link in site.data.navigation %}
+                <li class="nav-item mr-4 mb-2 mb-lg-0">
+                  <a class="nav-link" href="{% if link.url %}{{ site.baseurl }}{{ link.url }}{% else %}{{ link.external_url }}{% endif %}" target="_self"><span>{{ link.title }}</span></a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+          <div class="navbar-nav d-none d-lg-block ml-md-auto">
+            <input type="search" id="search" class="form-control td-search-input" placeholder="Search this site…" aria-label="Search this site…" autocomplete="off">
+            </div>
+          <ul class="search-results col-12 col-md-6 col-xl-3"></ul>
+    </div>
+  </nav>
+</header>
+

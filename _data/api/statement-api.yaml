@@ -1,0 +1,435 @@
+openapi: 3.0.1
+info:
+  title: Fileactive Accounts Statement API
+  description: Fileactive Account Statement API.
+  version: 2.1.1
+servers:
+- url: https://api.fileactive.uat.anzgcis.com
+  description: 'UAT (non-production) environment'
+- url: https://api.fileactive.anzgcis.com
+  description: 'Production Environment'
+  variables:
+    basePath:
+      default: accounts/v2.0
+security:
+  - apiKeyAuth: []
+    bearerAuth: []
+paths:
+  /v1.0/auth:
+    post:
+      security:
+        - apiKeyAuth: []
+          OAuth2: []
+      summary: Auth Token Request
+      description: >
+        ANZ use OAuth 2.0 to authenticate inbound token requests, a bearer token
+        is returned as a response which is then used to authorise against ANZ
+        resources
+      tags:
+        - Authorisation
+      operationId: auth
+      requestBody:
+        description: 'Information and examples of Auth request body '
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/authTokenRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/200OKAuth'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '502':
+          $ref: '#/components/responses/502'
+        '503':
+          $ref: '#/components/responses/503'
+        '504':
+          $ref: '#/components/responses/504'
+        default:
+          $ref: '#/components/responses/default'
+  /accounts/v2.0/statement:
+    post:
+      summary: Intraday Statement Request
+      description: Get the statement of an account
+      tags:
+        - Statements
+      operationId: submitStatementRequest
+      requestBody:
+        description: Statement Request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatementRequest'
+        required: true
+      responses:
+        200:
+          $ref: '#/components/responses/200'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        413:
+          $ref: '#/components/responses/413'
+        429:
+          $ref: '#/components/responses/429'
+        500:
+          $ref: '#/components/responses/500'
+        503:
+          $ref: '#/components/responses/503'
+        504:
+          $ref: '#/components/responses/504'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: uuid
+      description: Bearer token obtained during token exchange
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
+      description: API key to authorize requests.
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.fileactive.anzgcis.com/auth
+          tokenUrl: https://api.fileactive.uat.anzgcis.com/v1.0/auth
+          scopes:
+            GBL.INSTO.ACCOUNTS.STATEMENT.READ: Request Account Statement     
+  parameters:
+    requestKey:
+      name: X-REQUESTKEY
+      in: header
+      description: Internal End to End key used for support and reporting purposes
+      schema:
+        $ref: '#/components/schemas/UUID'
+      example: 325ea624-ac19-47e2-94ef-a1ab4e487275
+  responses:
+    200:
+      description: Statement Response
+      headers:
+        X-RequestKey:
+          description: Request Key provided to customer for support and reporting
+            purposes.
+          schema:
+            $ref: '#/components/schemas/UUID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StatementResponse'
+    200OKAuth:
+      description: Bearer token (Opaque Token) returned after a token request
+      headers:
+        x-RequestKey:
+          schema:
+            $ref: '#/components/parameters/requestKey'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/authTokenResponse'
+    400:
+      description: Bad Request
+      headers:
+        X-RequestKey:
+          description: Request Key provided to customer for support and reporting
+            purposes.
+          schema:
+            $ref: '#/components/schemas/UUID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    401:
+      description: Unauthorised
+      headers:
+        X-RequestKey:
+          description: Request Key provided to customer for support and reporting
+            purposes.
+          schema:
+            $ref: '#/components/schemas/UUID'
+      content: {}
+    403:
+      description: Forbidden
+      headers:
+        X-RequestKey:
+          description: Request Key provided to customer for support and reporting
+            purposes.
+          schema:
+            $ref: '#/components/schemas/UUID'
+      content: {}
+    404:
+      description: Not Found
+      content: {}
+    413:
+      description: Payload Too Large
+      headers:
+        X-RequestKey:
+          description: Request Key provided to customer for support and reporting
+            purposes.
+          schema:
+            $ref: '#/components/schemas/UUID'
+      content: {}
+    429:
+      description: Too many requests
+      headers:
+        X-RequestKey:
+          description: Request Key provided to customer for support and reporting
+            purposes.
+          schema:
+            $ref: '#/components/schemas/UUID'
+      content: {}
+    500:
+      description: Internal Error
+      headers:
+        X-RequestKey:
+          description: Request Key provided to customer for support and reporting
+            purposes.
+          schema:
+            $ref: '#/components/schemas/UUID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    502:
+        description: Bad Gateway, contact support
+        headers:
+          X-RequestKey:
+            description: Request Key provided to customer for support and reporting
+              purposes.
+            schema:
+              $ref: '#/components/schemas/UUID'
+        content: {}
+    503:
+      description: Service Unavailable
+      headers:
+        X-RequestKey:
+          description: Request Key provided to customer for support and reporting
+            purposes.
+          schema:
+            $ref: '#/components/schemas/UUID'
+      content: {}
+    504:
+      description: Gateway Timeout
+      headers:
+        X-RequestKey:
+          description: Request Key provided to customer for support and reporting
+            purposes.
+          schema:
+            $ref: '#/components/schemas/UUID'
+      content: {}
+    default:
+      description: Unexpected error
+      content: {}
+  schemas:
+    authTokenRequest:
+      required:
+        - grant_type
+        - client_assertion_type
+        - scope
+        - client_assertion
+      type: object
+      properties:
+        grant_type:
+          description: Specify the type credential requested
+          type: string
+          example: client_credentials
+        client_assertion_type:
+          description: >-
+            Describes the type of client assertion provided in the message
+            request
+          type: string
+          example: urn:ietf:params:oauth:client-assertion-type:jwt-bearer
+        scope:
+          $ref: '#/components/schemas/Scopes'
+        client_assertion:
+          $ref: '#/components/schemas/ClientAssertion'
+    authTokenResponse:
+      type: object
+      description: Response to report the status of a customer credit transfer.
+      additionalProperties: false
+      properties:
+        expires_in:
+          description: Indication on how long a token is valid for
+          type: integer
+        token_type:
+          description: Type of token returned
+          type: string
+        access_token:
+          description: >-
+            Opaque token returned as part of request, GCIS does not provide the
+            full access token
+          type: string
+      example:
+        expires_in: 3600
+        token_type: Bearer
+        access_token: eaaa13ee-b596-a8cc-b9d4-f778f8bb9377
+    Camt05200106Xml:
+      type: string
+      description: Message payload. Provided as camt.052.001.06 xml.
+      example: '[camt.052.001.06 XML]'
+      externalDocs:
+        description: Refer here for **camt.052.001.06 xml message implementation guide** with examples
+        url: 'https://anz-insto.github.io/fileactive/specs/accounts-statement.html'
+    ClientAssertion:
+      required:
+        - sub
+        - exp
+        - aud
+      type: object
+      properties:
+        sub:
+          type: string
+          description: Customer Code as provided by ANZ onboarding
+          example: CUSTOMERA
+        exp:
+          type: integer
+          description: EPOCH date and time
+          example: '1619658591'
+          maxLength: 10
+          minLength: 10
+        aud:
+          type: string
+          description: Specify the intended audience of the token request
+          example: https://api.fileactive.uat.anzgcis.com/auth
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          required:
+          - statusCode
+          - title
+          type: object
+          properties:
+            statusCode:
+              type: string
+              description: Error code supplied to assist with support investigation
+              example: EC42001
+            title:
+              type: string
+              example: Failed to validate request body against JSON schema for customer.
+        requestKey:
+          type: string
+          description: Unique identifier <UUID> used to correlate the message with
+            ANZ
+          example: 7380C995-2C70-4F25-8BBC-47DD1E60D5EA
+    Scopes:
+      description: |
+        GBL.INSTO.ACCOUNTS.STATEMENT.READ - Request Account Statement   
+      type: string
+      enum:
+        - GBL.INSTO.ACCOUNTS.STATEMENT.READ
+    StatementRequest:
+      required:
+      - accountId
+      type: object
+      properties:
+        accountId:
+          title: Account Identifier
+          maxLength: 35
+          minLength: 1
+          pattern: ^[a-zA-Z0-9.]*$
+          type: string
+          description: |
+            Uniquely identify the account. For AU and NZ domestic accounts this will include BSB + account number.
+          example: "012123999999999"
+        sortOrder:
+          title: Sort order
+          type: string
+          description: Sort transactions &quot;forward&quot; (default) from least
+            recent to most recent or &quot;backward&quot; from most recent to least
+            recent.
+          enum:
+          - forward
+          - backward
+        cursor:
+          title: Cursor
+          pattern: ^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$
+          type: string
+          description: Statement entry cursor used for call back if requesting additional pages.
+          example: "MjAyMjA3MDQ6Ng=="
+        maxEntries:
+          title: Maximum Entries.
+          maximum: 1000
+          minimum: 1
+          type: number
+          description: Maximum number of entries to return (1-1000), default to 1000.
+        includeNarrative:
+          title: Include Narative.
+          type: boolean
+          description: 'Include extended narrative relevant (e.g. NPP 280 characters),
+            (default: true).'
+    StatementResponse:
+      required:
+      - accountId
+      - moreTransactionsAvailable
+      - payload
+      - requestKey
+      - sortOrder
+      type: object
+      properties:
+        accountId:
+          type: string
+          description: Uniquely identify the account.
+        sortOrder:
+          type: string
+          description: Sort transactions &quot;forward&quot; (default) from least
+            recent to most recent or &quot;backward&quot; from most recent to least
+            recent.
+          enum:
+          - forward
+          - backward
+        payload:
+          $ref: '#/components/schemas/Camt05200106Xml'
+        requestKey:
+          type: string
+          description: Unique identifier used to correlate the message with ANZ
+          example: 71d6fb19-7515-40dc-b045-e17550b67600
+          pattern: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+        cursor:
+          type: string
+          description: Statement entry cursor used for call back if requesting additional pages.
+          example: "MjAyMjA3MDQ6Ng=="
+        moreTransactionsAvailable:
+          type: boolean
+          description: More transactions available, use cursor in subsequent calls
+          example: true
+    UUID:
+      type: string
+      example: 71d6fb19-7515-40dc-b045-e17550b67600
+      pattern: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+tags:
+  - name: Authorisation
+    description: |
+      Operations related to authentication & authorisation.
+  - name: Statements
+    description: |
+      Operations related to account statements
+  - name: StatementRequest
+    description: <SchemaDefinition schemaRef="#/components/schemas/StatementRequest" />
+    x-displayName: StatementRequest
+  - name: StatementResponse
+    description: <SchemaDefinition schemaRef="#/components/schemas/StatementResponse" />
+    x-displayName: StatementResponse
+x-tagGroups:
+  - name: Paths
+    tags: 
+      - Authorisation
+      - Statements
+  - name: Models
+    tags: 
+      - StatementRequest
+      - StatementResponse
+

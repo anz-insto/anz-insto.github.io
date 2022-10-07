@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/png" href="/gcis/docs/assets/img/icon/ANZ_DIGITAL_favicon_flat_16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/gcis/docs/assets/img/icon/ANZ_DIGITAL_favicon_flat_32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/gcis/docs/assets/img/icon/ANZ_DIGITAL_favicon_flat_64.png" sizes="64x64">
+<link rel="icon" type="image/png" href="/gcis/docs/assets/img/icon/ANZ_DIGITAL_favicon_flat_128.png" sizes="128x128">
+<link rel="icon" type="image/png" href="/gcis/docs/assets/img/icon/ANZ_DIGITAL_favicon_flat_512.png" sizes="512x512">
+
+    <title>NPP Payment Submit</title>
+    <link rel="stylesheet" href="/gcis/docs/assets/css/styles.css">
+</head>
+
+    <body class="td-section d-flex flex-column min-vh-100">
+        <a name="top"></a>
+        <header>
+  <nav class="navbar navbar-dark navbar-expand-md fixed-top flex-column flex-md-row td-navbar">
+    <div class="container-fluid col-12 px-md-20 mx-auto">
+
+        <a class="navbar-brand" href="/gcis/docs/">
+          <img title="anz logo" alt="anz logo - go to homepage" src="/gcis/docs/assets/img/anz-logo-small.png" />
+
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+          <div class="td-navbar-nav-scroll collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mt-2 mt-lg-0">
+              
+                <li class="nav-item mr-4 mb-2 mb-lg-0">
+                  <a class="nav-link" href="/gcis/docs/#api-catalogue" target="_self"><span>API Catalogue</span></a>
+                </li>
+              
+                <li class="nav-item mr-4 mb-2 mb-lg-0">
+                  <a class="nav-link" href="/gcis/docs/#faq" target="_self"><span>FAQ</span></a>
+                </li>
+              
+            </ul>
+          </div>
+          <div class="navbar-nav d-none d-lg-block ml-md-auto">
+            <input type="search" id="search" class="form-control td-search-input" placeholder="Search this site…" aria-label="Search this site…" autocomplete="off">
+            </div>
+          <ul class="search-results col-12 col-md-6 col-xl-3"></ul>
+    </div>
+  </nav>
+</header>
+
+
+        <div class="container-fluid td-outer">
+            <main role="main">
+                <div class="row mx-0 hero-row">
+                    <div id="split-hero" class="col-12 px-0 mx-auto anz-body-container">
+                
+                        <h1 id="page-title">NPP Payment Submit</h1>
+                        <p><p>Fileactive NPP Payment API Submit Stub Specification. This page details the different test scenarios of Fileactive NPP Payment API Submit requests and the corresponding initial response.</p>
+</p>
+                
+                    </div>
+                </div>
+                <div class="row flex-xl-nowrap mx-auto min-vh-100 anz-body-container">   
+                    
+                        <div class="w-100 col-12 px-0">
+                    
+
+
+                <p><a name="top"></a></p>
+
+<h6 id="environment-uat">Environment: UAT</h6>
+
+<h2 id="contents">Contents</h2>
+
+<ul>
+  <li><a href="#success-paytoaccount">Successful Submit Payment to BSB Account number</a></li>
+  <li><a href="#success-paytopayid">Successful Submit Payment to PayID</a></li>
+  <li><a href="#success-paytoaccount-emojis">Successful Submit Payment to BSB Account number with Emojis</a></li>
+  <li><a href="#payment-empty-debitaccount">Submit Payment with Empty Debit Account number fails </a></li>
+  <li><a href="#payment-limit-exceeded">Submit Payment fails with error Limit Arrangement exceeded </a></li>
+  <li><a href="#payid-invalid">Submit Payment fails for PayID Validation failure </a></li>
+  <li><a href="#all-sample-payloads">Sample JSON pain.a09.001 payloads</a></li>
+</ul>
+
+<p>For fetching the further/final state of the submitted payment, please refer: <a href="/gcis/docs/fileactive/stub/npp-payment-status.html">NPP Payment Status</a></p>
+
+<hr />
+
+<p><a name="success-paytoaccount"></a></p>
+<h2 id="1-successful-submit-payment-to-bsbaccount-number">1. Successful Submit-Payment to BSB|Account number</h2>
+
+<p>To simulate a successful response, please use the values below in the API request:</p>
+
+<p>Reference:
+<a href="#sample-json-BSBAccount">Sample JSON Input message with BSB|Account number (pain.a09.001)</a></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Field</th>
+      <th style="text-align: left">Path</th>
+      <th style="text-align: left">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Amount</td>
+      <td style="text-align: left">instructed_amount.amount</td>
+      <td style="text-align: left">any amount between 0.01 and 400.00</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="http-method--__post__"><strong>HTTP Method : __POST__</strong></h4>
+
+<h4 id="sample-request-details-"><strong>Sample Request Details :</strong></h4>
+
+<p><em>Headers:</em></p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="na">Content-Type</span><span class="pi">:</span> <span class="s">application/json</span>
+<span class="na">X-Message-Id</span><span class="pi">:</span> <span class="s">4b635dc0-efa2-11e9-961c-0b8918670b2c</span>
+<span class="na">Authorization</span><span class="pi">:</span> <span class="s">Bearer &lt;Access Token&gt;</span>
+<span class="na">apikey</span><span class="pi">:</span> <span class="s">&lt;apikey&gt;</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><em>Body:</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="p">{</span><span class="w">
+   </span><span class="nl">"secured_pain001"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;signed and encrypted pain.a09.001&gt;"</span><span class="w">
+</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h4 id="sample-response-details"><strong>Sample Response details:</strong></h4>
+
+<p>Status Code: 201</p>
+
+<p><em>Headers:</em></p>
+
+<h6 id="note-location-from-this-response-is-used-as-the-url-for-the-payment-status-enquiry">Note: ‘Location’ from this response is used as the URL for the payment status enquiry</h6>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="na">Location</span><span class="pi">:</span> <span class="s1">'</span><span class="s">https://api.fileactive.uat.anzgcis.com/npp/v1.0/payment/4b645dc0-efa2-11e9-961c-0b8918670b2c/status'</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><em>Body:</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="p">{</span><span class="w">
+  </span><span class="nl">"transaction_status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RCVD"</span><span class="w">
+</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><a href="#top">back to top</a></p>
+
+<hr />
+<p><br /><br /></p>
+
+<p><a name="success-paytopayid"></a></p>
+<h2 id="2-successful-submit-payment-to-payid">2. Successful Submit-Payment to PayID</h2>
+
+<p>To simulate a successful response , please use the ‘Test values’ from the below table into pain.a09.001 (JSON):</p>
+
+<p>Reference:
+<a href="#sample-json-payID">Sample JSON Input message with PayID (pain.a09.001)</a></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Field</th>
+      <th style="text-align: left">Path</th>
+      <th style="text-align: left">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Amount</td>
+      <td style="text-align: left">instructed_amount.amount</td>
+      <td style="text-align: left">any amount between 0.01 and 400.00</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="http-method--__post__-1"><strong>HTTP Method : __POST__</strong></h4>
+
+<h4 id="sample-request-details--1"><strong>Sample Request Details :</strong></h4>
+
+<p><em>Headers:</em></p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre>  <span class="na">Content-Type</span><span class="pi">:</span> <span class="s">application/json</span>
+   <span class="s">X-Message-Id</span><span class="pi">:</span> <span class="s">4b635dc0-efa2-11e9-961c-0b8918670b2c</span>
+   <span class="s">Authorization</span><span class="pi">:</span> <span class="s">Bearer &lt;Access Token&gt;</span>
+   <span class="s">apikey</span><span class="pi">:</span> <span class="s">&lt;apikey&gt;</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><em>Body:</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="p">{</span><span class="w">
+   </span><span class="nl">"secured_pain001"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;signed and encrypted pain.a09.001&gt;"</span><span class="w">
+</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h4 id="sample-response-details-1"><strong>Sample Response details:</strong></h4>
+
+<p>Status Code: 201</p>
+
+<p><em>Headers:</em></p>
+
+<h6 id="note-location-from-this-response-is-used-as-the-url-for-the-payment-status-enquiry-1">Note: ‘Location’ from this response is used as the URL for the payment status enquiry</h6>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="err">Location:</span><span class="w"> </span><span class="err">'https://api.fileactive.uat.anzgcis.com/npp/v</span><span class="mf">1.0</span><span class="err">/payment/</span><span class="mi">4</span><span class="err">b</span><span class="mi">645</span><span class="err">dc</span><span class="mi">0</span><span class="err">-efa</span><span class="mi">2-11e9-961</span><span class="err">c</span><span class="mi">-0</span><span class="err">b</span><span class="mi">8918670</span><span class="err">b</span><span class="mi">2</span><span class="err">c/status'</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><em>Body:</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="p">{</span><span class="w">
+  </span><span class="nl">"transaction_status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RCVD"</span><span class="w">
+</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><a href="#top">back to top</a></p>
+
+<hr />
+<p><br /><br /></p>
+
+<p><a name="success-paytoaccount-emojis"></a></p>
+
+<h2 id="3-successful-submit-payment-to-bsbaccount-number-with-emojis">3. Successful Submit-Payment to BSB|Account number with Emojis</h2>
+
+<p>To simulate a successful response , please use the ‘Test values’ from the below table into pain.a09.001 (JSON):</p>
+
+<p>Reference:
+<a href="#sample-json-BSBAccount">Sample JSON Input message with BSB|Account number (pain.a09.001)</a></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Field</th>
+      <th style="text-align: left">Path</th>
+      <th style="text-align: left">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Amount</td>
+      <td style="text-align: left">instructed_amount.amount</td>
+      <td style="text-align: left">any amount between 0.01 and 400.00</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ExtendedRemittanceInfo</td>
+      <td style="text-align: left">remittance_information_unstructured</td>
+      <td style="text-align: left">sample “👍👨‍👩‍👧‍👦😃”</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="http-method--__post__-2"><strong>HTTP Method : __POST__</strong></h4>
+
+<h4 id="sample-request-details--2"><strong>Sample Request Details :</strong></h4>
+
+<p><em>Headers:</em></p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre>  <span class="na">Content-Type</span><span class="pi">:</span> <span class="s">application/json</span>
+   <span class="s">X-Message-Id</span><span class="pi">:</span> <span class="s">4b635dc0-efa2-11e9-961c-0b8918670b2c</span>
+   <span class="s">Authorization</span><span class="pi">:</span> <span class="s">Bearer &lt;Access Token&gt;</span>
+   <span class="s">apikey</span><span class="pi">:</span> <span class="s">&lt;apikey&gt;</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><em>Body:</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="p">{</span><span class="w">
+   </span><span class="nl">"secured_pain001"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;signed and encrypted pain.a09.001&gt;"</span><span class="w">
+</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h4 id="sample-response-details-2"><strong>Sample Response details:</strong></h4>
+
+<p>Status Code: 201</p>
+
+<p><em>Headers:</em></p>
+
+<h6 id="note-location-from-this-response-is-used-as-the-url-for-the-payment-status-enquiry-2">Note: ‘Location’ from this response is used as the URL for the payment status enquiry</h6>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="na">Location</span><span class="pi">:</span> <span class="s1">'</span><span class="s">https://api.fileactive.uat.anzgcis.com/npp/v1.0/payment/4b645dc0-efa2-11e9-961c-0b8918670b2c/status'</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><em>Body:</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="p">{</span><span class="w">
+  </span><span class="nl">"transaction_status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RCVD"</span><span class="w">
+</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><a href="#top">back to top</a></p>
+
+<hr />
+<p><br /><br /></p>
+
+<p><a name="payment-empty-debitaccount"></a></p>
+<h2 id="4-submit-payment-with-empty-debit-account-number-fails-negative-scenario">4. Submit payment with Empty Debit Account number fails (Negative scenario)</h2>
+
+<p>To simulate a successful response , please use the ‘Test values’ from the below table into pain.a09.001 (JSON):</p>
+
+<p>Reference:
+<a href="#sample-json-BSBAccount">Sample JSON Input message with BSB|Account number (pain.a09.001)</a></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Field</th>
+      <th style="text-align: left">Path</th>
+      <th style="text-align: left">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Amount</td>
+      <td style="text-align: left">instructed_amount.amount</td>
+      <td style="text-align: left">any amount between 0.01 and 400.00</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">DebtorAccountId</td>
+      <td style="text-align: left">debtor_account_identification</td>
+      <td style="text-align: left">”  “</td>
+    </tr>
+  </tbody>
+</table>
+
+<h6 id="note-leave-the-debtor-account-id-value-empty-in-the-json-">Note: Leave the Debtor account ID Value empty in the JSON “”</h6>
+
+<h4 id="http-method--__post__-3"><strong>HTTP Method : __POST__</strong></h4>
+
+<h4 id="sample-request-details--3"><strong>Sample Request Details :</strong></h4>
+
+<p><em>Headers:</em></p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre>  <span class="na">Content-Type</span><span class="pi">:</span> <span class="s">application/json</span>
+   <span class="s">X-Message-Id</span><span class="pi">:</span> <span class="s">4b635dc0-efa2-11e9-961c-0b8918670b2c</span>
+   <span class="s">Authorization</span><span class="pi">:</span> <span class="s">Bearer &lt;Access Token&gt;</span>
+   <span class="s">apikey</span><span class="pi">:</span> <span class="s">&lt;apikey&gt;</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><em>Body:</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="p">{</span><span class="w">
+   </span><span class="nl">"secured_pain001"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;signed and encrypted pain.a09.001&gt;"</span><span class="w">
+</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h4 id="sample-response-details-3"><strong>Sample Response details:</strong></h4>
+
+<p>Status Code: 201</p>
+
+<p><em>Headers:</em></p>
+
+<h6 id="note-location-from-this-response-is-used-as-the-url-for-the-payment-status-enquiry-3">Note: ‘Location’ from this response is used as the URL for the payment status enquiry</h6>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="na">Location</span><span class="pi">:</span> <span class="s1">'</span><span class="s">https://api.fileactive.uat.anzgcis.com/npp/v1.0/payment/4b645dc0-efa2-11e9-961c-0b8918670b2c/status'</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><em>Body:</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="p">{</span><span class="w">
+  </span><span class="nl">"transaction_status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RCVD"</span><span class="w">
+</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h6 id="note--make-a-payment-status-enquiry-to-fetch-the-current-state-of-this-payment-rejection-response-in-this-case-npp-payment-status">Note:  Make a Payment Status Enquiry to fetch the current state of this payment (Rejection response in this case). <a href="/gcis/docs/fileactive/stub/npp-payment-status.html">NPP Payment Status</a></h6>
+
+<p><br /></p>
+
+<p><a href="#top">back to top</a></p>
+
+<hr />
+<p><br /><br /></p>
+
+<p><a name="payment-limit-exceeded"></a></p>
+<h2 id="5-submit-payment-fails-with-error-limit-arrangement-exceeded-negative-scenario">5. Submit Payment fails with error Limit Arrangement exceeded (Negative scenario)</h2>
+
+<p>To simulate a successful response , please use the ‘Test values’ from the below table into pain.a09.001 (JSON):</p>
+
+<p>Reference:
+<a href="#sample-json-BSBAccount">Sample JSON Input message with BSB|Account number (pain.a09.001)</a></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Field</th>
+      <th style="text-align: left">Path</th>
+      <th style="text-align: left">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Amount</td>
+      <td style="text-align: left">instructed_amount.amount</td>
+      <td style="text-align: left">450.08</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="http-method--__post__-4"><strong>HTTP Method : __POST__</strong></h4>
+
+<h4 id="sample-request-details--4"><strong>Sample Request Details :</strong></h4>
+
+<p><em>Headers:</em></p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre>  <span class="na">Content-Type</span><span class="pi">:</span> <span class="s">application/json</span>
+   <span class="s">X-Message-Id</span><span class="pi">:</span> <span class="s">4b635dc0-efa2-11e9-961c-0b8918670b2c</span>
+   <span class="s">Authorization</span><span class="pi">:</span> <span class="s">Bearer &lt;Access Token&gt;</span>
+   <span class="s">apikey</span><span class="pi">:</span> <span class="s">&lt;apikey&gt;</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><em>Body:</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="p">{</span><span class="w">
+   </span><span class="nl">"secured_pain001"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;signed and encrypted pain.a09.001&gt;"</span><span class="w">
+</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h4 id="sample-response-details-4"><strong>Sample Response details:</strong></h4>
+
+<p>Status Code: 201</p>
+
+<p><em>Headers:</em></p>
+
+<h6 id="note-location-from-this-response-is-used-as-the-url-for-the-payment-status-enquiry-4">Note: ‘Location’ from this response is used as the URL for the payment status enquiry</h6>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="na">Location</span><span class="pi">:</span> <span class="s1">'</span><span class="s">https://api.fileactive.uat.anzgcis.com/npp/v1.0/payment/4b645dc0-efa2-11e9-961c-0b8918670b2c/status'</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><em>Body:</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="p">{</span><span class="w">
+  </span><span class="nl">"transaction_status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RCVD"</span><span class="w">
+</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h6 id="note--make-a-payment-status-enquiry-to-fetch-the-current-state-of-this-payment-rejection-response-in-this-case-npp-payment-status-1">Note:  Make a Payment Status Enquiry to fetch the current state of this payment (Rejection response in this case). <a href="/gcis/docs/fileactive/stub/npp-payment-status.html">NPP Payment Status</a></h6>
+
+<p><br /></p>
+
+<p><a href="#top">back to top</a></p>
+
+<hr />
+<p><br /><br /></p>
+
+<p><a name="payid-invalid"></a></p>
+<h2 id="6-submit-payment-fails-for-payid-validation-failure--negative-scenario">6. Submit Payment fails for PayID Validation failure  (Negative scenario)</h2>
+
+<p>To simulate a successful response , please use the ‘Test values’ from the below table into pain.a09.001 (JSON):</p>
+
+<p>Reference:
+<a href="#sample-json-payID">Sample JSON Input message with PayID - pain.a09.001</a></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Field</th>
+      <th style="text-align: left">Path</th>
+      <th style="text-align: left">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Amount</td>
+      <td style="text-align: left">instructed_amount.amount</td>
+      <td style="text-align: left">450.09</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="http-method--__post__-5"><strong>HTTP Method : __POST__</strong></h4>
+
+<h4 id="sample-request-details--5"><strong>Sample Request Details :</strong></h4>
+
+<p><em>Headers:</em></p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre>  <span class="na">Content-Type</span><span class="pi">:</span> <span class="s">application/json</span>
+   <span class="s">X-Message-Id</span><span class="pi">:</span> <span class="s">4b635dc0-efa2-11e9-961c-0b8918670b2c</span>
+   <span class="s">Authorization</span><span class="pi">:</span> <span class="s">Bearer &lt;Access Token&gt;</span>
+   <span class="s">apikey</span><span class="pi">:</span> <span class="s">&lt;apikey&gt;</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><em>Body:</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="p">{</span><span class="w">
+   </span><span class="nl">"secured_pain001"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;signed and encrypted pain.a09.001&gt;"</span><span class="w">
+</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h4 id="sample-response-details-5"><strong>Sample Response details:</strong></h4>
+
+<p>Status Code: 201</p>
+
+<p><em>Headers:</em></p>
+
+<h6 id="note-location-from-this-response-is-used-as-the-url-for-the-payment-status-enquiry-5">Note: ‘Location’ from this response is used as the URL for the payment status enquiry</h6>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="na">Location</span><span class="pi">:</span> <span class="s1">'</span><span class="s">https://api.fileactive.uat.anzgcis.com/npp/v1.0/payment/4b645dc0-efa2-11e9-961c-0b8918670b2c/status'</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><em>Body:</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="p">{</span><span class="w">
+  </span><span class="nl">"transaction_status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RCVD"</span><span class="w">
+</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h6 id="note--make-a-payment-status-enquiry-to-fetch-the-current-state-of-this-payment-rejection-response-in-this-case-npp-payment-status-2">Note:  Make a Payment Status Enquiry to fetch the current state of this payment (Rejection response in this case). <a href="/gcis/docs/fileactive/stub/npp-payment-status.html">NPP Payment Status</a></h6>
+
+<p><br /></p>
+
+<p><a href="#top">back to top</a></p>
+
+<hr />
+<p><br /><br /></p>
+
+<p><a name="all-sample-payloads"></a>
+<a name="sample-json-BSBAccount"></a></p>
+<h2 id="sample-json-input-message-with-bsbaccount-number---paina09001">Sample JSON Input message with BSB|Account number - pain.a09.001</h2>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+</pre></td><td class="code"><pre><span class="p">{</span><span class="w">
+  </span><span class="nl">"instruction_identification"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TC121/1471873823"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"end_to_end_identification"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7760e5d0f9fa11e9a7d0a180e88ecf79"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"creation_date_time"</span><span class="p">:</span><span class="w">  </span><span class="s2">"2019-10-29T14:16:14Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"initiating_party_name"</span><span class="p">:</span><span class="w">  </span><span class="s2">"ANZ Customer 1"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"service_level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npp.clear.01-x2p1"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"requested_execution_date"</span><span class="p">:</span><span class="w">  </span><span class="s2">"2019-10-29"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"debtor_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BILBO BAGGINS"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"debtor_account_identification"</span><span class="p">:</span><span class="w"> </span><span class="s2">"014002837101671"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"debtor_account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BBAN"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"instructed_amount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AUD"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"850.10"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"creditor_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"James Smith"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"creditor_account_identification"</span><span class="p">:</span><span class="w"> </span><span class="s2">"017141909999670"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"creditor_account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BBAN"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"creditor_agent_bic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ANZBAU3LXXX"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"remittance_information_unstructured"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"FIRST LINE "</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"SECOND LINE "</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><br /></p>
+
+<p><a name="sample-json-payID"></a></p>
+<h2 id="sample-json-input-message-with-payid---paina09001">Sample JSON Input message with PayID - pain.a09.001</h2>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+</pre></td><td class="code"><pre><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"instruction_identification"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TC121/1471873844"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"end_to_end_identification"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b1f35b30373d11ea89fabd599dda3bf2"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"creation_date_time"</span><span class="p">:</span><span class="w">  </span><span class="s2">"2020-01-15T13:21:08Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"initiating_party_name"</span><span class="p">:</span><span class="w">  </span><span class="s2">"ANZ Customer 2"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"service_level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npp.clear.01-x2p1"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"requested_execution_date"</span><span class="p">:</span><span class="w">  </span><span class="s2">"2020-01-15"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"debtor_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BILBO BAGGINS"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"debtor_account_identification"</span><span class="p">:</span><span class="w"> </span><span class="s2">"013328101002003"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"debtor_account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BBAN"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"instructed_amount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AUD"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"851.10"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"creditor_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Sarah Jones"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"creditor_alias_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TELI"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"creditor_alias_value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+61-4123456789"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"creditor_account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BBAN"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"creditor_agent_bic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"QBANAU4BXXX"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"remittance_information_unstructured"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"FIRST LINE "</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"SECOND LINE "</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+ </span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><br /><br /></p>
+
+<hr />
+<p><a href="#top">back to top</a></p>
+
+
+
+                    </div>            
+                </div>  
+
+            </main>
+        </div>
+
+        <footer class="py-5 row d-print-none mx-0 w-100">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12 col-sm-4 text-center py-2 order-sm-2 mx-auto ">
+        <small>© 2022 Australia and New Zealand Banking Group Limited (ANZ) 2022 ABN 11 005 357 522. All Rights Reserved</small>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+    </body>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
+<script src="/gcis/docs/assets/js/lunr.js"></script>
+<script src="/gcis/docs/assets/js/search.js"></script>
+    <script>
+    $(document).ready(function() {
+    
+        const toc = $('#toc-content');
+        const scrollOffset = 100;
+
+        // Select each header
+        sections = $('h2');
+            $.each(sections, function(idx, v) {
+                section = $(v);
+                var div_id = $(section).attr('id');
+                var div_text = section.text().split('¶')[0];
+                var parent = $("#" + div_id)
+                var content = '<li id="toc-top-' + div_id + '" class="toc-li-top"><a class="toc-nav-link toc-top" href="#' + div_id + '" title="' + div_text +'">' + div_text +'</a></li>';
+                $(toc).append(content);
+    
+                // Add section code to subnavigation
+                var children = $('<nav class="toc-nav-mid"><ul class="toc-ul-mid"></nav></ul>')
+                var contenders = $("#" + div_id).nextUntil("h2");
+                $.each(contenders, function(idx, contender){
+                    if($(contender).is('h3')) {
+                       var contender_id = $(contender).attr('id');
+                       var contender_text = $(contender).text().split('¶')[0];
+                       var content = '<li class="toc-li-mid"><a class="toc-nav-link toc-mid" href="#' + contender_id + '" title="' + contender_text +'">' + contender_text +'</a></li>';
+                       children.append(content);
+                    }
+                    else if($(contender).is('.faq-card')) {
+                        var questions = $(contender).find('h4');
+                        $.each(questions, function(idx, question) {
+                            var contender_id = $(question).attr('id');
+                            var contender_text = $(question).text().split('¶')[0];
+                            var content = '<li class="toc-li-faq"><a class="toc-nav-link toc-faq" href="#' + contender_id + '" title="' + contender_text +'">' + contender_text +'</a></li>';
+                            children.append(content);
+                        });
+                    }
+                })
+                $("#toc-top-" + div_id).append(children);
+                $('.toc-faq').on('click', function(event) {
+                    const id = $(this).attr('href').substring(1);
+                    $('div[aria-labelledby=' + id + ']').collapse('show');
+                });
+            });
+            $(document).on('click', 'a[href^="#"].toc-nav-link', function (event) {
+                event.preventDefault();
+                $('html, body').animate({
+                    scrollTop: $($.attr(this, 'href')).offset().top - scrollOffset
+                }, 100);
+            });
+        });
+    </script>
+</html>

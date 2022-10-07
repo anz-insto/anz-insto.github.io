@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/png" href="/gcis/docs/assets/img/icon/ANZ_DIGITAL_favicon_flat_16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/gcis/docs/assets/img/icon/ANZ_DIGITAL_favicon_flat_32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/gcis/docs/assets/img/icon/ANZ_DIGITAL_favicon_flat_64.png" sizes="64x64">
+<link rel="icon" type="image/png" href="/gcis/docs/assets/img/icon/ANZ_DIGITAL_favicon_flat_128.png" sizes="128x128">
+<link rel="icon" type="image/png" href="/gcis/docs/assets/img/icon/ANZ_DIGITAL_favicon_flat_512.png" sizes="512x512">
+
+    <title>Fileactive Accounts Statement API</title>
+    <link rel="stylesheet" href="/gcis/docs/assets/css/styles.css">
+</head>
+
+    <body class="td-section d-flex flex-column min-vh-100">
+        <a name="top"></a>
+        <header>
+  <nav class="navbar navbar-dark navbar-expand-md fixed-top flex-column flex-md-row td-navbar">
+    <div class="container-fluid col-12 px-md-20 mx-auto">
+
+        <a class="navbar-brand" href="/gcis/docs/">
+          <img title="anz logo" alt="anz logo - go to homepage" src="/gcis/docs/assets/img/anz-logo-small.png" />
+
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+          <div class="td-navbar-nav-scroll collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mt-2 mt-lg-0">
+              
+                <li class="nav-item mr-4 mb-2 mb-lg-0">
+                  <a class="nav-link" href="/gcis/docs/#api-catalogue" target="_self"><span>API Catalogue</span></a>
+                </li>
+              
+                <li class="nav-item mr-4 mb-2 mb-lg-0">
+                  <a class="nav-link" href="/gcis/docs/#faq" target="_self"><span>FAQ</span></a>
+                </li>
+              
+            </ul>
+          </div>
+          <div class="navbar-nav d-none d-lg-block ml-md-auto">
+            <input type="search" id="search" class="form-control td-search-input" placeholder="Search this site…" aria-label="Search this site…" autocomplete="off">
+            </div>
+          <ul class="search-results col-12 col-md-6 col-xl-3"></ul>
+    </div>
+  </nav>
+</header>
+
+
+        <div class="container-fluid td-outer">
+            <main role="main">
+                <div class="row mx-0 hero-row">
+                    <div id="split-hero" class="col-12 px-0 mx-auto anz-body-container">
+                
+                        <h1 id="page-title">Fileactive Accounts Statement API</h1>
+                        <p><p>This page details the Accounts Statement request and the relevant response. <br />
+<strong>Pre-Requisite:</strong> All the account intended to be used for fetching account statement, must be requested to be registered prior.</p>
+</p>
+                
+                    </div>
+                </div>
+                <div class="row flex-xl-nowrap mx-auto min-vh-100 anz-body-container">   
+                    
+                        <div class="w-100 col-12 px-0">
+                    
+
+
+                <!--page content-->
+
+<p><a name="top"></a></p>
+
+<h2 id="contents">Contents</h2>
+
+<ul>
+  <li><a href="#sample-success">Successful Intraday call</a></li>
+  <li><a href="#sample-success-narrative">Successful Intraday call with NPP Extended Narrative Information</a></li>
+  <li><a href="#sample-arm-success-narrative">Successful Intraday ARM call with NPP Extended Narrative Information</a></li>
+  <li><a href="#sample-invalid-accountId">Account Statement request with Incorrect/Invalid accountId</a></li>
+  <li><a href="#reserved-accounts">Reserved accounts list to not use</a></li>
+</ul>
+
+<hr />
+
+<p><a name="sample-success"></a></p>
+<h2 id="successful-intraday-accounts-statement">Successful Intraday Accounts Statement</h2>
+
+<p>To simulate a successful response, use the following test values:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Field</th>
+      <th style="text-align: left">Path</th>
+      <th style="text-align: left">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">AccountId</td>
+      <td style="text-align: left">accountId</td>
+      <td style="text-align: left">any account id <a href="#reserved-accounts">exception list</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="http-method--__post__"><strong>HTTP Method : __POST__</strong></h4>
+
+<h4 id="sample-request-details-"><strong>Sample Request Details :</strong></h4>
+
+<p><em>Headers:</em></p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre>   <span class="na">Content-Type</span><span class="pi">:</span> <span class="s">application/json</span>
+   <span class="na">Authorization</span><span class="pi">:</span> <span class="s">Bearer &lt;Access Token&gt;</span>
+   <span class="na">apikey </span><span class="pi">:</span> <span class="s">&lt;apikey&gt;</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><em>Body:</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="p">{</span><span class="w">
+	</span><span class="nl">"accountId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"011222814766535"</span><span class="w">
+</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h4 id="sample-response-details"><strong>Sample Response details:</strong></h4>
+
+<p><em>HTTP: 200</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre><span class="p">{</span><span class="w">
+	</span><span class="nl">"accountId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"011222814766535"</span><span class="p">,</span><span class="w">
+	</span><span class="nl">"extract"</span><span class="p">:</span><span class="w"> </span><span class="s2">"intraday"</span><span class="p">,</span><span class="w">
+	</span><span class="nl">"payload"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;?xml version="</span><span class="mf">1.0</span><span class="s2">" encoding="</span><span class="err">UTF</span><span class="mi">-8</span><span class="s2">"?&gt; &lt;Document xmlns:xsi=</span><span class="se">\"</span><span class="s2">http://www.w3.org/2001/XMLSchema-instance</span><span class="se">\"</span><span class="s2"> xmlns:xsd=</span><span class="se">\"</span><span class="s2">http://www.w3.org/2001/XMLSchema</span><span class="se">\"</span><span class="s2"> xmlns=</span><span class="se">\"</span><span class="s2">urn:iso:std:iso:20022:tech:xsd:camt.052.001.06</span><span class="se">\"</span><span class="s2">&gt; &lt;BkToCstmrAcctRpt&gt; &lt;GrpHdr&gt; &lt;MsgId&gt;80010d0c0003ce00b63f84710c7967bb&lt;/MsgId&gt; &lt;CreDtTm&gt;2019-10-17T11:28:12.1814057+11:00&lt;/CreDtTm&gt; &lt;/GrpHdr&gt; &lt;Rpt&gt; &lt;Id&gt;d0e4d3a12fd4494aba691fc6c6cbf194&lt;/Id&gt; &lt;CreDtTm&gt;2019-10-17T11:28:12.1814057+11:00&lt;/CreDtTm&gt; &lt;RptgSrc&gt; &lt;Prtry&gt;V2P&lt;/Prtry&gt; &lt;/RptgSrc&gt; &lt;Acct&gt; &lt;Id&gt; &lt;Othr&gt; &lt;Id&gt;011222814766535&lt;/Id&gt; &lt;/Othr&gt; &lt;/Id&gt; &lt;Ccy&gt;AUD&lt;/Ccy&gt; &lt;/Acct&gt; &lt;Bal&gt; &lt;Tp&gt; &lt;CdOrPrtry&gt; &lt;Cd&gt;ITAV&lt;/Cd&gt; &lt;/CdOrPrtry&gt; &lt;SubTp&gt; &lt;Prtry&gt;Current&lt;/Prtry&gt; &lt;/SubTp&gt; &lt;/Tp&gt; &lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;14242340.28&lt;/Amt&gt; &lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt; &lt;Dt&gt; &lt;Dt&gt;2019-07-31&lt;/Dt&gt; &lt;/Dt&gt; &lt;/Bal&gt; &lt;TxsSummry&gt; &lt;TtlNtries&gt; &lt;NbOfNtries&gt;0&lt;/NbOfNtries&gt; &lt;Sum&gt;0&lt;/Sum&gt; &lt;TtlNetNtry&gt; &lt;Amt&gt;0&lt;/Amt&gt; &lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtI nd&gt; &lt;/TtlNetNtry&gt; &lt;/TtlNtries&gt; &lt;TtlCdtNtries&gt; &lt;NbOfNtries&gt;0&lt;/NbOfNtries&gt; &lt;Sum&gt;0&lt;/Sum&gt; &lt;/TtlCdtNtries&gt; &lt;TtlDbtNtries&gt; &lt;NbOfNtries&gt;0&lt;/NbOfNtries&gt; &lt;Sum&gt;0&lt;/Sum&gt; &lt;/TtlDbtNtries&gt; &lt;/TxsSummry&gt; &lt;/Rpt&gt; &lt;/BkToCstmrAcctRpt&gt; &lt;/Document&gt;"</span><span class="p">,</span><span class="w">
+	</span><span class="nl">"requestKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"80010d0c-0003-ce00-b63f-84710c7967bb"</span><span class="p">,</span><span class="w">
+	</span><span class="nl">"cursor"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MjAxOTEwMTc6NQ=="</span><span class="p">,</span><span class="w">
+	</span><span class="nl">"moreTransactionsAvailable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><br /></p>
+
+<p><a href="#top">back to top</a></p>
+
+<hr />
+
+<p><a name="sample-success-narrative"></a></p>
+<h2 id="successful-intraday-accounts-statement-with-npp-extended-narrative-information">Successful Intraday Accounts Statement with NPP Extended Narrative Information</h2>
+
+<p>To simulate a successful response, use the following test values:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Field</th>
+      <th style="text-align: left">Path</th>
+      <th style="text-align: left">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">AccountId</td>
+      <td style="text-align: left">accountId</td>
+      <td style="text-align: left">011222814766535</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Include Narrative</td>
+      <td style="text-align: left">includeNarrative</td>
+      <td style="text-align: left">true</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="http-method--__post__-1"><strong>HTTP Method : __POST__</strong></h4>
+
+<h4 id="sample-request-details--1"><strong>Sample Request Details :</strong></h4>
+
+<p><em>Headers:</em></p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre>   <span class="na">Content-Type</span><span class="pi">:</span> <span class="s">application/json</span>
+   <span class="na">Authorization</span><span class="pi">:</span> <span class="s">Bearer &lt;Access Token&gt;</span>
+   <span class="na">apikey </span><span class="pi">:</span> <span class="s">&lt;apikey&gt;</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><em>Body:</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="p">{</span><span class="w">
+	</span><span class="nl">"accountId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"011222814766535"</span><span class="p">,</span><span class="w">
+	</span><span class="nl">"includeNarrative"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h4 id="sample-response-details-1"><strong>Sample Response details:</strong></h4>
+
+<p><em>HTTP: 200</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="p">{</span><span class="w">
+  </span><span class="nl">"accountId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"011222814766535"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"extract"</span><span class="p">:</span><span class="w"> </span><span class="s2">"intraday"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"payload"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;?xml version=</span><span class="se">\"</span><span class="s2">1.0</span><span class="se">\"</span><span class="s2"> encoding=</span><span class="se">\"</span><span class="s2">utf-8</span><span class="se">\"</span><span class="s2">?&gt;&lt;Document xmlns:xsi=</span><span class="se">\"</span><span class="s2">http://www.w3.org/2001/XMLSchema-instance</span><span class="se">\"</span><span class="s2"> xmlns:xsd=</span><span class="se">\"</span><span class="s2">http://www.w3.org/2001/XMLSchema</span><span class="se">\"</span><span class="s2"> xmlns=</span><span class="se">\"</span><span class="s2">urn:iso:std:iso:20022:tech:xsd:camt.052.001.06</span><span class="se">\"</span><span class="s2">&gt;&lt;BkToCstmrAcctRpt&gt;&lt;GrpHdr&gt;&lt;MsgId&gt;b420c09b8dc64694b41613fce40e3022&lt;/MsgId&gt;&lt;CreDtTm&gt;2020-01-20T16:42:06.2313279+11:00&lt;/CreDtTm&gt;&lt;/GrpHdr&gt;&lt;Rpt&gt;&lt;Id&gt;768b9226504f41a9955501f6b3c5ba8d&lt;/Id&gt;&lt;CreDtTm&gt;2020-01-20T16:42:06.2313279+11:00&lt;/CreDtTm&gt;&lt;RptgSrc&gt;&lt;Prtry&gt;V2P&lt;/Prtry&gt;&lt;/RptgSrc&gt;&lt;Acct&gt;&lt;Id&gt;&lt;Othr&gt;&lt;Id&gt;011222814766535&lt;/Id&gt;&lt;/Othr&gt;&lt;/Id&gt;&lt;Ccy&gt;AUD&lt;/Ccy&gt;&lt;/Acct&gt;&lt;Bal&gt;&lt;Tp&gt;&lt;CdOrPrtry&gt;&lt;Cd&gt;ITAV&lt;/Cd&gt;&lt;/CdOrPrtry&gt;&lt;SubTp&gt;&lt;Prtry&gt;Current&lt;/Prtry&gt;&lt;/SubTp&gt;&lt;/Tp&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;14242340.28&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;Dt&gt;&lt;Dt&gt;2019-07-31&lt;/Dt&gt;&lt;/Dt&gt;&lt;/Bal&gt;&lt;TxsSummry&gt;&lt;TtlNtries&gt;&lt;NbOfNtries&gt;5&lt;/NbOfNtries&gt;&lt;Sum&gt;135.00&lt;/Sum&gt;&lt;TtlNetNtry&gt;&lt;Amt&gt;135.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;/TtlNetNtry&gt;&lt;/TtlNtries&gt;&lt;TtlCdtNtries&gt;&lt;NbOfNtries&gt;5&lt;/NbOfNtries&gt;&lt;Sum&gt;135.00&lt;/Sum&gt;&lt;/TtlCdtNtries&gt;&lt;TtlDbtNtries&gt;&lt;NbOfNtries&gt;0&lt;/NbOfNtries&gt;&lt;Sum&gt;0&lt;/Sum&gt;&lt;/TtlDbtNtries&gt;&lt;/TxsSummry&gt;&lt;Ntry&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;42.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;Sts&gt;BOOK&lt;/Sts&gt;&lt;BookgDt&gt;&lt;Dt&gt;2020-01-20&lt;/Dt&gt;&lt;/BookgDt&gt;&lt;ValDt&gt;&lt;Dt&gt;2020-01-20&lt;/Dt&gt;&lt;/ValDt&gt;&lt;BkTxCd&gt;&lt;Domn&gt;&lt;Cd&gt;PMNT&lt;/Cd&gt;&lt;Fmly&gt;&lt;Cd&gt;RCDT&lt;/Cd&gt;&lt;SubFmlyCd&gt;DMCT&lt;/SubFmlyCd&gt;&lt;/Fmly&gt;&lt;/Domn&gt;&lt;/BkTxCd&gt;&lt;NtryDtls&gt;&lt;TxDtls&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;42.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;RmtInf&gt;&lt;Ustrd&gt;Memo for transaction 20200120:4&lt;/Ustrd&gt;&lt;/RmtInf&gt;&lt;/TxDtls&gt;&lt;/NtryDtls&gt;&lt;/Ntry&gt;&lt;Ntry&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;17.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;Sts&gt;BOOK&lt;/Sts&gt;&lt;BookgDt&gt;&lt;Dt&gt;2020-01-20&lt;/Dt&gt;&lt;/BookgDt&gt;&lt;ValDt&gt;&lt;Dt&gt;2020-01-20&lt;/Dt&gt;&lt;/ValDt&gt;&lt;BkTxCd&gt;&lt;Domn&gt;&lt;Cd&gt;PMNT&lt;/Cd&gt;&lt;Fmly&gt;&lt;Cd&gt;RCDT&lt;/Cd&gt;&lt;SubFmlyCd&gt;DMCT&lt;/SubFmlyCd&gt;&lt;/Fmly&gt;&lt;/Domn&gt;&lt;/BkTxCd&gt;&lt;NtryDtls&gt;&lt;TxDtls&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;17.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;RmtInf&gt;&lt;Ustrd&gt;Memo for transaction 20200120:3&lt;/Ustrd&gt;&lt;/RmtInf&gt;&lt;/TxDtls&gt;&lt;/NtryDtls&gt;&lt;/Ntry&gt;&lt;Ntry&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;51.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;Sts&gt;BOOK&lt;/Sts&gt;&lt;BookgDt&gt;&lt;Dt&gt;2020-01-20&lt;/Dt&gt;&lt;/BookgDt&gt;&lt;ValDt&gt;&lt;Dt&gt;2020-01-20&lt;/Dt&gt;&lt;/ValDt&gt;&lt;BkTxCd&gt;&lt;Domn&gt;&lt;Cd&gt;PMNT&lt;/Cd&gt;&lt;Fmly&gt;&lt;Cd&gt;RCDT&lt;/Cd&gt;&lt;SubFmlyCd&gt;DMCT&lt;/SubFmlyCd&gt;&lt;/Fmly&gt;&lt;/Domn&gt;&lt;/BkTxCd&gt;&lt;NtryDtls&gt;&lt;TxDtls&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;51.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;RmtInf&gt;&lt;Ustrd&gt;Memo for transaction 20200120:2&lt;/Ustrd&gt;&lt;/RmtInf&gt;&lt;/TxDtls&gt;&lt;/NtryDtls&gt;&lt;/Ntry&gt;&lt;Ntry&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;25.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;Sts&gt;BOOK&lt;/Sts&gt;&lt;BookgDt&gt;&lt;Dt&gt;2020-01-20&lt;/Dt&gt;&lt;/BookgDt&gt;&lt;ValDt&gt;&lt;Dt&gt;2020-01-20&lt;/Dt&gt;&lt;/ValDt&gt;&lt;BkTxCd&gt;&lt;Domn&gt;&lt;Cd&gt;PMNT&lt;/Cd&gt;&lt;Fmly&gt;&lt;Cd&gt;RCDT&lt;/Cd&gt;&lt;SubFmlyCd&gt;DMCT&lt;/SubFmlyCd&gt;&lt;/Fmly&gt;&lt;/Domn&gt;&lt;/BkTxCd&gt;&lt;NtryDtls&gt;&lt;TxDtls&gt;&lt;Refs&gt;&lt;AcctSvcrRef&gt;1234567890123456789&lt;/AcctSvcrRef&gt;&lt;EndToEndId&gt;Tx0000163773&lt;/EndToEndId&gt;&lt;Prtry&gt;&lt;Tp&gt;ServiceLevel&lt;/Tp&gt;&lt;Ref&gt;ics1.clear.V01&lt;/Ref&gt;&lt;/Prtry&gt;&lt;/Refs&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;25.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;RltdPties&gt;&lt;Dbtr&gt;&lt;Nm&gt;HITACHI INTERNATIONAL&lt;/Nm&gt;&lt;/Dbtr&gt;&lt;Cdtr&gt;&lt;Nm&gt;BILBO BAGGINS&lt;/Nm&gt;&lt;/Cdtr&gt;&lt;/RltdPties&gt;&lt;RmtInf&gt;&lt;Ustrd&gt;Hey 😁! this is a Fast payment Extended Narrative Information 👍👨‍👩‍👧‍👦&lt;/Ustrd&gt;&lt;/RmtInf&gt;&lt;/TxDtls&gt;&lt;/NtryDtls&gt;&lt;/Ntry&gt;&lt;Ntry&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;0.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;Sts&gt;BOOK&lt;/Sts&gt;&lt;BookgDt&gt;&lt;Dt&gt;2020-01-20&lt;/Dt&gt;&lt;/BookgDt&gt;&lt;ValDt&gt;&lt;Dt&gt;2020-01-20&lt;/Dt&gt;&lt;/ValDt&gt;&lt;BkTxCd&gt;&lt;Domn&gt;&lt;Cd&gt;PMNT&lt;/Cd&gt;&lt;Fmly&gt;&lt;Cd&gt;RCDT&lt;/Cd&gt;&lt;SubFmlyCd&gt;DMCT&lt;/SubFmlyCd&gt;&lt;/Fmly&gt;&lt;/Domn&gt;&lt;/BkTxCd&gt;&lt;NtryDtls&gt;&lt;TxDtls&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;0.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;RmtInf&gt;&lt;Ustrd&gt;Memo for transaction 20200120:0&lt;/Ustrd&gt;&lt;/RmtInf&gt;&lt;/TxDtls&gt;&lt;/NtryDtls&gt;&lt;/Ntry&gt;&lt;/Rpt&gt;&lt;/BkToCstmrAcctRpt&gt;&lt;/Document&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"requestKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b420c09b-8dc6-4694-b416-13fce40e3022"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"moreTransactionsAvailable"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h6 id="note--payload-will-contain-a-transaction-with-rltdpties-and-ustrd-field-values-with-npp-transaction-and-narrative-information">Note:  Payload will contain a transaction with ‘RltdPties’ and ‘Ustrd’ field values with NPP Transaction and NARRATIVE Information.</h6>
+
+<p><br /></p>
+
+<hr />
+
+<p><a name="sample-arm-success-narrative"></a></p>
+<h2 id="successful-intraday-arm-accounts-statement-with-npp-extended-narrative-information">Successful Intraday ARM Accounts Statement with NPP Extended Narrative Information</h2>
+
+<p>To simulate a successful response, use the following test values:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Field</th>
+      <th style="text-align: left">Path</th>
+      <th style="text-align: left">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">AccountId</td>
+      <td style="text-align: left">accountId</td>
+      <td style="text-align: left">011222814766538 or 011222814766539</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Include Narrative</td>
+      <td style="text-align: left">includeNarrative</td>
+      <td style="text-align: left">true</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="http-method--__post__-2"><strong>HTTP Method : __POST__</strong></h4>
+
+<h4 id="sample-request-details--2"><strong>Sample Request Details :</strong></h4>
+
+<p><em>Headers:</em></p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre>   <span class="na">Content-Type</span><span class="pi">:</span> <span class="s">application/json</span>
+   <span class="na">Authorization</span><span class="pi">:</span> <span class="s">Bearer &lt;Access Token&gt;</span>
+   <span class="na">apikey </span><span class="pi">:</span> <span class="s">&lt;apikey&gt;</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><em>Body:</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="p">{</span><span class="w">
+	</span><span class="nl">"accountId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"011222814766538"</span><span class="p">,</span><span class="w">
+	</span><span class="nl">"includeNarrative"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h4 id="sample-response-details-2"><strong>Sample Response details:</strong></h4>
+
+<p><em>HTTP: 200</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre><span class="p">{</span><span class="w">
+  </span><span class="nl">"accountId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"011222814766538"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"extract"</span><span class="p">:</span><span class="w"> </span><span class="s2">"intraday"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"sortOrder"</span><span class="p">:</span><span class="w"> </span><span class="s2">"forward"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"payload"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;?xml version=</span><span class="se">\"</span><span class="s2">1.0</span><span class="se">\"</span><span class="s2"> encoding=</span><span class="se">\"</span><span class="s2">utf-8</span><span class="se">\"</span><span class="s2">?&gt;&lt;Document xmlns:xsi=</span><span class="se">\"</span><span class="s2">http://www.w3.org/2001/XMLSchema-instance</span><span class="se">\"</span><span class="s2"> xmlns:xsd=</span><span class="se">\"</span><span class="s2">http://www.w3.org/2001/XMLSchema</span><span class="se">\"</span><span class="s2"> xmlns=</span><span class="se">\"</span><span class="s2">urn:iso:std:iso:20022:tech:xsd:camt.052.001.06</span><span class="se">\"</span><span class="s2">&gt;&lt;BkToCstmrAcctRpt&gt;&lt;GrpHdr&gt;&lt;MsgId&gt;44b756ed60c8496391a768af90073f3f&lt;/MsgId&gt;&lt;CreDtTm&gt;2021-07-29T17:10:05.1750344+10:00&lt;/CreDtTm&gt;&lt;/GrpHdr&gt;&lt;Rpt&gt;&lt;Id&gt;2a49546e4627493c9ba9645df24c9271&lt;/Id&gt;&lt;CreDtTm&gt;2021-07-29T17:10:05.1750344+10:00&lt;/CreDtTm&gt;&lt;RptgSrc&gt;&lt;Prtry&gt;CMM&lt;/Prtry&gt;&lt;/RptgSrc&gt;&lt;Acct&gt;&lt;Id&gt;&lt;Othr&gt;&lt;Id&gt;011222814766538&lt;/Id&gt;&lt;/Othr&gt;&lt;/Id&gt;&lt;Ccy&gt;AUD&lt;/Ccy&gt;&lt;/Acct&gt;&lt;Bal&gt;&lt;Tp&gt;&lt;CdOrPrtry&gt;&lt;Cd&gt;ITAV&lt;/Cd&gt;&lt;/CdOrPrtry&gt;&lt;SubTp&gt;&lt;Prtry&gt;Current&lt;/Prtry&gt;&lt;/SubTp&gt;&lt;/Tp&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;1245500.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;Dt&gt;&lt;Dt&gt;2021-07-29&lt;/Dt&gt;&lt;/Dt&gt;&lt;/Bal&gt;&lt;TxsSummry&gt;&lt;TtlNtries&gt;&lt;NbOfNtries&gt;6&lt;/NbOfNtries&gt;&lt;Sum&gt;143.00&lt;/Sum&gt;&lt;TtlNetNtry&gt;&lt;Amt&gt;143.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;/TtlNetNtry&gt;&lt;/TtlNtries&gt;&lt;TtlCdtNtries&gt;&lt;NbOfNtries&gt;6&lt;/NbOfNtries&gt;&lt;Sum&gt;143.00&lt;/Sum&gt;&lt;/TtlCdtNtries&gt;&lt;TtlDbtNtries&gt;&lt;NbOfNtries&gt;0&lt;/NbOfNtries&gt;&lt;Sum&gt;0&lt;/Sum&gt;&lt;/TtlDbtNtries&gt;&lt;/TxsSummry&gt;&lt;Ntry&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;8.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;Sts&gt;BOOK&lt;/Sts&gt;&lt;BookgDt&gt;&lt;Dt&gt;2021-07-29&lt;/Dt&gt;&lt;/BookgDt&gt;&lt;ValDt&gt;&lt;Dt&gt;2021-07-29&lt;/Dt&gt;&lt;/ValDt&gt;&lt;BkTxCd&gt;&lt;Domn&gt;&lt;Cd&gt;PMNT&lt;/Cd&gt;&lt;Fmly&gt;&lt;Cd&gt;RCDT&lt;/Cd&gt;&lt;SubFmlyCd&gt;DMCT&lt;/SubFmlyCd&gt;&lt;/Fmly&gt;&lt;/Domn&gt;&lt;/BkTxCd&gt;&lt;NtryDtls&gt;&lt;TxDtls&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;8.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;RmtInf&gt;&lt;Ustrd&gt;Memo for transaction 20210729:5&lt;/Ustrd&gt;&lt;/RmtInf&gt;&lt;/TxDtls&gt;&lt;/NtryDtls&gt;&lt;/Ntry&gt;&lt;Ntry&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;42.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;Sts&gt;BOOK&lt;/Sts&gt;&lt;BookgDt&gt;&lt;Dt&gt;2021-07-29&lt;/Dt&gt;&lt;/BookgDt&gt;&lt;ValDt&gt;&lt;Dt&gt;2021-07-29&lt;/Dt&gt;&lt;/ValDt&gt;&lt;BkTxCd&gt;&lt;Domn&gt;&lt;Cd&gt;PMNT&lt;/Cd&gt;&lt;Fmly&gt;&lt;Cd&gt;RCDT&lt;/Cd&gt;&lt;SubFmlyCd&gt;DMCT&lt;/SubFmlyCd&gt;&lt;/Fmly&gt;&lt;/Domn&gt;&lt;/BkTxCd&gt;&lt;NtryDtls&gt;&lt;TxDtls&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;42.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;RmtInf&gt;&lt;Ustrd&gt;Memo for transaction 20210729:4&lt;/Ustrd&gt;&lt;/RmtInf&gt;&lt;/TxDtls&gt;&lt;/NtryDtls&gt;&lt;/Ntry&gt;&lt;Ntry&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;17.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;Sts&gt;BOOK&lt;/Sts&gt;&lt;BookgDt&gt;&lt;Dt&gt;2021-07-29&lt;/Dt&gt;&lt;/BookgDt&gt;&lt;ValDt&gt;&lt;Dt&gt;2021-07-29&lt;/Dt&gt;&lt;/ValDt&gt;&lt;BkTxCd&gt;&lt;Domn&gt;&lt;Cd&gt;PMNT&lt;/Cd&gt;&lt;Fmly&gt;&lt;Cd&gt;RCDT&lt;/Cd&gt;&lt;SubFmlyCd&gt;DMCT&lt;/SubFmlyCd&gt;&lt;/Fmly&gt;&lt;/Domn&gt;&lt;/BkTxCd&gt;&lt;NtryDtls&gt;&lt;TxDtls&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;17.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;RmtInf&gt;&lt;Ustrd&gt;Memo for transaction 20210729:3&lt;/Ustrd&gt;&lt;/RmtInf&gt;&lt;/TxDtls&gt;&lt;/NtryDtls&gt;&lt;/Ntry&gt;&lt;Ntry&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;51.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;Sts&gt;BOOK&lt;/Sts&gt;&lt;BookgDt&gt;&lt;Dt&gt;2021-07-29&lt;/Dt&gt;&lt;/BookgDt&gt;&lt;ValDt&gt;&lt;Dt&gt;2021-07-29&lt;/Dt&gt;&lt;/ValDt&gt;&lt;BkTxCd&gt;&lt;Domn&gt;&lt;Cd&gt;PMNT&lt;/Cd&gt;&lt;Fmly&gt;&lt;Cd&gt;RCDT&lt;/Cd&gt;&lt;SubFmlyCd&gt;DMCT&lt;/SubFmlyCd&gt;&lt;/Fmly&gt;&lt;/Domn&gt;&lt;/BkTxCd&gt;&lt;NtryDtls&gt;&lt;TxDtls&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;51.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;RmtInf&gt;&lt;Ustrd&gt;Memo for transaction 20210729:2&lt;/Ustrd&gt;&lt;/RmtInf&gt;&lt;/TxDtls&gt;&lt;/NtryDtls&gt;&lt;/Ntry&gt;&lt;Ntry&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;25.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;Sts&gt;BOOK&lt;/Sts&gt;&lt;BookgDt&gt;&lt;Dt&gt;2021-07-29&lt;/Dt&gt;&lt;/BookgDt&gt;&lt;ValDt&gt;&lt;Dt&gt;2021-07-29&lt;/Dt&gt;&lt;/ValDt&gt;&lt;BkTxCd&gt;&lt;Domn&gt;&lt;Cd&gt;PMNT&lt;/Cd&gt;&lt;Fmly&gt;&lt;Cd&gt;RCDT&lt;/Cd&gt;&lt;SubFmlyCd&gt;DMCT&lt;/SubFmlyCd&gt;&lt;/Fmly&gt;&lt;/Domn&gt;&lt;/BkTxCd&gt;&lt;NtryDtls&gt;&lt;TxDtls&gt;&lt;Refs&gt;&lt;AcctSvcrRef&gt;1234567890123456789&lt;/AcctSvcrRef&gt;&lt;EndToEndId&gt;Tx0000163773&lt;/EndToEndId&gt;&lt;Prtry&gt;&lt;Tp&gt;ServiceLevel&lt;/Tp&gt;&lt;Ref&gt;ics1.clear.V01&lt;/Ref&gt;&lt;/Prtry&gt;&lt;/Refs&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;25.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;RltdPties&gt;&lt;Dbtr&gt;&lt;Nm&gt;HITACHI INTERNATIONAL&lt;/Nm&gt;&lt;/Dbtr&gt;&lt;Cdtr&gt;&lt;Nm&gt;BILBO BAGGINS&lt;/Nm&gt;&lt;/Cdtr&gt;&lt;CdtrAcct&gt;&lt;Id&gt;&lt;Othr&gt;&lt;Id&gt;006430991&lt;/Id&gt;&lt;Issr&gt;010201&lt;/Issr&gt;&lt;/Othr&gt;&lt;/Id&gt;&lt;/CdtrAcct&gt;&lt;/RltdPties&gt;&lt;RmtInf&gt;&lt;Ustrd&gt;payment 12345 - sample emoji 👍&lt;/Ustrd&gt;&lt;/RmtInf&gt;&lt;/TxDtls&gt;&lt;/NtryDtls&gt;&lt;/Ntry&gt;&lt;Ntry&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;0.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;Sts&gt;BOOK&lt;/Sts&gt;&lt;BookgDt&gt;&lt;Dt&gt;2021-07-29&lt;/Dt&gt;&lt;/BookgDt&gt;&lt;ValDt&gt;&lt;Dt&gt;2021-07-29&lt;/Dt&gt;&lt;/ValDt&gt;&lt;BkTxCd&gt;&lt;Domn&gt;&lt;Cd&gt;PMNT&lt;/Cd&gt;&lt;Fmly&gt;&lt;Cd&gt;RCDT&lt;/Cd&gt;&lt;SubFmlyCd&gt;DMCT&lt;/SubFmlyCd&gt;&lt;/Fmly&gt;&lt;/Domn&gt;&lt;/BkTxCd&gt;&lt;NtryDtls&gt;&lt;TxDtls&gt;&lt;Amt Ccy=</span><span class="se">\"</span><span class="s2">AUD</span><span class="se">\"</span><span class="s2">&gt;0.00&lt;/Amt&gt;&lt;CdtDbtInd&gt;CRDT&lt;/CdtDbtInd&gt;&lt;RmtInf&gt;&lt;Ustrd&gt;Memo for transaction 20210729:0&lt;/Ustrd&gt;&lt;/RmtInf&gt;&lt;/TxDtls&gt;&lt;/NtryDtls&gt;&lt;/Ntry&gt;&lt;/Rpt&gt;&lt;/BkToCstmrAcctRpt&gt;&lt;/Document&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"requestKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"44b756ed-60c8-4963-91a7-68af90073f3f"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"moreTransactionsAvailable"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h6 id="note--payload-will-contain-a-transaction-with-rltdpties-and-ustrd-field-values-with-npp-transaction-and-narrative-information-along-with-the-arm-virtual-account-details-as-follows">Note:  Payload will contain a transaction with ‘RltdPties’ and ‘Ustrd’ field values with NPP Transaction and narrative information, along with the ARM virtual account details as follows:</h6>
+<ul>
+  <li>Creditor account identification. Payee account number (ARM virtual account)</li>
+  <li>Creditor account issuer. Payee account issuer - BSB (ARM Off System BSB)</li>
+</ul>
+
+<p><a href="#top">back to top</a></p>
+
+<hr />
+
+<p><br />
+<br /></p>
+
+<p><a name="sample-invalid-accountId"></a></p>
+<h2 id="account-statement-request-with-incorrectinvalid-accountid-fails">Account Statement request with Incorrect/Invalid accountId fails</h2>
+
+<p>To simulate a successful response, use the following test values:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Field</th>
+      <th style="text-align: left">Path</th>
+      <th style="text-align: left">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">AccountId</td>
+      <td style="text-align: left">accountId</td>
+      <td style="text-align: left">000000000000000</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="http-method--__post__-3"><strong>HTTP Method : __POST__</strong></h4>
+
+<h4 id="sample-request-details--3"><strong>Sample Request Details :</strong></h4>
+
+<p><em>Headers:</em></p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre>   <span class="na">Content-Type</span><span class="pi">:</span> <span class="s">application/json</span>
+   <span class="na">Authorization</span><span class="pi">:</span> <span class="s">Bearer &lt;Access Token&gt;</span>
+   <span class="na">apikey </span><span class="pi">:</span> <span class="s">&lt;apikey&gt;</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><em>Body:</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="p">{</span><span class="w">
+	</span><span class="nl">"accountId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"000000000000000"</span><span class="p">,</span><span class="w">
+</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h4 id="sample-response-details-3"><strong>Sample Response details:</strong></h4>
+
+<p><em>HTTP: 200</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="p">{</span><span class="w">
+         </span><span class="nl">"requestKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"531ba7c0-47dc-11ea-a20e-b9c0078e2e9a"</span><span class="p">,</span><span class="w">
+         </span><span class="nl">"error"</span><span class="p">:{</span><span class="w">
+           </span><span class="nl">"statusCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EC20001"</span><span class="p">,</span><span class="w">
+           </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Account Id: '000000000000000' not found"</span><span class="w">
+         </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w"> </span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><br /></p>
+
+<hr />
+
+<p><br /></p>
+
+<h2 id="back-to-top"><a href="#top">back to top</a></h2>
+
+<p><br />
+<br /></p>
+
+<p><a name="reserved-accounts"></a></p>
+<h2 id="accounts-reserved-for-internal-error-cases">Accounts Reserved for Internal error cases</h2>
+
+<h6 id="note--these-below-listed-accounts-with-any-bsb-are-used-for-internal-negative-testing-only-and-not-be-used">Note:  These below listed accounts (with any BSB) are used for INTERNAL negative testing only and not be used.</h6>
+<p><br /></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Account numbers</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">111111111</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">222222222</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">333333333</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">444444444</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">555555555</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">666666666</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">777777777</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">888888888</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">999999999</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+                    </div>            
+                </div>  
+
+            </main>
+        </div>
+
+        <footer class="py-5 row d-print-none mx-0 w-100">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12 col-sm-4 text-center py-2 order-sm-2 mx-auto ">
+        <small>© 2022 Australia and New Zealand Banking Group Limited (ANZ) 2022 ABN 11 005 357 522. All Rights Reserved</small>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+    </body>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
+<script src="/gcis/docs/assets/js/lunr.js"></script>
+<script src="/gcis/docs/assets/js/search.js"></script>
+    <script>
+    $(document).ready(function() {
+    
+        const toc = $('#toc-content');
+        const scrollOffset = 100;
+
+        // Select each header
+        sections = $('h2');
+            $.each(sections, function(idx, v) {
+                section = $(v);
+                var div_id = $(section).attr('id');
+                var div_text = section.text().split('¶')[0];
+                var parent = $("#" + div_id)
+                var content = '<li id="toc-top-' + div_id + '" class="toc-li-top"><a class="toc-nav-link toc-top" href="#' + div_id + '" title="' + div_text +'">' + div_text +'</a></li>';
+                $(toc).append(content);
+    
+                // Add section code to subnavigation
+                var children = $('<nav class="toc-nav-mid"><ul class="toc-ul-mid"></nav></ul>')
+                var contenders = $("#" + div_id).nextUntil("h2");
+                $.each(contenders, function(idx, contender){
+                    if($(contender).is('h3')) {
+                       var contender_id = $(contender).attr('id');
+                       var contender_text = $(contender).text().split('¶')[0];
+                       var content = '<li class="toc-li-mid"><a class="toc-nav-link toc-mid" href="#' + contender_id + '" title="' + contender_text +'">' + contender_text +'</a></li>';
+                       children.append(content);
+                    }
+                    else if($(contender).is('.faq-card')) {
+                        var questions = $(contender).find('h4');
+                        $.each(questions, function(idx, question) {
+                            var contender_id = $(question).attr('id');
+                            var contender_text = $(question).text().split('¶')[0];
+                            var content = '<li class="toc-li-faq"><a class="toc-nav-link toc-faq" href="#' + contender_id + '" title="' + contender_text +'">' + contender_text +'</a></li>';
+                            children.append(content);
+                        });
+                    }
+                })
+                $("#toc-top-" + div_id).append(children);
+                $('.toc-faq').on('click', function(event) {
+                    const id = $(this).attr('href').substring(1);
+                    $('div[aria-labelledby=' + id + ']').collapse('show');
+                });
+            });
+            $(document).on('click', 'a[href^="#"].toc-nav-link', function (event) {
+                event.preventDefault();
+                $('html, body').animate({
+                    scrollTop: $($.attr(this, 'href')).offset().top - scrollOffset
+                }, 100);
+            });
+        });
+    </script>
+</html>

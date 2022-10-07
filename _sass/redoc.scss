@@ -1,0 +1,24 @@
+@import 'variables';
+
+// redoc styling overrides
+#redoc {
+    background-color: $white;
+    .api-content {
+        padding-top: $nav-height;
+    }
+
+}
+
+// code block headings
+.gBjRyf {
+    h1, h2, h3, h4 {
+        color: $white !important;
+    }
+}
+
+// remove redoc ad
+a[href="https://redocly.com/redoc/"] {
+    opacity: 0; 
+    width: 0;
+    height: 0;
+}

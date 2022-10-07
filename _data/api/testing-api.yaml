@@ -1,0 +1,286 @@
+openapi: 3.0.1
+info:
+  title: Fileactive Testing API
+  description: Fileactive Self-Service Testing API. Rate limit is one request per second.
+  version: v1.0
+servers:
+  - url: https://api.fileactive.uat.anzgcis.com
+    description: 'UAT (non-production) environment'
+security:
+  - apiKeyAuth: []
+paths:
+  /testingfileactive/v1.0/rtn:
+    post:
+      summary: Request A Real Time Notification Submit
+      description: |-
+        Request includes attributes which will be included in the RTN. All unspecified RTN fields will be defaulted  
+      tags:
+        - Receivables
+      operationId: submitRTNRequest
+      parameters:
+        - $ref: '#/components/parameters/correlationID'
+        - $ref: '#/components/parameters/messageID'
+      requestBody:
+        description: Request a RTN
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestRTN'
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/201Created'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorised'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalError'
+        '502':
+          $ref: '#/components/responses/502BadGateway'
+        '503':
+          $ref: '#/components/responses/503Unavailable'
+        '504':
+          $ref: '#/components/responses/504Timeout'
+        default:
+          $ref: '#/components/responses/default'
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
+      description: API key to authorise requests.
+  parameters:
+    correlationID:
+      name: x-Correlation-Id
+      in: header
+      description: >-
+        Optional correlation ID provided by the data consumer that should be
+        reflected back in the response headers. Can be used for reporting and
+        logging.
+      schema:
+        $ref: '#/components/schemas/UUID'
+      example: 'baf7b2b0-449d-48c7-a63a-876e72cd7b02'
+    messageID:
+      name: x-Message-Id
+      in: header
+      description: >-
+        Point to point reference, as assigned by the
+        instructing party, and sent to the next party in the chain to
+        unambiguously identify the message
+      required: true
+      schema:
+        $ref: '#/components/schemas/UUID'
+      example: '3c40b28a-b902-477f-8400-6cb97d41cb06'
+  responses:
+    201Created:
+      description: Success - A RTN was successfully created
+      headers:
+        x-Correlation-Id:
+          description: GUID echoed from request. Example baf7b2b0-449d-48c7-a63a-876e72cd7b02
+          schema:
+            $ref: '#/components/schemas/UUID'
+        x-RequestKey:
+          description: Request Key provided to customer for support and reporting purposes. Example 7eda441d-5716-4f28-b5fe-d3dc7458d526
+          schema:
+            $ref: '#/components/schemas/UUID'
+    400BadRequest:
+      description: Bad Request, message format does not match expected schema
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorCode'
+          example:
+            status:
+              code: EC000 _003
+              severity: Fatal
+              text: The request failed validation {reason}
+    401Unauthorised:
+      description: Request is not authenticated
+      content: {}
+    403Forbidden:
+      description: Request is authenticated but action is not allowed 
+      content: 
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorCode'
+          example:
+            status:
+              code: EC013_003
+              severity: Fatal
+              text: The provided account_identification = 013999012345678 is not authorised to receive real time notifications. Provide an authorised account or please contact support
+    404NotFound:
+      description: Not Found
+      content: {}
+    429TooManyRequests:
+      description: Action exceeds allocated limits
+      content: {}
+    500InternalError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorCode'
+          example:
+            status:
+              code: EC000_001
+              title: Fatal
+              detail: Internal Server Error, please contact support
+    502BadGateway:
+      description: Bad Gateway, contact support
+      content: {}
+    503Unavailable:
+      description: Service Unavailable or down for maintainance
+      content: {}
+    504Timeout:
+      description: Gateway Timeout, retry or contact support
+      content: {}
+    default:
+      description: Unexpected error
+      content: {}
+  schemas:
+    RequestRTN:
+      required:
+      - account_identification
+      - entry_reference
+      - amount
+      type: object
+      properties:
+        account_identification:
+          type: string
+          description: Account identification assigned by an institution, includes BSB
+          minLength: 1
+          maxLength: 34
+          example: '014814800000010'
+        entry_reference:
+          type: string
+          minLength: 1
+          maxLength: 35
+          description: Unique reference for the entry
+          example: Reference entered in the initiating channel     
+        amount:
+          type: string
+          description: Notifiyied amount in AUD
+          minLength: 1
+          maxLength: 19
+          example: 7120.86
+        debtor_name:
+          type: string
+          minLength: 1
+          maxLength: 140  
+          description: Debtor (payer) account name 
+          example: Andras Arato
+        creditor_name:
+          type: string
+          minLength: 1
+          maxLength: 140  
+          description: Creditor (payee) account name 
+          example: Holden Holdings
+        arm_creditor_account_identification:
+          type: string
+          description: ARM (virtual) account identification, includes BSB
+          minLength: 1
+          maxLength: 34
+          example: '063678965323010'
+        creditor_alias:
+          required:
+          - type
+          - identification
+          type: object
+          description: Creditor account alias
+          properties:
+            type:
+              type: string
+              enum:
+                - 'TELI'
+                - 'EMAL'
+                - 'AUBN'
+                - 'ORGN'
+              description: Creditor account alias type
+              example: 'TELI'
+            identification:
+              type: string
+              description: Creditor account alias identification
+              minLength: 1
+              maxLength: 2048
+              example: '+61403736550'
+        remittance_information:
+          type: object
+          properties:
+            unstructured:
+              type: array
+              description: >-
+                Information supplied to enable the matching/reconciliation of an entry 
+                with the items that the payment is intended to settle, such as commercial 
+                invoices in an accounts receivable system, in an unstructured form.
+              example: ['👨‍👩‍👧‍👦Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim a','d minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit i']
+              items:
+                type: string
+                minLength: 1
+                maxLength: 140
+              minItems: 1
+              maxItems: 2
+        return_information:
+          required:
+          - reason_code
+          type: object
+          properties:
+            reason_code:
+              type: string
+              description: Payment return reason code
+              minLength: 4
+              maxLength: 4
+              example: NARR   
+            additional_information:
+              type: array
+              description: Further details on the return reason  
+              example: ['Beneficiary is','unknown']
+              items:
+                type: string
+                minLength: 1
+                maxLength: 105
+              minItems: 1
+              maxItems: 3         
+    UUID:
+      type: string
+      pattern: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+    ErrorCode:
+      type: object
+      properties: 
+        status:
+          type: object
+          required:
+          - code
+          - severity
+          - text
+          properties:
+            code:
+              type: string
+              example: EC000_001
+            severity: 
+              type: string
+              enum:
+                - Fatal
+                - Transient
+              example: Fatal
+            text:
+              type: string
+              example: Internal Server Error, please contact support   
+tags:
+  - name: Receivables
+    description: Operations related to receivables. 
+  - name: RequestRTN
+    description: <SchemaDefinition schemaRef="#/components/schemas/RequestRTN" />
+    x-displayName: RequestRTN
+x-tagGroups:
+  - name: Paths
+    tags: 
+      - Receivables
+  - name: Models
+    tags: 
+      - RequestRTN

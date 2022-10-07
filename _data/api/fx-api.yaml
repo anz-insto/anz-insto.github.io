@@ -1,0 +1,908 @@
+openapi: '3.0.2'
+info:
+  title: Fileactive FX API
+  description: |-
+    Fileactive FX API provides consumers the ability to request FX (foreign exchange) quotes and do deals.
+       
+    __Supported Countries:__   
+    * New Zealand
+  version: 1.3.0
+servers:
+  - url: https://api.fileactive.uat.anzgcis.com
+    description: 'UAT (non-production) environment'
+  - url: https://api.fileactive.anzgcis.com
+    description: 'Production Environment'
+security:
+  - bearerAuth: []
+    apiKeyAuth: []
+paths:
+  /v1.0/auth:
+    post:
+      security:
+          - apiKeyAuth: []
+            OAuth2: []
+      summary: Obtain authorisation token
+      description: >
+        ANZ use OAuth 2.0 to authenticate inbound token requests, a bearer token is returned as a response which is then used to authorise against ANZ resources
+      tags: 
+      - Authorisation
+      operationId: auth
+      requestBody:
+        description: 'Information and examples of Auth request body'
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/authTokenRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/200OKAuth'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        429:
+          $ref: '#/components/responses/429'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502Auth'
+        default:
+          $ref: '#/components/responses/default'  
+  /fx/v1.0/quotes/{country-code}:
+    post:
+      summary: Submit an asynchronous request for a new quote
+      description: This endpoint is be used to submit a RFQ (request for quote).
+      tags:
+        - FX RFQ Pricing Service
+      operationId: submitQuoteRequest
+      parameters:
+        - $ref: '#/components/parameters/correlationID'
+        - $ref: '#/components/parameters/messageID'
+        - $ref: '#/components/parameters/countryCode'
+      requestBody:
+        description: A request for quote object
+        required: true
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/ClientQuoteRequest'
+      responses:
+        202:
+          description: Accepted the request for quote ('RFQ')
+          $ref: '#/components/responses/202'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401' 
+        403:
+          description: Country code parameter is invalid for has not been configured
+          $ref: '#/components/responses/403'
+        422:
+          description: 'RFQ not accepted: Failed Business Rule'
+          $ref: '#/components/responses/422'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          description: 'Request failure: Bad Gateway i.e, one or more of the downstream services is unavailable'
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        default:
+          description: Internal Server Error, Bad Request/Syntactically incorrect etc.,
+          $ref: '#/components/responses/default'
+  /fx/v1.0/quotes/{quoteIdentifier}:
+    get:
+      summary: Poll for the response corresponding to a submitted RFQ
+      description: This endpoint is used to poll for the business outcome/result of a submitted RFQ.
+      tags:
+        - FX RFQ Pricing Service
+      operationId: pollQuoteResponse
+      parameters:
+        - $ref: '#/components/parameters/correlationID'
+        - $ref: '#/components/parameters/messageID'
+        - $ref: '#/components/parameters/quoteIdentifier'
+      responses:
+        200:
+          description: The response polled for is available and the business outcome is affirmative i.e., quote was issued
+          $ref: '#/components/responses/200Quote'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401' 
+        404:
+          description: The response polled for is not yet available.
+          $ref: '#/components/responses/404'
+        422:
+          description: The response polled for is available and the business outcome is not affirmative or is unknown
+          $ref: '#/components/responses/422'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          description: 'Request failure: Bad Gateway i.e, one or more of the downstream services is unavailable'
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        default:
+          description: Internal Server Error, Bad Request/Syntactically incorrect request etc.,
+          $ref: '#/components/responses/default'
+  /fx/v1.0/deals/{quoteIdentifier}:
+    post:
+      summary: Submit an asynchronous request for new deal
+      description: This endpoint is be used to submit a Deal request.
+      tags:
+        - FX RFQ Pricing Service
+      operationId: submitDealRequest
+      parameters:
+        - $ref: '#/components/parameters/correlationID'
+        - $ref: '#/components/parameters/messageID'
+        - $ref: '#/components/parameters/quoteIdentifier'
+      responses:
+        202:
+          description: Accepted the request for deal
+          $ref: '#/components/responses/202'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401' 
+        422:
+          description: 'RFQ not accepted: Failed Business Rule'
+          $ref: '#/components/responses/422'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          description: 'Request failure: Bad Gateway i.e, one or more of the downstream services is unavailable'
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        default:
+          description: Internal Server Error, Bad Request/Syntactically incorrect etc.,
+          $ref: '#/components/responses/default'
+    get:
+      summary: Poll for the response corresponding to a submitted deal request
+      description: >
+        This endpoint is used to poll for the business outcome/result of
+        a submitted deal request.
+      tags:
+        - FX RFQ Pricing Service
+      operationId: pollDealResponse
+      parameters:
+        - $ref: '#/components/parameters/correlationID'
+        - $ref: '#/components/parameters/messageID'
+        - $ref: '#/components/parameters/quoteIdentifier'
+      responses:
+        200:
+          description: The response polled for is available and the business outcome is affirmative i.e., deal was issued
+          $ref: '#/components/responses/200Quote'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401' 
+        404:
+          description: The response polled for is not yet available.
+          $ref: '#/components/responses/404'
+        422:
+          description: The response polled for is available and the business outcome is not affirmative or is unknown
+          $ref: '#/components/responses/422'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          description: 'Request failure: Bad Gateway i.e, one or more of the downstream services is unavailable'
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        default:
+          description: Internal Server Error, Bad Request/Syntactically incorrect request etc.,
+          $ref: '#/components/responses/default'
+  /fx/v1.0/quotes:
+    put:
+      summary: Decline or cancel an issued quote
+      description: This endpoint is used to decline or cancel a quote.
+      tags:
+        - FX RFQ Pricing Service
+      operationId: abandonOrRejectQuote
+      parameters:
+        - $ref: '#/components/parameters/correlationID'
+        - $ref: '#/components/parameters/messageID'
+      requestBody:
+        description: A request to decline or cancel a quote
+        required: true
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/StatusUpdateRequest'
+      responses:
+        200:
+          description: The requested update was completed successfully i.e., quote was cancelled/declined
+          $ref: '#/components/responses/200Cancel'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401' 
+        404:
+          description: The response polled for is not yet available.
+          $ref: '#/components/responses/404'
+        422:
+          description: 'The requested update rejected: Failed Business rule'
+          $ref: '#/components/responses/422'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          description: 'Request failure: Bad Gateway i.e, one or more of the downstream services is unavailable'
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        default:
+          description: Internal Server Error, Bad Request/Syntactically incorrect request etc.,
+          $ref: '#/components/responses/default'
+components:
+  securitySchemes:
+    bearerAuth:            
+          type: http
+          scheme: bearer
+          bearerFormat: uuid
+          description: Bearer token obtained during token exchange
+    apiKeyAuth:        
+      type: apiKey
+      in: header
+      name: apikey
+      description: API key to authorize requests.
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:  
+          authorizationUrl: https://api.fileactive.anzgcis.com/auth
+          tokenUrl: https://api.fileactive.uat.anzgcis.com/v1.0/auth
+          scopes:
+            GBL.INSTO.FX.RFQ: Request FX Quote and create FX Deal
+  parameters:
+    id:
+      name: x-Message-Id
+      in: path
+      description: Message Identifier as provided in x-Message-Id header of message submission
+      required: true
+      schema:
+        $ref: '#/components/schemas/UUID'
+    correlationID:  
+      name: X-Correlation-Id
+      in: header
+      description: Optional correlation ID provided by the data consumer that should
+        be reflected back in the response headers. Can be used for reporting and
+        logging.
+      schema:
+        $ref: '#/components/schemas/UUID'
+    countryCode:
+      name: country-code
+      in: path
+      required: true
+      description: ISO 3166, Alpha-2 country code
+      schema:
+        type: string
+        enum:
+          - NZ
+    messageID:
+      name: X-Message-Id
+      in: header
+      description: Duplicate check using point to point reference, as assigned by
+        the instructing party, and sent to the next party in the chain to unambiguously
+        identify the message
+      required: true
+      schema:
+        $ref: '#/components/schemas/UUID'
+    requestKey:
+      name: X-RequestKey
+      in: header
+      description: Internal End to End key used for support and reporting purposes
+      schema:
+        $ref: '#/components/schemas/UUID'
+      example: 325ea624-ac19-47e2-94ef-a1ab4e487275
+    quoteIdentifier:
+      name: quoteIdentifier
+      in: path
+      description: A unique id provided by this service to identify a quote. MUST be
+        provided in any further interactions (Polling, Acceptance, Declination, Cancellation)
+      required: true
+      schema:
+        $ref: '#/components/schemas/QuoteIdentifier'
+  responses:
+    200OKAuth:
+        description: 'Bearer token (Opaque Token) returned after a token request'
+        headers:
+          x-RequestKey:
+            schema:
+              $ref: '#/components/parameters/requestKey'
+        content: 
+          application/json:
+            schema:
+             $ref: '#/components/schemas/authTokenResponse'
+    200Quote:
+      description: The response polled for is available and the business outcome is affirmative i.e., quote was issued
+      headers:
+        X-Correlation-Id:
+          schema:
+            $ref: '#/components/schemas/UUID'
+          description: GUID echo'd from customer request
+        X-RequestKey:
+          schema:
+            $ref: '#/components/parameters/requestKey'
+        Location:
+            description: Location of the resource, used for enquiry
+            schema:
+              type: string
+              example: 'https://api.fileactive.uat.anzgcis.com/fx/v1.0/quotes/64eb2fb9-57f8-4d80-bff5-86d666f92944'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ClientQuoteResponse'
+    200Deal:
+      description: The response polled for is available and the business outcome is affirmative i.e., deal was completed
+      headers:
+        X-Correlation-Id:
+          schema:
+            $ref: '#/components/schemas/UUID'
+          description: GUID echo'd from customer request
+        X-RequestKey:
+          schema:
+            $ref: '#/components/parameters/requestKey'
+        Location:
+            description: Location of the resource, used for enquiry
+            schema:
+              type: string
+              example: 'https://api.fileactive.uat.anzgcis.com/fx/v1.0/deals/64eb2fb9-57f8-4d80-bff5-86d666f92944'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ClientDealResponse'
+    200Cancel:
+      description: The requested update was completed successfully i.e. quote was cancelled/declined
+      headers:
+        X-Correlation-Id:
+          schema:
+            $ref: '#/components/schemas/UUID'
+          description: GUID echo'd from customer request
+        X-RequestKey:
+          schema:
+            $ref: '#/components/parameters/requestKey'
+        Location:
+            description: Location of the resource, used for enquiry
+            schema:
+              type: string
+              example: 'https://api.fileactive.uat.anzgcis.com/fx/v1.0/deals/64eb2fb9-57f8-4d80-bff5-86d666f92944'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StatusUpdateResponse'
+    202:
+      description: Accepted the request for quote ('RFQ') or request for deal
+      headers:
+        X-Correlation-Id:
+          schema:
+            $ref: '#/components/schemas/UUID'
+          description: GUID echo'd from customer request
+        X-RequestKey:
+          schema:
+            $ref: '#/components/parameters/requestKey'
+        Location:
+            description: Location of the resource, used for enquiry
+            schema:
+              type: string
+              example: 'https://api.fileactive.uat.anzgcis.com/fx/v1.0/quotes/64eb2fb9-57f8-4d80-bff5-86d666f92944'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StatusUpdateResponse'
+    250:
+      description: The response polled for is available and the business outcome
+            is not affirmative i.e., quote was not issued or deal was not completed
+      headers:
+        X-Correlation-Id:
+          schema:
+            $ref: '#/components/schemas/UUID'
+          description: GUID echo'd from customer request
+        X-RequestKey:
+          schema:
+            $ref: '#/components/parameters/requestKey'
+        Location:
+            description: Location of the resource, used for enquiry
+            schema:
+              type: string
+              example: 'https://api.fileactive.uat.anzgcis.com/payments/64eb2fb9-57f8-4d80-bff5-86d666f92944'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StatusUpdateResponse'
+    400:
+        description: Bad Request, message format does not match expected schema
+    401:
+      description: Application is not unauthorised to perform a specific action
+    403:
+      description: Action is not authorised using current authentication credentials
+    404:
+      description: The response polled for is not yet available.
+      headers:
+        X-Correlation-Id:
+          schema:
+            $ref: '#/components/schemas/UUID'
+          description: GUID echo'd from customer request
+        X-RequestKey:
+          schema:
+            $ref: '#/components/parameters/requestKey'
+        Location:
+            description: Location of the resource, used for enquiry
+            schema:
+              type: string
+              example: 'https://api.fileactive.uat.anzgcis.com/payments/64eb2fb9-57f8-4d80-bff5-86d666f92944'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StatusUpdateResponse'
+    422:
+      description: 'RFQ or Deal request not accepted: Failed Business Rule; or the response polled for is unknown'
+      headers:
+        X-Correlation-Id:
+          schema:
+            $ref: '#/components/schemas/UUID'
+          description: GUID echo'd from customer request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StatusUpdateResponse'
+    429:
+      description: Action exceeds allocated limits
+    500:
+      description: Internal Server Error, contact support
+      headers:
+        X-Correlation-Id:
+          schema:
+            $ref: '#/components/schemas/UUID'
+          description: GUID echo'd from customer request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    502:
+      description: 'Request failure: Bad Gateway i.e, one or more of the downstream
+            services is unavailable'
+      headers:
+        X-Correlation-Id:
+          schema:
+            $ref: '#/components/schemas/UUID'
+          description: GUID echo'd from customer request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    502Auth:
+        description: Bad Gateway, contact support
+    503:
+      description: Service Unavailable
+    default:
+      description: Internal Server Error, Bad Request/Syntactically incorrect
+            etc.,
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    authTokenRequest:
+      required:
+      - grant_type
+      - client_assertion_type
+      - scope
+      - client_assertion
+      type: object
+      properties:
+        grant_type:
+          description: Specify the type credential requested
+          type: string
+          example: 'client_credentials'
+        client_assertion_type:
+          description: Describes the type of client assertion provided in the message request
+          type: string
+          example: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'
+        scope:
+          $ref: '#/components/schemas/Scopes'
+        client_assertion:
+          $ref: '#/components/schemas/ClientAssertion'
+    authTokenResponse:
+      type: object
+      description: Response to report the status of a customer credit transfer.
+      additionalProperties: false
+      properties:
+        expires_in:
+          description: Indication on how long a token is valid for
+          type: integer
+        token_type: 
+          description: Type of token returned
+          type: string
+        access_token:
+          description: Opaque token returned as part of request, GCIS does not provide the full access token
+          type: string   
+      example:
+        expires_in: 3600
+        token_type: 'Bearer'
+        access_token: 'eaaa13ee-b596-a8cc-b9d4-f778f8bb9377'
+    ClientAssertion:
+        required:
+        - sub
+        - exp
+        - aud
+        type: object
+        properties:
+          sub:
+            type: string
+            description: Customer Code as provided by ANZ onboarding
+            example: 'CUSTOMERA'
+          exp:
+            type: integer
+            description: EPOCH date and time
+            example: '1619658591'
+            maxLength: 10
+            minLength: 10
+          aud:
+            type: string
+            description: Specify the intended audience of the token request
+            example: 'https://api.fileactive.uat.anzgcis.com/auth'
+    ClientQuoteRequest:
+      type: object
+      required:
+      - channelTransactionIdentifier
+      - requestLegs
+      properties:
+        customerExternalIdentifier:
+          type: string
+          description: A customer identifier that will be purely used for MIS purposes.
+          example: CRN0000000001
+        channelTransactionIdentifier:
+          type: string
+          description: An id used by a channel to uniquely identify it's quote request.
+          example: "0123456789"
+        currencyPair:
+          type: string
+          description: A valid currency pair, based on market convention and verified
+            by pricing engine.
+          pattern: ^[A-Z]{3}[/][A-Z]{3}$
+          example: AUD/USD
+        parentDealSourceSystem:
+          type: string
+          description: Parent deal source system. When provided, parentDealId must also
+            be provided.
+          example: ABCDEF
+        parentDealId:
+          type: string
+          description: Parent deal id. When provided, parentDealSourceSystem must also
+            be provided.
+          example: "123456789"
+        auxiliaryType:
+          type: string
+          description: Auxiliary type
+          example: HR_EXT
+        requestLegs:
+          type: array
+          minItems: 1
+          maxItems: 2
+          items:
+            $ref: '#/components/schemas/RequestLeg'
+    RequestLeg:
+      type: object
+      required:
+      - customerBuyCurrency
+      - customerSellCurrency
+      properties:
+        customerBuyCurrency:
+          type: string
+          description: Valid ISO Currency Code
+          example: USD
+          pattern: ^[A-Z]{3}$
+        customerSellCurrency:
+          type: string
+          description: Valid ISO Currency Code
+          example: USD
+          pattern: ^[A-Z]{3}$
+        customerBuyAmount:
+          type: number
+          format: int32
+          description: Amount to Buy. Only one of either customerBuyAmount or customerSellAmount
+            has to be provided.
+          example: "10000"
+        customerSellAmount:
+          type: number
+          description: Sell amount. Only one of either customerBuyAmount or customerSellAmount
+            has to be provided.
+          format: int32
+          example: "10000"
+        valueDate:
+          type: string
+          format: date
+          description: Absence of this field implies a TODAY/TOM; adjusted for Ccy holidays
+          example: "2020-05-31"
+    ClientQuoteResponse:
+      type: object
+      required:
+      - channelTransactionIdentifier
+      - quoteIdentifier
+      - currencyPair
+      - responseLegs
+      - quoteExpiry
+      - securityType
+      properties:
+        channelTransactionIdentifier:
+          type: string
+          description: Echoed from request
+          example: "CRN123456789"
+        quoteIdentifier:
+          type: string
+          description: A unique id generated by this service to identify a quote. This
+            MUST be provided in any further interactions (Polling, Acceptance, Declination,
+            Cancellation)
+          example: "MKT-d75a03b5-2d7c-4db0-b30f-bcccc67a4fed"
+        currencyPair:
+          type: string
+          example: AUD/USD
+          pattern: ^[A-Z]{3}[/][A-Z]{3}$
+        swapPoints:
+          type: number
+          format: int32
+          example: "1.3"
+          description: Number of basis points between near and far leg. Signed and scaled.
+        quoteExpiry:
+          type: string
+          format: date-time
+          description: Timestamp in UTC.
+          example: "2019-12-31T11:59:59Z"
+        securityType:
+          type: string
+          description: Security that this Quote represents.
+          example: HR_EXT
+        responseLegs:
+          type: array
+          minItems: 1
+          maxItems: 2
+          items:
+            $ref: '#/components/schemas/ResponseLeg'
+    ResponseLeg:
+      type: object
+      required:
+      - customerBuyAmount
+      - customerBuyAmountDps
+      - customerBuyCurrency
+      - customerSellAmount
+      - customerSellAmountDps
+      - customerSellCurrency
+      - valueDate
+      - customerDealtCurrency
+      - customerAllInRate
+      - customerAllInRateDps
+      properties:
+        customerBuyAmount:
+          type: number
+          format: int32
+          example: "1000.00"
+        customerBuyAmountDps:
+          type: integer
+          format: int32
+          example: "2"
+        customerBuyCurrency:
+          type: string
+          example: USD
+          pattern: ^[A-Z]{3}$
+        customerSellAmount:
+          type: number
+          format: int32
+          example: "1250.50"
+        customerSellAmountDps:
+          type: integer
+          format: int32
+          example: "2"
+        customerSellCurrency:
+          type: string
+          example: AUD
+          pattern: ^[A-Z]{3}$
+        customerDealtCurrency:
+          type: string
+          example: USD
+        valueDate:
+          type: string
+          format: date
+          example: "2020-05-31"
+        customerAllInRate:
+          type: number
+          format: int32
+          example: "0.68712"
+        customerAllInRateDps:
+          type: integer
+          format: int32
+          example: "5"
+        customerSpotPrice:
+          type: number
+          nullable: true
+          format: int32
+          example: "0.6871"
+        customerSpotPriceDps:
+          type: integer
+          nullable: true
+          format: int32
+          example: "4"
+        customerForwardPoints:
+          type: number
+          nullable: true
+          format: int32
+          example: "0.2"
+          description: Signed adjustment to Spot Rate in basis (scaled) points.
+        customerForwardPtDps:
+          type: integer
+          nullable: true
+          format: int32
+          example: "1"
+        legType:
+          type: string
+          nullable: true
+          enum:
+            - NEAR-LEG
+            - FAR-LEG
+            - OFFSET
+          description: The type that this leg represents.
+    StatusUpdateResponse:
+      type: object
+      required:
+      - status
+      - text
+      properties:
+        channelTransactionIdentifier:
+          type: string
+          description: Echoed from request when available and if quoteIdentifier is
+            not provided.
+        quoteIdentifier:
+          type: string
+          description: Echoed from request when available
+        status:
+          type: string
+          enum:
+          - ACCEPTED
+          - IN PROGRESS
+          - CANCELLED
+          - DECLINED
+          - FAILED
+          - REJECTED
+          - EXPIRED
+          - DEALER INTERVENTION
+          - NOT PERMISSIONED
+          - NOT IMPLEMENTED
+          - NOT SUPPORTED
+        text:
+          type: string
+          description: Additional text for elaborating on the status.
+          example: Bad Gateway
+    StatusUpdateRequest:
+      type: object
+      required:
+      - quoteIdentifier
+      - status
+      properties:
+        quoteIdentifier:
+          type: string
+          description: A unique id provided by this service to identify a quote.
+          example: "MKT-d75a03b5-2d7c-4db0-b30f-bcccc67a4fed"
+        status:
+          type: string
+          enum:
+          - CANCEL
+          - DECLINE
+          description: Requested status.
+          example: CANCEL
+    ClientDealResponse:
+      type: object
+      required:
+      - quoteIdentifier
+      - dealIdentifier
+      - status
+      properties:
+        quoteIdentifier:
+          type: string
+          description: Echoed from request
+          example: "MKT-d75a03b5-2d7c-4db0-b30f-bcccc67a4fed"
+        status:
+          type: string
+          enum:
+          - COMPLETED
+        dealIdentifier:
+          type: string
+          description: Customers booking reference number for Markets deals. Identifier
+            for reconciliation purposes in payments for Fx Deals.
+          example: "1234567890"
+        currencyPair:
+          type: string
+          example: AUD/USD
+          pattern: ^[A-Z]{3}[/][A-Z]{3}$
+        swapPoints:
+          type: number
+          format: int32
+          example: "1.3"
+        securityType:
+          type: string
+          description: Security that this Deal represents.
+          example: HR_EXT
+        responseLegs:
+          type: array
+          minItems: 1
+          maxItems: 2
+          items:
+            $ref: '#/components/schemas/ResponseLeg'
+    ErrorResponse:
+      type: object
+      required:
+      - status
+      properties:
+        status:
+          type: object
+          description: Summary of the error
+          $ref: '#/components/schemas/ErrorDetail'
+    ErrorDetail:
+      type: object
+      properties:
+        severity:
+          type: string
+          description: Severity of the error
+          enum:
+            - Fatal
+            - Transient
+          example: Fatal
+        code:
+          type: string
+          description: |
+            Error code (format: ECxxx_xxx)
+          example: EC014_003
+        text:
+          type: string
+          description: Human readable description of the error
+          example: Internal Server Error, please contact support.
+    QuoteIdentifier:
+      description: A unique id provided by this service to identify a quote.
+      type: string
+      example: "MKT-d75a03b5-2d7c-4db0-b30f-bcccc67a4fed"
+    Scopes:
+      description: >
+        GBL.INSTO.FX.RFQ -  Request FX Quote and create FX Deal
+      type: string
+      enum:
+      - GBL.INSTO.FX.RFQ
+    UUID:
+        type: string
+        example: '71d6fb19-7515-40dc-b045-e17550b67600'
+        pattern: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+tags:
+  - name: Authorisation
+    description: Operations related to authentication & authorisation.
+  - name: FX RFQ Pricing Service
+    description: Request for fx quote and do deals.
+  - name: ClientQuoteRequest
+    description: <SchemaDefinition schemaRef="#/components/schemas/ClientQuoteRequest" />
+    x-displayName: ClientQuoteRequest
+  - name: ClientQuoteResponse
+    description: <SchemaDefinition schemaRef="#/components/schemas/ClientQuoteResponse" />
+    x-displayName: ClientQuoteResponse
+  - name: ClientDealResponse
+    description: <SchemaDefinition schemaRef="#/components/schemas/ClientDealResponse" />
+    x-displayName: ClientDealResponse
+  - name: StatusUpdateRequest
+    description: <SchemaDefinition schemaRef="#/components/schemas/StatusUpdateRequest" />
+    x-displayName: StatusUpdateRequest
+  - name: StatusUpdateResponse
+    description: <SchemaDefinition schemaRef="#/components/schemas/StatusUpdateResponse" />
+    x-displayName: StatusUpdateResponse
+  - name: ErrorResponse
+    description: <SchemaDefinition schemaRef="#/components/schemas/ErrorResponse" />
+    x-displayName: ErrorResponse
+x-tagGroups:
+  - name: Paths
+    tags: 
+      - Authorisation
+      - FX RFQ Pricing Service
+  - name: Models
+    tags: 
+      - ClientQuoteRequest
+      - ClientQuoteResponse
+      - ClientDealResponse
+      - StatusUpdateRequest
+      - StatusUpdateResponse
+      - ErrorResponse

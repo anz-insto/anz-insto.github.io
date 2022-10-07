@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/png" href="/gcis/docs/assets/img/icon/ANZ_DIGITAL_favicon_flat_16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/gcis/docs/assets/img/icon/ANZ_DIGITAL_favicon_flat_32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/gcis/docs/assets/img/icon/ANZ_DIGITAL_favicon_flat_64.png" sizes="64x64">
+<link rel="icon" type="image/png" href="/gcis/docs/assets/img/icon/ANZ_DIGITAL_favicon_flat_128.png" sizes="128x128">
+<link rel="icon" type="image/png" href="/gcis/docs/assets/img/icon/ANZ_DIGITAL_favicon_flat_512.png" sizes="512x512">
+
+    <title>NPP Payment Status</title>
+    <link rel="stylesheet" href="/gcis/docs/assets/css/styles.css">
+</head>
+
+    <body class="td-section d-flex flex-column min-vh-100">
+        <a name="top"></a>
+        <header>
+  <nav class="navbar navbar-dark navbar-expand-md fixed-top flex-column flex-md-row td-navbar">
+    <div class="container-fluid col-12 px-md-20 mx-auto">
+
+        <a class="navbar-brand" href="/gcis/docs/">
+          <img title="anz logo" alt="anz logo - go to homepage" src="/gcis/docs/assets/img/anz-logo-small.png" />
+
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+          <div class="td-navbar-nav-scroll collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mt-2 mt-lg-0">
+              
+                <li class="nav-item mr-4 mb-2 mb-lg-0">
+                  <a class="nav-link" href="/gcis/docs/#api-catalogue" target="_self"><span>API Catalogue</span></a>
+                </li>
+              
+                <li class="nav-item mr-4 mb-2 mb-lg-0">
+                  <a class="nav-link" href="/gcis/docs/#faq" target="_self"><span>FAQ</span></a>
+                </li>
+              
+            </ul>
+          </div>
+          <div class="navbar-nav d-none d-lg-block ml-md-auto">
+            <input type="search" id="search" class="form-control td-search-input" placeholder="Search this site…" aria-label="Search this site…" autocomplete="off">
+            </div>
+          <ul class="search-results col-12 col-md-6 col-xl-3"></ul>
+    </div>
+  </nav>
+</header>
+
+
+        <div class="container-fluid td-outer">
+            <main role="main">
+                <div class="row mx-0 hero-row">
+                    <div id="split-hero" class="col-12 px-0 mx-auto anz-body-container">
+                
+                        <h1 id="page-title">NPP Payment Status</h1>
+                        <p><p>Fileactive NPP Payment API Enquire Stub Specification. This page details the Fileactive NPP Payment API Status enquiry request and the relevant responses.
+<strong>NOTE:</strong> <code class="language-plaintext highlighter-rouge">transaction_identification</code> used in the request URL’s are to be retrieved from the “Submit-Payment” response ‘Location’ header.</p>
+</p>
+                
+                    </div>
+                </div>
+                <div class="row flex-xl-nowrap mx-auto min-vh-100 anz-body-container">   
+                    
+                        <div class="w-100 col-12 px-0">
+                    
+
+
+                <!--page content-->
+
+<p><a name="top"></a></p>
+
+<h2 id="contents">Contents</h2>
+<ul>
+  <li><a href="#success-paymentstatus">Successful Enquire Payment Status</a></li>
+  <li><a href="#RJCT-paymentstatus">Enquire Payment Status for Unsuccesful Payment</a></li>
+  <li><a href="#RJCT-paymentstatus-limitexceeded">Enquire Payment Status for payment failed limit arrangement</a></li>
+  <li><a href="#RJCT-paymentstatus-invalidpayid">Enquire Payment Status for payment failed for Invalid PayID</a></li>
+</ul>
+
+<p><br />
+<br /></p>
+
+<p><a name="success-paymentstatus"></a></p>
+<h2 id="1-successful-enquire-payment-status">1. Successful Enquire Payment Status</h2>
+
+<p>To simulate a successful response , use the latest “transaction_identification” returned in the “Submit-Payment” request</p>
+
+<p>Pre-Requisite: To get the “transaction_identification” , Please run the scenario <strong>“Successful Submit Payment to BSB Account number”</strong> from <a href="/gcis/docs/fileactive/stub/npp-payment-submit.html">NPP Payment Submit</a></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Element</th>
+      <th style="text-align: left">Test Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">URL</td>
+      <td style="text-align: left">https://api.fileactive.uat.anzgcis.com/npp/v1.0/payment/{transaction_identification}/status</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="http-method--__get__"><strong>HTTP Method : __GET__</strong></h4>
+
+<h4 id="sample-request-details-"><strong>Sample Request Details :</strong></h4>
+
+<p><em>URL</em></p>
+
+<p>https://api.fileactive.uat.anzgcis.com/npp/v1.0/payment/4b645dc0-efa2-11e9-961c-0b8918670b2c/status</p>
+
+<p><em>Headers:</em></p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="na">Authorization</span><span class="pi">:</span> <span class="s">Bearer &lt;Access Token&gt;</span>
+<span class="na">apikey</span><span class="pi">:</span> <span class="s">&lt;apikey&gt;</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><em>Body:</em></p>
+
+<h4 id="sample-response-details"><strong>Sample Response details:</strong></h4>
+
+<p>Status Code: 200</p>
+
+<p><em>Body:</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="w"> </span><span class="p">{</span><span class="w">
+   </span><span class="nl">"transaction_identification"</span><span class="p">:</span><span class="w"> </span><span class="s2">"32d292f1-ee65-11ea-84ce-3d837763b9eb"</span><span class="p">,</span><span class="w">
+   </span><span class="nl">"transaction_status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACSC"</span><span class="p">,</span><span class="w">
+   </span><span class="nl">"transaction_status_description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Completed"</span><span class="p">,</span><span class="w">
+   </span><span class="nl">"acceptance_date_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-09-04T04:15:04.631Z"</span><span class="w">
+ </span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h6 id="note-acceptance_date_time-holds-the-time-when-payment-is-accepted-and-started-processing-by-bank">Note: “acceptance_date_time” holds the time when payment is accepted and started processing by Bank</h6>
+
+<p><a href="#top">back to top</a></p>
+
+<hr />
+<p><br />
+<br /></p>
+
+<p><a name="RJCT-paymentstatus"></a></p>
+<h2 id="2-enquire-payment-status-for-unsuccesful-payment">2. Enquire Payment Status for Unsuccesful Payment</h2>
+
+<p>To simulate a successful response , use the latest “transaction_identification” returned in the “Submit-Payment” request</p>
+
+<p>Pre-Requisite: To get the “transaction_identification” , Please run the scenario <strong>“Submit Payment with Empty Debit Account number”</strong> from <a href="/gcis/docs/fileactive/stub/npp-payment-submit.html">NPP Payment Submit</a></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Element</th>
+      <th style="text-align: left">Test Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">URL</td>
+      <td style="text-align: left">https://api.fileactive.uat.anzgcis.com/npp/v1.0/payment/{transaction_identification}/status</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="http-method--__get__-1"><strong>HTTP Method : __GET__</strong></h4>
+
+<h4 id="sample-request-details--1"><strong>Sample Request Details :</strong></h4>
+
+<p><em>URL</em></p>
+
+<p>https://api.fileactive.uat.anzgcis.com/npp/v1.0/payment/4b645dc0-efa2-11e9-961c-0b8918670b2c/status</p>
+
+<p><em>Headers:</em></p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>  <span class="na">Authorization</span><span class="pi">:</span> <span class="s">Bearer &lt;Access Token&gt;</span>
+  <span class="na">apikey</span><span class="pi">:</span> <span class="s">&lt;apikey&gt;</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><em>Body:</em></p>
+
+<h4 id="sample-response-details-1"><strong>Sample Response details:</strong></h4>
+
+<p>Status Code: 200</p>
+
+<p><em>Body:</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="w">  </span><span class="p">{</span><span class="w">
+   </span><span class="nl">"transaction_identification"</span><span class="p">:</span><span class="w"> </span><span class="s2">"526df080-d071-11ea-ab7c-252d6a4e313c"</span><span class="p">,</span><span class="w">
+   </span><span class="nl">"transaction_status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RJCT"</span><span class="p">,</span><span class="w">
+   </span><span class="nl">"transaction_status_reason_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TD03"</span><span class="p">,</span><span class="w">
+   </span><span class="nl">"transaction_status_description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EC004_005-SchemaValidation"</span><span class="p">,</span><span class="w">
+   </span><span class="nl">"acceptance_date_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-09-04T07:14:42.543Z"</span><span class="w">
+ </span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><br /></p>
+
+<p><a href="#top">back to top</a></p>
+
+<hr />
+<p><br />
+<br /></p>
+
+<p><a name="RJCT-paymentstatus-limitexceeded"></a></p>
+<h2 id="3-enquire-payment-status-for-payment-failed-limit-arrangement">3. Enquire Payment Status for payment failed limit arrangement</h2>
+
+<p>To simulate a successful response , use the latest “transaction_identification” returned in the “Submit-Payment” request</p>
+
+<p>Pre-Requisite: To get the “transaction_identification” , Please run the scenario <strong>“Submit Payment fails with error Limit Arrangement exceeded”</strong> from <a href="/gcis/docs/fileactive/stub/npp-payment-submit.html">NPP Payment Submit</a></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Element</th>
+      <th style="text-align: left">Test Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">URL</td>
+      <td style="text-align: left">https://api.fileactive.uat.anzgcis.com/npp/v1.0/payment/{transaction_identification}/status</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="http-method--__get__-2"><strong>HTTP Method : __GET__</strong></h4>
+
+<h4 id="sample-request-details--2"><strong>Sample Request Details :</strong></h4>
+
+<p><em>URL</em></p>
+
+<p>https://api.fileactive.uat.anzgcis.com/npp/v1.0/payment/4b645dc0-efa2-11e9-961c-0b8918670b2c/status</p>
+
+<p><em>Headers:</em></p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>  <span class="na">Authorization</span><span class="pi">:</span> <span class="s">Bearer &lt;Access Token&gt;</span>
+  <span class="na">apikey</span><span class="pi">:</span> <span class="s">&lt;apikey&gt;</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><em>Body:</em></p>
+
+<h4 id="sample-response-details-2"><strong>Sample Response details:</strong></h4>
+
+<p>Status Code: 200</p>
+
+<p><em>Body:</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="w">     </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"transaction_identification"</span><span class="p">:</span><span class="w"> </span><span class="s2">"96f5f781-d1fb-11ea-b01a-2bdcf9570091"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"transaction_status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RJCT"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"transaction_status_reason_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3580"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"transaction_status_description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Payment failed as it has exceeded your Limit arrangement."</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"acceptance_date_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-09-04T07:14:42.543Z"</span><span class="w">
+     </span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><br /></p>
+
+<p><a href="#top">back to top</a></p>
+
+<hr />
+<p><br />
+<br /></p>
+
+<p><a name="RJCT-paymentstatus-invalidpayid"></a></p>
+<h2 id="3-enquire-payment-status-for-payment-failed-for-invalid-payid">3. Enquire Payment Status for payment failed for Invalid PayId</h2>
+
+<p>To simulate a successful response , use the latest “transaction_identification” returned in the “Submit-Payment” request</p>
+
+<p>Pre-Requisite: To get the “transaction_identification” , Please run the scenario <strong>“Submit Payment fails for PayID Validation failure”</strong> from <a href="/gcis/docs/fileactive/stub/npp-payment-submit.html">NPP Payment Submit</a></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Element</th>
+      <th style="text-align: left">Test Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">URL</td>
+      <td style="text-align: left">https://api.fileactive.uat.anzgcis.com/npp/v1.0/payment/{transaction_identification}/status</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="http-method--__get__-3"><strong>HTTP Method : __GET__</strong></h4>
+
+<h4 id="sample-request-details--3"><strong>Sample Request Details :</strong></h4>
+
+<p><em>URL</em></p>
+
+<p>https://api.fileactive.uat.anzgcis.com/npp/v1.0/payment/4b645dc0-efa2-11e9-961c-0b8918670b2c/status</p>
+
+<p><em>Headers:</em></p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>  <span class="na">Authorization</span><span class="pi">:</span> <span class="s">Bearer &lt;Access Token&gt;</span>
+  <span class="na">apikey</span><span class="pi">:</span> <span class="s">&lt;apikey&gt;</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><em>Body:</em></p>
+
+<h4 id="sample-response-details-3"><strong>Sample Response details:</strong></h4>
+
+<p>Status Code: 200</p>
+
+<p><em>Body:</em></p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="w">     </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"transaction_identification"</span><span class="p">:</span><span class="w"> </span><span class="s2">"96f5f781-d1fb-11ea-b01a-2bdcf9570091"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"transaction_status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RJCT"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"transaction_status_reason_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2954"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"transaction_status_description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The PayID provided is no longer valid."</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"acceptance_date_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-09-04T07:14:42.543Z"</span><span class="w">
+     </span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><br /></p>
+
+<p><a href="#top">back to top</a></p>
+
+<hr />
+
+
+
+                    </div>            
+                </div>  
+
+            </main>
+        </div>
+
+        <footer class="py-5 row d-print-none mx-0 w-100">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12 col-sm-4 text-center py-2 order-sm-2 mx-auto ">
+        <small>© 2022 Australia and New Zealand Banking Group Limited (ANZ) 2022 ABN 11 005 357 522. All Rights Reserved</small>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+    </body>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
+<script src="/gcis/docs/assets/js/lunr.js"></script>
+<script src="/gcis/docs/assets/js/search.js"></script>
+    <script>
+    $(document).ready(function() {
+    
+        const toc = $('#toc-content');
+        const scrollOffset = 100;
+
+        // Select each header
+        sections = $('h2');
+            $.each(sections, function(idx, v) {
+                section = $(v);
+                var div_id = $(section).attr('id');
+                var div_text = section.text().split('¶')[0];
+                var parent = $("#" + div_id)
+                var content = '<li id="toc-top-' + div_id + '" class="toc-li-top"><a class="toc-nav-link toc-top" href="#' + div_id + '" title="' + div_text +'">' + div_text +'</a></li>';
+                $(toc).append(content);
+    
+                // Add section code to subnavigation
+                var children = $('<nav class="toc-nav-mid"><ul class="toc-ul-mid"></nav></ul>')
+                var contenders = $("#" + div_id).nextUntil("h2");
+                $.each(contenders, function(idx, contender){
+                    if($(contender).is('h3')) {
+                       var contender_id = $(contender).attr('id');
+                       var contender_text = $(contender).text().split('¶')[0];
+                       var content = '<li class="toc-li-mid"><a class="toc-nav-link toc-mid" href="#' + contender_id + '" title="' + contender_text +'">' + contender_text +'</a></li>';
+                       children.append(content);
+                    }
+                    else if($(contender).is('.faq-card')) {
+                        var questions = $(contender).find('h4');
+                        $.each(questions, function(idx, question) {
+                            var contender_id = $(question).attr('id');
+                            var contender_text = $(question).text().split('¶')[0];
+                            var content = '<li class="toc-li-faq"><a class="toc-nav-link toc-faq" href="#' + contender_id + '" title="' + contender_text +'">' + contender_text +'</a></li>';
+                            children.append(content);
+                        });
+                    }
+                })
+                $("#toc-top-" + div_id).append(children);
+                $('.toc-faq').on('click', function(event) {
+                    const id = $(this).attr('href').substring(1);
+                    $('div[aria-labelledby=' + id + ']').collapse('show');
+                });
+            });
+            $(document).on('click', 'a[href^="#"].toc-nav-link', function (event) {
+                event.preventDefault();
+                $('html, body').animate({
+                    scrollTop: $($.attr(this, 'href')).offset().top - scrollOffset
+                }, 100);
+            });
+        });
+    </script>
+</html>

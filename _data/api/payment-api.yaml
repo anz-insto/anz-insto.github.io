@@ -1,0 +1,2083 @@
+openapi: 3.0.1
+info:
+  title: Fileactive Payment API
+  description: Fileactive Payment API.
+  version: 1.1.1
+servers:
+  - url: https://api.fileactive.uat.anzgcis.com
+    description: 'UAT (non-production) environment'
+  - url: https://api.fileactive.anzgcis.com
+    description: 'Production Environment'
+security:
+  - bearerAuth: []
+  - apiKeyAuth: []
+paths:
+  /v1.0/auth:
+    post:
+      security:
+        - apiKeyAuth: []
+        - OAuth2: []
+      summary: Auth Token Request
+      description: >
+        ANZ use OAuth 2.0 to authenticate inbound token requests, a bearer token
+        is returned as a response which is then used to authorise against ANZ
+        resources
+      tags:
+        - Authorisation
+      operationId: auth
+      requestBody:
+        description: 'Information and examples of Auth request body '
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/authTokenRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/200OKAuth'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorised'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalError'
+        '502':
+          $ref: '#/components/responses/502BadGateway'
+        '503':
+          $ref: '#/components/responses/503Unavailable'
+        '504':
+          $ref: '#/components/responses/504Timeout'
+        default:
+          $ref: '#/components/responses/default'
+  /payment/au/v1.0/de:
+    post:
+      summary: AU DE Submit
+      description: |-
+        Australian Direct Entry API using pain.001.001.09 derived json message format. Payment Initiation request using AU DE from single debtor to single or multiple creditors.   
+        Refer to **#/components/schemas/CustomerCreditTransferInitiationV09_AU_DE** for unencrypted payload object.
+      tags:
+        - Australia Payments
+      operationId: submitAuDe
+      parameters:
+        - $ref: '#/components/parameters/correlationID'
+        - $ref: '#/components/parameters/messageID'
+      requestBody:
+        description: Resource to instruct movement of funds from the debtor account to creditor
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecuredPaymentSubmissionResource'
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/201Created'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorised'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalError'
+        '502':
+          $ref: '#/components/responses/502BadGateway'
+        '503':
+          $ref: '#/components/responses/503Unavailable'
+        '504':
+          $ref: '#/components/responses/504Timeout'
+        default:
+          $ref: '#/components/responses/default'
+  /payment/au/v1.0/de/{x-Message-Id}:
+    get:
+      summary: AU DE Status
+      description: |
+        Retrieve and return the status of a submited message. 
+      tags:
+        - Australia Payments
+      operationId: getAuDeStatus
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/correlationID'
+      responses:
+        '200':
+          $ref: '#/components/responses/200OK'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorised'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalError'
+        '502':
+          $ref: '#/components/responses/502BadGateway'
+        '503':
+          $ref: '#/components/responses/503Unavailable'
+        '504':
+          $ref: '#/components/responses/504Timeout'
+        default:
+          $ref: '#/components/responses/default'
+  /payment/in/v1.0/ach:
+    post:
+      summary: IN ACH Submit
+      description: |-
+        India ACH API using pain.001.001.09 derived json message format. Payment Initiation request using IN ACH from single debtor to single or multiple creditors.   
+        Refer to **#/components/schemas/CustomerCreditTransferInitiationV09_ASIA_ACH** for unencrypted payload object.
+      tags:
+        - India Payments
+      operationId: submitInAch
+      parameters:
+        - $ref: '#/components/parameters/correlationID'
+        - $ref: '#/components/parameters/messageID'
+      requestBody:
+        description: >-
+          Secured resource to instruct movement of funds from the debtor account
+          to creditor.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecuredPaymentSubmissionResource'
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/201Created'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorised'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalError'
+        '502':
+          $ref: '#/components/responses/502BadGateway'
+        '503':
+          $ref: '#/components/responses/503Unavailable'
+        '504':
+          $ref: '#/components/responses/504Timeout'
+        default:
+          $ref: '#/components/responses/default'
+  /payment/in/v1.0/ach/{x-Message-Id}:
+    get:
+      summary: IN ACH Status
+      description: |
+        Retrieve and return the status of a submited message. 
+      tags:
+        - India Payments
+      operationId: getInAchStatus
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/correlationID'
+      responses:
+        '200':
+          $ref: '#/components/responses/200OK'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorised'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalError'
+        '502':
+          $ref: '#/components/responses/502BadGateway'
+        '503':
+          $ref: '#/components/responses/503Unavailable'
+        '504':
+          $ref: '#/components/responses/504Timeout'
+        default:
+          $ref: '#/components/responses/default'
+  /payment/hk/v1.0/ach:
+    post:
+      summary: HK ACH Submit
+      description: |-
+        Hong Kong ACH API using pain.001.001.09 derived json message format. Payment Initiation request using ACH from single debtor to single or multiple creditors.   
+        Refer to **#/components/schemas/CustomerCreditTransferInitiationV09_ASIA_ACH** for unencrypted payload object.
+      tags:
+        - Hong Kong Payments
+      operationId: submitHkAch
+      parameters:
+        - $ref: '#/components/parameters/correlationID'
+        - $ref: '#/components/parameters/messageID'
+      requestBody:
+        description: >-
+          Secured resource to instruct movement of funds from the debtor account
+          to creditor.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecuredPaymentSubmissionResource'
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/201Created'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorised'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalError'
+        '502':
+          $ref: '#/components/responses/502BadGateway'
+        '503':
+          $ref: '#/components/responses/503Unavailable'
+        '504':
+          $ref: '#/components/responses/504Timeout'
+        default:
+          $ref: '#/components/responses/default'
+  /payment/hk/v1.0/ach/{x-Message-Id}:
+    get:
+      summary: HK ACH Status
+      description: |
+        Retrieve and return the status of a submited message. 
+      tags:
+        - Hong Kong Payments
+      operationId: getHkAchStatus
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/correlationID'
+      responses:
+        '200':
+          $ref: '#/components/responses/200OK'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorised'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalError'
+        '502':
+          $ref: '#/components/responses/502BadGateway'
+        '503':
+          $ref: '#/components/responses/503Unavailable'
+        '504':
+          $ref: '#/components/responses/504Timeout'
+        default:
+          $ref: '#/components/responses/default'
+  /payment/hk/v1.0/fast:
+    post:
+      summary: HK FAST Submit
+      description: |-
+        Hong Kong FAST API using pain.001.001.09 derived json message format. Payment Initiation request using Hong Kong FPS (Faster Payment System) from single debtor to single or multiple creditors.   
+        Refer to **#/components/schemas/CustomerCreditTransferInitiationV09_ASIA_FAST** for unencrypted payload object.
+      tags:
+        - Hong Kong Payments
+      operationId: submitHkFast
+      parameters:
+        - $ref: '#/components/parameters/correlationID'
+        - $ref: '#/components/parameters/messageID'
+      requestBody:
+        description: >-
+          Secured resource to instruct movement of funds from the debtor account
+          to creditor.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecuredPaymentSubmissionResource'
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/201Created'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorised'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalError'
+        '502':
+          $ref: '#/components/responses/502BadGateway'
+        '503':
+          $ref: '#/components/responses/503Unavailable'
+        '504':
+          $ref: '#/components/responses/504Timeout'
+        default:
+          $ref: '#/components/responses/default'
+  /payment/hk/v1.0/fast/{x-Message-Id}:  
+    get:
+      summary: HK FAST Status
+      description: |
+        Retrieve and return the status of a submited message. 
+      tags:
+        - Hong Kong Payments
+      operationId: getHkFastStatus
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/correlationID'
+      responses:
+        '200':
+          $ref: '#/components/responses/200OK'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorised'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalError'
+        '502':
+          $ref: '#/components/responses/502BadGateway'
+        '503':
+          $ref: '#/components/responses/503Unavailable'
+        '504':
+          $ref: '#/components/responses/504Timeout'
+        default:
+          $ref: '#/components/responses/default' 
+  /payment/sg/v1.0/ach:
+      post:
+        summary: SG ACH Submit
+        description: |-
+          Singapore ACH API using pain.001.001.09 derived json message format. Payment Initiation request using ACH from single debtor to single or multiple creditors.   
+          Refer to **#/components/schemas/CustomerCreditTransferInitiationV09_ASIA_ACH** for unencrypted payload object.
+        tags:
+          - Singapore Payments
+        operationId: submitSgAch
+        parameters:
+          - $ref: '#/components/parameters/correlationID'
+          - $ref: '#/components/parameters/messageID'
+        requestBody:
+          description: >-
+            Secured resource to instruct movement of funds from the debtor account
+            to creditor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecuredPaymentSubmissionResource'
+          required: true
+        responses:
+          '201':
+            $ref: '#/components/responses/201Created'
+          '400':
+            $ref: '#/components/responses/400BadRequest'
+          '401':
+            $ref: '#/components/responses/401Unauthorised'
+          '429':
+            $ref: '#/components/responses/429TooManyRequests'
+          '500':
+            $ref: '#/components/responses/500InternalError'
+          '502':
+            $ref: '#/components/responses/502BadGateway'
+          '503':
+            $ref: '#/components/responses/503Unavailable'
+          '504':
+            $ref: '#/components/responses/504Timeout'
+          default:
+            $ref: '#/components/responses/default'
+  /payment/sg/v1.0/ach/{x-Message-Id}:
+    get:
+      summary: SG ACH Status
+      description: |
+        Retrieve and return the status of a submited message. 
+      tags:
+        - Singapore Payments
+      operationId: getSgAchStatus
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/correlationID'
+      responses:
+        '200':
+          $ref: '#/components/responses/200OK'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorised'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalError'
+        '502':
+          $ref: '#/components/responses/502BadGateway'
+        '503':
+          $ref: '#/components/responses/503Unavailable'
+        '504':
+          $ref: '#/components/responses/504Timeout'
+        default:
+          $ref: '#/components/responses/default'
+  /payment/sg/v1.0/fast:
+    post:
+      summary: SG FAST Submit
+      description: |-
+        Singapore FAST API using pain.001.001.09 derived json message format. Payment Initiation request using Singapore FAST (Fast And Secure Transfers) service from single debtor to single or multiple creditors.   
+        Refer to **#/components/schemas/CustomerCreditTransferInitiationV09_ASIA_FAST** for unencrypted payload object.
+      tags:
+        - Singapore Payments
+      operationId: submitSgFast
+      parameters:
+        - $ref: '#/components/parameters/correlationID'
+        - $ref: '#/components/parameters/messageID'
+      requestBody:
+        description: >-
+          Secured resource to instruct movement of funds from the debtor account
+          to creditor.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecuredPaymentSubmissionResource'
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/201Created'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorised'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalError'
+        '502':
+          $ref: '#/components/responses/502BadGateway'
+        '503':
+          $ref: '#/components/responses/503Unavailable'
+        '504':
+          $ref: '#/components/responses/504Timeout'
+        default:
+          $ref: '#/components/responses/default'
+  /payment/sg/v1.0/fast/{x-Message-Id}:  
+    get:
+      summary: SG FAST Status
+      description: |
+        Retrieve and return the status of a submited message. 
+      tags:
+        - Singapore Payments
+      operationId: getSgFastStatus
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/correlationID'
+      responses:
+        '200':
+          $ref: '#/components/responses/200OK'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorised'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalError'
+        '502':
+          $ref: '#/components/responses/502BadGateway'
+        '503':
+          $ref: '#/components/responses/503Unavailable'
+        '504':
+          $ref: '#/components/responses/504Timeout'
+        default:
+          $ref: '#/components/responses/default'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: uuid
+      description: Bearer token obtained during token exchange
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
+      description: API key to authorize requests.
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.fileactive.anzgcis.com/auth
+          tokenUrl: https://api.fileactive.uat.anzgcis.com/v1.0/auth
+          scopes:
+            AU.INSTO.PAYMENT.DE.CREATE: Create Australia DE Payment Resource   
+            AU.INSTO.PAYMENT.READ: Retrieve information for specific payment resource   
+            IN.INSTO.PAYMENT.ACH.CREATE: Create India ACH Payment Resource   
+            IN.INSTO.PAYMENT.READ: Retrieve information for specific payment resource   
+            HK.INSTO.PAYMENT.ACH.CREATE: Create Hong Kong ACH Payment Resource   
+            HK.INSTO.PAYMENT.FAST.CREATE: Create Hong Kong FAST Payment Resource   
+            HK.INSTO.PAYMENT.READ: Retrieve information for specific payment resource   
+            SG.INSTO.PAYMENT.ACH.CREATE: Create Singapore ACH Payment Resource   
+            SG.INSTO.PAYMENT.FAST.CREATE: Create Singapore FAST Payment Resource   
+            SG.INSTO.PAYMENT.READ: Retrieve information for specific payment resource 
+  parameters:
+    id:
+      name: x-Message-Id
+      in: path
+      description: >-
+        Message Identifier as provided in x-Message-Id header of message
+        submission
+      required: true
+      schema:
+        $ref: '#/components/schemas/UUID'
+    correlationID:
+      name: x-Correlation-Id
+      in: header
+      description: >-
+        Optional correlation ID provided by the data consumer that should be
+        reflected back in the response headers. Can be used for reporting and
+        logging.
+      schema:
+        $ref: '#/components/schemas/UUID'
+    messageID:
+      name: x-Message-Id
+      in: header
+      description: >-
+        Duplicate check using point to point reference, as assigned by the
+        instructing party, and sent to the next party in the chain to
+        unambiguously identify the message
+      required: true
+      schema:
+        $ref: '#/components/schemas/UUID'
+    requestKey:
+      name: X-REQUESTKEY
+      in: header
+      description: Internal End to End key used for support and reporting purposes
+      schema:
+        $ref: '#/components/schemas/UUID'
+      example: 325ea624-ac19-47e2-94ef-a1ab4e487275
+  responses:
+    200OKAuth:
+      description: Bearer token (Opaque Token) returned after a token request
+      headers:
+        x-RequestKey:
+          schema:
+            $ref: '#/components/parameters/requestKey'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/authTokenResponse'
+    200OK:
+      description: Information and status of submitted resource found and returned
+      headers:
+        x-Correlation-Id:
+          schema:
+            $ref: '#/components/parameters/correlationID'
+        x-RequestKey:
+          schema:
+            $ref: '#/components/parameters/requestKey'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CustomerPaymentStatusReportV10'
+          examples:
+            Payment_Accepted_Settled:
+              $ref: '#/components/examples/CustomerPaymentStatusReportV10_Ex01'
+            Payment_Rejected_Batch:
+              $ref: '#/components/examples/CustomerPaymentStatusReportV10_Ex02'
+            Payment_Rejected_Transaction:
+              $ref: '#/components/examples/CustomerPaymentStatusReportV10_Ex03'
+            Payment_Accepted_technical:
+              $ref: '#/components/examples/CustomerPaymentStatusReportV10_Ex04'
+    201Created:
+      description: Success - Payment request resource created
+      headers:
+        x-Correlation-Id:
+          schema:
+            $ref: '#/components/schemas/UUID'
+          description: GUID echo'd from customer request
+        x-RequestKey:
+          schema:
+            $ref: '#/components/schemas/UUID'
+          description: ANZ GCIS Unique GUID allocated for each message submission
+        Location:
+          description: Location of the resource, used for enquiry
+          schema:
+            type: string
+            example: >-
+              https://api.fileactive.uat.anzgcis.com/payments/64eb2fb9-57f8-4d80-bff5-86d666f92944
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PaymentSubmitResponse'
+    400BadRequest:
+      description: Bad Request, message format does not match expected schema
+      content: {}
+    401Unauthorised:
+      description: Application is not unauthorised to perform a specific action
+      content: {}
+    403Forbidden:
+      description: Action is not authorised using current authentication credentils
+      content: {}
+    404NotFound:
+      description: Not Found
+      content: {}
+    429TooManyRequests:
+      description: Action exceeds allocated limits
+      content: {}
+    500InternalError:
+      description: Internal Server Error, contact support
+      content: {}
+    502BadGateway:
+      description: Bad Gateway, contact support
+      content: {}
+    503Unavailable:
+      description: Service Unavailable or down for maintainance
+      content: {}
+    504Timeout:
+      description: Gateway Timeout, retry or contact support
+      content: {}
+    default:
+      description: Unexpected error
+      content: {}
+  examples:
+    PaymentSubmission_Ex01:
+      summary: Multi transaction DE payment
+      value:
+        creation_date_time: '2021-04-27T04:59:04.914Z'
+        initiating_party_name: Mint Financial Services
+        payment_details: null
+    CustomerCreditTransferInitiationV09_AU_DE_Ex01:
+      summary: AU DE payment initiation example
+      value:
+        creation_date_time: '2020-12-17T00:00:00'
+        number_of_transactions: '1'
+        control_sum: '1.23'
+        initiating_party_name: ANZ Sample
+        payment_information:
+          - payment_information_identification: BATCH REF TEST
+            requested_execution_date: '2020-12-17'
+            debtor_name: AU DE Payer
+            debtor_organisation_identification: '123456'
+            debtor_account_identification: '999888777'
+            debtor_agent_member_identification: '012001'
+            credit_transfer_transaction_information:
+              - instruction_identification: SENDER REF
+                end_to_end_identification: TRANSACTION REF
+                instructed_amount:
+                  currency: AUD
+                  amount: '1.23'
+                creditor_agent_member_identification: '012999'
+                creditor_name: AU DE Payee
+                creditor_account_identification: '012999111222333'
+    CustomerCreditTransferInitiationV09_IN_ACH_Ex01:
+      summary: IN ACH payment initiation example
+      value:
+        creation_date_time: '2020-12-17T00:00:00.00'
+        number_of_transactions: '1'
+        control_sum: '1.23'
+        initiating_party_name: ANZ Sample
+        payment_information:
+          - payment_information_identification: Batch Name
+            batch_booking: false
+            requested_execution_date: '2020-12-17'
+            debtor_name: IN ACH Payer
+            debtor_account_identification: '12345678901'
+            credit_transfer_transaction_information:
+              - end_to_end_identification: '20000183542021'
+                instructed_amount:
+                  amount: '1.23'
+                creditor_agent_name: IBKL0000038
+                creditor_agent_member_identification: IBKL0000038
+                creditor_name: IN ACH Payee
+                creditor_account_identification: '111222333'
+                remittance_information_unstructured:
+                  - REM
+    CustomerPaymentStatusReportV10_Ex01:
+      summary: Message Settled
+      value:
+        group_status: ACSC
+        original_payment_information_and_status_details:
+          - original_payment_information_identification: BATCH REF
+            original_payment_information_status: ACSC
+            transaction_information_and_status:
+              - original_instruction_identification: SENDER REF
+                original_end_to_end_identification: TRANSACTION REF
+                transaction_status: ACSC
+                acceptance_date_time: '2021-01-01T12:00:00'
+    CustomerPaymentStatusReportV10_Ex02:
+      summary: Message Rejected Batch Level
+      value:
+        group_status: RJCT
+        original_payment_information_and_status_details:
+          - original_payment_information_identification: BATCH REF
+            original_payment_information_status: RJCT
+            original_payment_information_status_reason_code: NARR
+            original_payment_information_status_additional_information:
+              - Insufficient funds
+    CustomerPaymentStatusReportV10_Ex03:
+      summary: Message Rejected Transaction Level
+      value:
+        group_status: RJCT
+        original_payment_information_and_status_details:
+          - original_payment_information_identification: BATCH REF
+            original_payment_information_status: RJCT
+            transaction_information_and_status:
+              - original_instruction_identification: SENDER REF
+                original_end_to_end_identification: TRANSACTION REF
+                transaction_status: RJCT
+                transaction_status_reason_code: AC03
+                transaction_status_additional_information:
+                  - EC004_108-InvalidCreditorAccountNumber
+                acceptance_date_time: '2021-01-01T12:00:00'
+    CustomerPaymentStatusReportV10_Ex04:
+      summary: Message Technical Acceptance
+      value:
+        group_status: ACTC
+        original_payment_information_and_status_details:
+          - original_payment_information_identification: BATCH REF
+            original_payment_information_status: ACTC
+            transaction_information_and_status:
+              - original_instruction_identification: SENDER REF
+                original_end_to_end_identification: TRANSACTION REF
+                transaction_status: ACTC
+                acceptance_date_time: '2021-01-01T12:00:00'
+    CustomerPaymentStatusReportV10_Ex05:
+      summary: Message Partial Acceptance
+      value:
+        group_status: PART
+        original_payment_information_and_status_details:
+          - original_payment_information_identification: BATCH REF
+            payment_information_status: PART
+            transaction_information_and_status:
+              - original_instruction_identification: SENDER REF 1
+                original_end_to_end_identification: TRANSACTION REF 1
+                transaction_status: RJCT
+                transaction_status_reason_code: AC03
+                transaction_status_additional_information:
+                  - EC004_108-InvalidCreditorAccountNumber
+                acceptance_date_time: 2021-01-01T12:00:00
+              - original_instruction_identification: SENDER REF 2
+                original_end_to_end_identification: TRANSACTION REF 2
+                transaction_status: ACSC
+                acceptance_date_time: 2021-01-01T12:00:00
+  schemas:
+    ActiveOrHistoricCurrencyAndAmount:
+      required:
+        - currency
+        - amount
+      type: object
+      properties:
+        currency:
+          $ref: '#/components/schemas/ActiveOrHistoricCurrencyCode'
+        amount:
+          type: string
+          maxLength: 19
+          description: >-
+            A number of monetary units specified in an active or a historic
+            currency where the unit of currency is explicit and compliant with
+            ISO 4217.
+          example: '562.89'
+    ActiveOrHistoricCurrencyCode:
+      type: string
+      pattern: ^[A-Z]{3,3}$
+      description: >
+        A code allocated to a currency by a Maintenance Agency under an
+        international identification scheme, as described in the latest edition
+        of the international standard ISO 4217 "Codes for the representation of
+        currencies and funds"
+      example: AUD
+    AnyBICIdentifier:
+      description: >-
+        Code allocated to organisations by the ISO 9362 Registration Authority,
+        under an international identification scheme, as described in the latest
+        version of the standard ISO 9362 Banking (Banking telecommunication
+        messages, Bank Identifier Codes).
+      type: string
+      pattern: ^[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}$
+    authTokenRequest:
+      required:
+        - grant_type
+        - client_assertion_type
+        - scope
+        - client_assertion
+      type: object
+      properties:
+        grant_type:
+          description: Specify the type credential requested
+          type: string
+          example: client_credentials
+        client_assertion_type:
+          description: >-
+            Describes the type of client assertion provided in the message
+            request
+          type: string
+          example: urn:ietf:params:oauth:client-assertion-type:jwt-bearer
+        scope:
+          $ref: '#/components/schemas/Scopes'
+        client_assertion:
+          $ref: '#/components/schemas/ClientAssertion'
+    authTokenResponse:
+      type: object
+      description: Response to report the status of a customer credit transfer.
+      additionalProperties: false
+      properties:
+        expires_in:
+          description: Indication on how long a token is valid for
+          type: integer
+        token_type:
+          description: Type of token returned
+          type: string
+        access_token:
+          description: >-
+            Opaque token returned as part of request, GCIS does not provide the
+            full access token
+          type: string
+      example:
+        expires_in: 3600
+        token_type: Bearer
+        access_token: eaaa13ee-b596-a8cc-b9d4-f778f8bb9377
+    ClientAssertion:
+      required:
+        - sub
+        - exp
+        - aud
+      type: object
+      properties:
+        sub:
+          type: string
+          description: Customer Code as provided by ANZ onboarding
+          example: CUSTOMERA
+        exp:
+          type: integer
+          description: EPOCH date and time
+          example: '1619658591'
+          maxLength: 10
+          minLength: 10
+        aud:
+          type: string
+          description: Specify the intended audience of the token request
+          example: https://api.fileactive.uat.anzgcis.com/auth
+    BatchBookingIndicator:
+      type: boolean
+    BICFIDec2014Identifier:
+      description: 'Code allocated to a financial institution by the ISO 9362
+        Registration Authority as described in ISO 9362: 2014 - "Banking - Banking
+        telecommunication messages - Business identifier code (BIC)".'
+      type: string
+      pattern: "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}"
+      example: ANZBAU3MXXX
+    Contact4:
+      description: Specifies the details of the contact person.
+      type: object
+      properties:
+        email_address:
+          description: Address for electronic mail (e-mail).
+          example: example@example.com
+          $ref: "#/components/schemas/Max2048Text"
+    CountryCode:
+      description: Code to identify a country, a dependency, or another area of
+        particular geopolitical interest, on the basis of country names obtained
+        from the United Nations (ISO 3166, Alpha-2 code).
+      type: string
+      pattern: ^[A-Z]{2}$
+      example: AU 
+    CreationDateTime:
+      description: Date and time at which the request was created.
+      type: string
+      pattern: >-
+        ^(?:[1-9]\\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.[0-9]+)?(?:Z|[+-][01]\\d:[0-5]\\d)?$
+      example: '2021-03-01T09:30:47Z'
+    CreditTransferTransactionInformation:
+      description: Information related to the individual transactions within a payment.
+      type: object
+      properties:
+        instruction_identification:
+          description: >-
+            Unique identification as assigned by an instructing party for an
+            instructed party to unambiguously identify the instruction.
+          example: SENDER REF
+          $ref: "#/components/schemas/Max35Text"
+        end_to_end_identification:
+          description: >-
+            Unique identification assigned by the initiating party to
+            unambiguously identify the transaction. This identification is passed
+            on, unchanged, throughout the entire end-to-end chain. Usage
+            Note:  Where CategoryPurpose  has a value of 'TAXS' (Tax Payment) or
+            'PENS' (Superannuation Payment) then this identification must be the
+            Payment Reference Number (PRN).  
+          example: TRANSACTION REF
+          $ref: "#/components/schemas/Max35Text"
+        instructed_amount:
+          description: Amount of money to be moved between the debtor and creditor, before
+            deduction of charges, expressed in the currency as ordered by the
+            initiating party.
+          example: "1.23"
+          $ref: "#/components/schemas/ActiveOrHistoricCurrencyAndAmount"
+          additionalProperties: false
+        creditor_agent_name:
+          description: Name of financial institution servicing an account for the creditor.
+          example: ABC Bank
+          $ref: "#/components/schemas/Max140Text"
+        creditor_agent_bicfi:
+          $ref: "#/components/schemas/BICFIDec2014Identifier"
+        creditor_agent_member_identification:
+          description: Identification of a member of a clearing system.
+          example: "012123"
+          $ref: "#/components/schemas/Max35Text"
+        creditor_agent_postal_address:
+          $ref: "#/components/schemas/PostalAddress24"
+        creditor_name:
+          description: Name by which a party is known and which is usually used to
+            identify that party.
+          example: Payee Name
+          $ref: "#/components/schemas/Max140Text"
+        creditor_contact_details:
+          description: Unique and unambiguous identification for the account between the
+            account owner and the account servicer.
+          $ref: "#/components/schemas/Contact4"
+        creditor_account_identification:
+          description: Unique and unambiguous identification for the account between the
+            account owner and the account servicer.
+          example: "012999111222333"
+          $ref: "#/components/schemas/Max34Text"
+        creditor_account_proxy:
+          description: Specifies an alternate assumed name for the identification of the
+            account.
+          $ref: "#/components/schemas/ProxyAccountIdentification1"
+        purpose:
+          description: Underlying reason for the payment transaction.
+          $ref: "#/components/schemas/Purpose2Choice"
+        remittance_information_unstructured:
+          description: Information supplied to enable the matching/reconciliation of an
+            entry with the items that the payment is intended to settle, such as
+            commercial invoices in an accounts' receivable system, in an
+            unstructured form.
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/Max140Text"
+      required:
+        - instruction_identification
+        - end_to_end_identification
+        - instructed_amount
+        - creditor_name
+      additionalProperties: false
+    CurrencyAndAmount:
+      type: object
+      required:
+        - amount
+        - currency
+      properties:
+        currency:
+          $ref: '#/components/schemas/CurrencyCode'
+        amount:
+          type: string
+          example: '562.89'
+          description: >-
+            A number of monetary units specified in an active or a historic currency
+            where the unit of currency is explicit and compliant with ISO 4217.
+          maxLength: 19
+    CurrencyCode:
+      type: string
+      pattern: ^[A-Z]{3,3}$
+      description: >-
+        A code allocated to a currency by a Maintenance Agency under an
+        international identification scheme, as described in the latest edition of
+        the international standard ISO 4217 "Codes for the representation of
+        currencies and funds".
+      example: AUD
+    CustomerCreditTransferInitiationV09:
+      description: |
+        ISO 20022 JSON Schema CustomerCreditTransferInitiationV09 derived
+        from pain.001.001.09 and aligned to CGI-MP guidelines. Generated by ANZ
+        2021-09-27.   
+           
+        **All in country and payment type specific schemas are derived from this generic schema.**
+      type: object
+      properties:
+        creation_date_time:
+          description: Date and time at which the request was created.
+          example: 2020-12-17T00:00:00
+          $ref: "#/components/schemas/ISODateTime"
+        number_of_transactions:
+          description: The number of transactions contained in the request
+          example: 1
+          $ref: "#/components/schemas/Max15NumericText"
+        control_sum:
+          description: The sum of the transaction amounts in the request
+          example: 1.23
+          $ref: "#/components/schemas/DecimalNumber"
+        initiating_party_name:
+          description: Party that initiates the payment.
+          example: ANZ Sample
+          $ref: "#/components/schemas/Max140Text"
+        initiating_party_bic:
+          description: Code allocated to organisations by the ISO 9362 Registration
+            Authority, under an international identification scheme, as described in
+            the latest version of the standard ISO 9362 Banking (Banking
+            telecommunication messages, Bank Identifier Codes).
+          $ref: "#/components/schemas/AnyBICIdentifier"
+        initiating_party_identification:
+          description: Unique identification of an organisation, as assigned by an
+            institution, using an identification scheme.
+          $ref: "#/components/schemas/Max35Text"
+        payment_information:
+          description: Information related to the individual payments with a single API
+            submission.
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/PaymentInformation"
+      required:
+        - creation_date_time
+        - number_of_transactions
+        - initiating_party_name
+        - payment_information
+      additionalProperties: false
+    CustomerCreditTransferInitiationV09_AU_DE:
+      description: >-
+        Payment initiation AU DE. Request to instruct movement of funds from the debtor account to creditor. 
+      type: object
+      properties:
+        creation_date_time:
+          description: Date and time at which the request was created.
+          example: '2020-12-17T00:00:00'
+          $ref: '#/components/schemas/ISODateTime'
+        number_of_transactions:
+          description: The number of transactions contained in the request
+          example: '1'
+          $ref: '#/components/schemas/Max15NumericText'
+        control_sum:
+          description: The sum of the transaction amounts in the request
+          example: '1.23'
+          $ref: '#/components/schemas/DecimalNumber'
+        initiating_party_name:
+          description: Party that initiates the payment.
+          example: ANZ Sample
+          $ref: '#/components/schemas/Max140Text'
+        payment_information:
+          description: >-
+            Information related to the individual payments with a single API
+            submission.
+          type: array
+          minItems: 1
+          items:
+            description: >-
+              Set of characteristics that applies to the debit side of the payment
+              transactions included in the credit transfer initiation.
+            type: object
+            properties:
+              payment_information_identification:
+                description: >-
+                  Unique identification, as assigned by a sending party, to
+                  unambiguously identify the payment batch within the message.
+                example: 'BATCH REF'
+                $ref: '#/components/schemas/Max35Text'
+              batch_booking:
+                description: >-
+                  Identifies whether a single entry per individual transaction or a
+                  batch entry for the sum of the amounts of all transactions within the
+                  group of a message is requested. Usage: Batch booking is used to
+                  request and not order a possible batch booking.
+                $ref: '#/components/schemas/BatchBookingIndicator'
+              category_purpose:
+                description: >-
+                  Specifies the high level purpose of the instruction based on a set of
+                  pre-defined categories
+                example: 'SALA'
+                $ref: '#/components/schemas/ExternalCategoryPurpose1Code'
+              requested_execution_date:
+                description: >-
+                  Date at which the initiating party requests the clearing agent to
+                  process the payment.
+                example: '2020-12-17'
+                $ref: '#/components/schemas/ISODate'
+              debtor_name:
+                description: Name of Remitter. Produced on the recipient's Account Statement.
+                example: 'AU DE Payer'
+                type: string
+                minLength: 1
+                maxLength: 16
+              debtor_organisation_identification:
+                description: Direct Entry User ID.
+                example: '123456'
+                type: string
+                pattern: '^[0-9]{6}$'
+              debtor_account_identification:
+                description: BSB and Account number of debtor. Must include any leading zeros.
+                example: '012001999888777'
+                type: string
+                pattern: '^[0-9]{12,15}$'
+              credit_transfer_transaction_information:
+                description: Information related to the individual transaction within a payment.
+                type: array
+                minItems: 1
+                items:
+                  description: >-
+                    Set of elements used to provide information on the individual
+                    transaction(s) included in the message.
+                  type: object
+                  properties:
+                    instruction_identification:
+                      description: >-
+                        Unique identification as assigned by an instructing party for an
+                        instructed party to unambiguously identify the instruction.
+                      example: 'SENDER REF'
+                      $ref: '#/components/schemas/Max35Text'
+                    end_to_end_identification:
+                      description: Lodgement Reference. Produced on the recipient’s Account Statement.
+                      example: 'TRANSACTION REF'
+                      type: string
+                      minLength: 1
+                      maxLength: 18
+                    instructed_amount:
+                      description: >-
+                        Amount of money to be moved between the debtor and creditor, before
+                        deduction of charges, expressed in the currency as ordered by the
+                        initiating party.
+                      example: '1.23'
+                      $ref: '#/components/schemas/ActiveOrHistoricCurrencyAndAmount'
+                    creditor_name:
+                      description: Title of account to be CREDITED
+                      example: AU DE Payee
+                      type: string
+                      minLength: 1
+                      maxLength: 32
+                    creditor_account_identification:
+                      description: BSB and Account number of creditor. Must include any leading zeros.
+                      example: '012999111222333'
+                      type: string
+                      pattern: '^[0-9]{12,15}$'
+                  required:
+                    - end_to_end_identification
+                    - instructed_amount
+                    - creditor_agent_member_identification
+                    - creditor_name
+                    - creditor_account_identification
+                  additionalProperties: false
+            required:
+              - payment_information_identification
+              - requested_execution_date
+              - debtor_name
+              - debtor_account_identification
+              - credit_transfer_transaction_information
+            additionalProperties: false
+      required:
+        - creation_date_time
+        - number_of_transactions
+        - initiating_party_name
+        - payment_information
+      example:
+        $ref: '#/components/examples/CustomerCreditTransferInitiationV09_AU_DE_Ex01'
+      additionalProperties: false
+    CustomerCreditTransferInitiationV09_ASIA_ACH:
+      description: |
+        Payment initiation ASIA ACH. Request to instruct movement of funds from the debtor account to creditor.   
+        Countries in scope for Asia ACH:   
+        - IN   
+        - HK   
+        - SG   
+      type: object
+      properties:
+        creation_date_time:
+          description: Date and time at which the request was created.
+          example: '2020-12-17T00:00:00'
+          $ref: '#/components/schemas/ISODateTime'
+        number_of_transactions:
+          description: The number of transactions contained in the request
+          example: '1'
+          $ref: '#/components/schemas/Max15NumericText'
+        control_sum:
+          description: The sum of the transaction amounts in the request
+          example: 1.23'
+          $ref: '#/components/schemas/DecimalNumber'
+        initiating_party_name:
+          description: Party that initiates the payment.
+          example: ANZ Sample
+          $ref: '#/components/schemas/Max140Text'
+        initiating_party_bic:
+          description: Code allocated to organisations by the ISO 9362 Registration
+            Authority, under an international identification scheme, as described in
+            the latest version of the standard ISO 9362 Banking (Banking
+            telecommunication messages, Bank Identifier Codes).
+          $ref: "#/components/schemas/AnyBICIdentifier"
+        initiating_party_identification:
+          description: Unique identification of an organisation, as assigned by an
+            institution, using an identification scheme.
+          $ref: "#/components/schemas/Max35Text"
+        payment_information:
+          description: Information related to the individual payments with a single API submission.
+          type: array
+          minItems: 1
+          items:
+            description: >-
+              Set of characteristics that applies to the debit side of the payment
+              transactions included in the credit transfer initiation.
+            type: object
+            properties:
+              payment_information_identification:
+                description: Unique identification, as assigned by a sending party, to
+                  unambiguously identify the payment batch within the message.
+                example: BATCH REF
+                type: string
+                minLength: 1
+                maxLength: 20               
+              batch_booking:
+                $ref: "#/components/schemas/BatchBookingIndicator"
+              category_purpose:
+                description: Specifies the high level purpose of the instruction based on a set
+                  of pre-defined categories
+                example: OTHR
+                $ref: "#/components/schemas/ExternalCategoryPurpose1Code"
+              requested_execution_date:
+                description: Date at which the initiating party requests the clearing agent to
+                  process the payment.
+                example: 2020-12-17
+                $ref: "#/components/schemas/ISODate"
+              debtor_name:
+                description: Name by which a party is known and which is usually used to
+                  identify that party.
+                example: Payer Name
+                $ref: "#/components/schemas/Max140Text"
+              debtor_account_identification:
+                description: Unique and unambiguous identification for the account between the
+                  account owner and the account servicer.
+                example: "012001999888777"
+                $ref: "#/components/schemas/Max34Text"
+              debtor_agent_member_identification:
+                $ref: "#/components/schemas/Max35Text"
+              debtor_agent_postal_address:
+                $ref: "#/components/schemas/PostalAddress24"
+              credit_transfer_transaction_information:
+                description: Information related to the individual transaction within a payment.
+                type: array
+                minItems: 1
+                items:
+                  description: Information related to the individual transactions within a payment.
+                  type: object
+                  properties:
+                    instruction_identification:
+                      description: >-
+                        Unique identification as assigned by an instructing party for an
+                        instructed party to unambiguously identify the instruction.
+                      example: SENDER REF
+                      type: string
+                      minLength: 1
+                      maxLength: 20
+                    end_to_end_identification:
+                      description: >-
+                        Unique identification assigned by the initiating party to
+                        unambiguously identify the transaction. This identification is passed
+                        on, unchanged, throughout the entire end-to-end chain. 
+                      type: string
+                      minLength: 1
+                      maxLength: 20
+                      example: TRANSACTION REF
+                    instructed_amount:
+                      description: Amount of money to be moved between the debtor and creditor, before
+                        deduction of charges, expressed in the currency as ordered by the
+                        initiating party.
+                      example: "1.23"
+                      $ref: "#/components/schemas/ActiveOrHistoricCurrencyAndAmount"
+                      additionalProperties: false
+                    creditor_agent_name:
+                      description: Name of financial institution servicing an account for the creditor.
+                      example: ABC Bank
+                      $ref: "#/components/schemas/Max140Text"
+                    creditor_agent_bicfi:
+                      description: Mandatory for SG ACH
+                      $ref: "#/components/schemas/BICFIDec2014Identifier"
+                    creditor_agent_member_identification:
+                      description: Identification of a member of a clearing system. Mandatory for ACH in IN and HK
+                      example: "012123"
+                      $ref: "#/components/schemas/Max35Text"
+                    creditor_agent_postal_address:
+                      $ref: "#/components/schemas/PostalAddress24"
+                    creditor_name:
+                      description: Name by which a party is known and which is usually used to
+                        identify that party.
+                      example: Payee Name
+                      $ref: "#/components/schemas/Max140Text"
+                    creditor_contact_details:
+                      description: Unique and unambiguous identification for the account between the
+                        account owner and the account servicer.
+                      $ref: "#/components/schemas/Contact4"
+                    creditor_account_identification:
+                      description: Unique and unambiguous identification for the account between the
+                        account owner and the account servicer.
+                      example: "012999111222333"
+                      $ref: "#/components/schemas/Max34Text"
+                    creditor_account_proxy:
+                      description: Specifies an alternate assumed name for the identification of the
+                        account.
+                      type: object
+                      properties:
+                        identification:
+                          description: Beneficiary code as registered with ANZ
+                          type: string
+                          minLength: 1
+                          maxLength: 10
+                          example: ABCD123456
+                    remittance_information_unstructured:
+                      description: Information supplied to enable the matching/reconciliation of an
+                        entry with the items that the payment is intended to settle, such as
+                        commercial invoices in an accounts' receivable system, in an
+                        unstructured form.
+                      type: array
+                      minItems: 1
+                      maxItems: 1
+                      items:
+                        $ref: "#/components/schemas/Max140Text"
+                  required:
+                    - instruction_identification
+                    - end_to_end_identification
+                    - instructed_amount
+                    - creditor_name
+                  additionalProperties: false
+            required:
+              - payment_information_identification
+              - requested_execution_date
+              - debtor_name
+              - debtor_account_identification
+              - credit_transfer_transaction_information
+            additionalProperties: false
+      required:
+        - creation_date_time
+        - number_of_transactions
+        - initiating_party_name
+        - payment_information
+      example:
+        - creation_date_time: '2020-12-17T00:00:00.00'
+          number_of_transactions: '1'
+          control_sum: '1.23'
+          initiating_party_name: ANZ Sample
+          payment_information:
+            - payment_information_identification: Batch Name
+              batch_booking: false
+              requested_execution_date: '2020-12-17'
+              debtor_name: IN ACH Payer
+              debtor_account_identification: '12345678901'
+              credit_transfer_transaction_information:
+                - end_to_end_identification: '20000183542021'
+                  instructed_amount:
+                    amount: '1.23'
+                  creditor_agent_name: IBKL0000038
+                  creditor_agent_member_identification: IBKL0000038
+                  creditor_name: IN ACH Payee
+                  creditor_account_identification: '111222333'
+                  remittance_information_unstructured:
+                    - REM
+        - creation_date_time: 2021-10-27T00:00:00.00
+          number_of_transactions: "1"
+          control_sum: "300"
+          initiating_party_name: ANZ Sample
+          payment_information:
+            - payment_information_identification: HK-ACH-PMTINFID-3
+              category_purpose: SALA
+              requested_execution_date: 2021-10-27
+              debtor_name: HK ACH Payer
+              debtor_account_identification: "12345678901"
+              credit_transfer_transaction_information:
+                - instruction_identification: HK-ACH-INSTRID-3
+                  end_to_end_identification: HK-ACH-E2EID-3
+                  instructed_amount:
+                    amount: "300"
+                    currency: HKD
+                  creditor_agent_name: The Hongkong and Shanghai Banking Corp L
+                  creditor_agent_bicfi: HSBCHKHHHKH
+                  creditor_agent_member_identification: "004002"
+                  creditor_name: HK ACH Payee
+                  creditor_account_identification: "111222333"
+                  remittance_information_unstructured:
+                    - REM
+        - creation_date_time: 2021-11-08T00:00:00.00
+          number_of_transactions: "1"
+          control_sum: "1.23"
+          initiating_party_name: ANZ Sample
+          payment_information:
+            - payment_information_identification: SG-ACH-PMTINFID-1
+              batch_booking: false
+              requested_execution_date: 2021-11-08
+              debtor_name: SG ACH Payer
+              debtor_account_identification: "12345678901"
+              credit_transfer_transaction_information:
+                - instruction_identification: SG-ACH-INSTRID-1
+                  end_to_end_identification: SG-ACH-E2EID-1
+                  instructed_amount:
+                    amount: "1.23"
+                    currency: SGD
+                  creditor_agent_name: DBS
+                  creditor_agent_bicfi: DBSSSGSGXXX
+                  creditor_agent_postal_address:
+                    country: SG
+                  creditor_name: SG ACH Payee
+                  creditor_account_identification: "111222333"
+                  remittance_information_unstructured:
+                    - REM
+      additionalProperties: false
+    CustomerCreditTransferInitiationV09_ASIA_FAST:
+      description: |
+          Payment initiation ASIA FAST. Request to instruct movement of funds from the debtor account to creditor.   
+          Countries in scope for Asia FAST:   
+          - HK   
+          - SG   
+      type: object
+      properties:
+        creation_date_time:
+          description: Date and time at which the request was created.
+          example: '2020-12-17T00:00:00'
+          $ref: '#/components/schemas/ISODateTime'
+        number_of_transactions:
+          description: The number of transactions contained in the request
+          example: '1'
+          $ref: '#/components/schemas/Max15NumericText'
+        control_sum:
+          description: The sum of the transaction amounts in the request
+          example: 1.23'
+          $ref: '#/components/schemas/DecimalNumber'
+        initiating_party_name:
+          description: Party that initiates the payment.
+          example: ANZ Sample
+          $ref: '#/components/schemas/Max140Text'
+        initiating_party_bic:
+          description: Code allocated to organisations by the ISO 9362 Registration
+            Authority, under an international identification scheme, as described in
+            the latest version of the standard ISO 9362 Banking (Banking
+            telecommunication messages, Bank Identifier Codes).
+          $ref: "#/components/schemas/AnyBICIdentifier"
+        initiating_party_identification:
+          description: Unique identification of an organisation, as assigned by an
+            institution, using an identification scheme.
+          $ref: "#/components/schemas/Max35Text"
+        payment_information:
+          description: Information related to the individual payments with a single API submission.
+          type: array
+          minItems: 1
+          items:
+            description: >-
+              Set of characteristics that applies to the debit side of the payment
+              transactions included in the credit transfer initiation.
+            type: object
+            properties:
+              payment_information_identification:
+                description: Unique identification, as assigned by a sending party, to
+                  unambiguously identify the payment batch within the message.
+                example: BATCH REF
+                type: string
+                minLength: 1
+                maxLength: 20               
+              batch_booking:
+                $ref: "#/components/schemas/BatchBookingIndicator"
+              category_purpose:
+                description: Specifies the high level purpose of the instruction based on a set
+                  of pre-defined categories
+                example: OTHR
+                $ref: "#/components/schemas/ExternalCategoryPurpose1Code"
+              requested_execution_date:
+                description: Date at which the initiating party requests the clearing agent to
+                  process the payment.
+                example: 2020-12-17
+                $ref: "#/components/schemas/ISODate"
+              debtor_name:
+                description: Name by which a party is known and which is usually used to
+                  identify that party.
+                example: Payer Name
+                $ref: "#/components/schemas/Max140Text"
+              debtor_account_identification:
+                description: Unique and unambiguous identification for the account between the
+                  account owner and the account servicer.
+                example: "012001999888777"
+                $ref: "#/components/schemas/Max34Text"
+              debtor_agent_member_identification:
+                $ref: "#/components/schemas/Max35Text"
+              credit_transfer_transaction_information:
+                description: Information related to the individual transaction within a payment.
+                type: array
+                minItems: 1
+                items:
+                  description: Information related to the individual transactions within a payment.
+                  type: object
+                  properties:
+                    instruction_identification:
+                      description: >-
+                        Unique identification as assigned by an instructing party for an
+                        instructed party to unambiguously identify the instruction.
+                      example: SENDER REF
+                      type: string
+                      minLength: 1
+                      maxLength: 20
+                    end_to_end_identification:
+                      description: >-
+                        Unique identification assigned by the initiating party to
+                        unambiguously identify the transaction. This identification is passed
+                        on, unchanged, throughout the entire end-to-end chain. 
+                      type: string
+                      minLength: 1
+                      maxLength: 20
+                      example: TRANSACTION REF
+                    instructed_amount:
+                      description: Amount of money to be moved between the debtor and creditor, before
+                        deduction of charges, expressed in the currency as ordered by the
+                        initiating party.
+                      example: "1.23"
+                      $ref: "#/components/schemas/ActiveOrHistoricCurrencyAndAmount"
+                      additionalProperties: false
+                    creditor_agent_name:
+                      description: Name of financial institution servicing an account for the creditor.
+                      example: ABC Bank
+                      $ref: "#/components/schemas/Max140Text"
+                    creditor_agent_bicfi:
+                      description: SWIFT BIC of the financial institution servicing an account for the creditor. Mandatory for FAST payments.
+                      $ref: "#/components/schemas/BICFIDec2014Identifier"
+                    creditor_name:
+                      description: Name by which a party is known and which is usually used to
+                        identify that party.
+                      example: Payee Name
+                      $ref: "#/components/schemas/Max140Text"
+                    creditor_contact_details:
+                      description: Unique and unambiguous identification for the account between the
+                        account owner and the account servicer.
+                      $ref: "#/components/schemas/Contact4"
+                    creditor_account_identification:
+                      description: |
+                        Unique and unambiguous identification for the account between the account owner and the account servicer.
+                        Must provide one of:
+                        - creditor_account_identification
+                        - creditor_account_proxy
+                      example: "012999111222333"
+                      $ref: "#/components/schemas/Max34Text"
+                    creditor_account_proxy:
+                      description: | 
+                        Specifies an alternate assumed name for the identification of the account.
+                        Must provide one of:
+                        - creditor_account_identification
+                        - creditor_account_proxy
+                      type: object
+                      $ref: "#/components/schemas/ProxyAccountIdentification1"
+                    purpose:
+                      description: Underlying reason for the payment transaction. Refer to ANZ contact for list of valid in country purpose codes.
+                      $ref: "#/components/schemas/Purpose2Choice"
+                    remittance_information_unstructured:
+                      description: Information supplied to enable the matching/reconciliation of an
+                        entry with the items that the payment is intended to settle, such as
+                        commercial invoices in an accounts' receivable system, in an
+                        unstructured form.
+                      type: array
+                      minItems: 1
+                      maxItems: 1
+                      items:
+                        $ref: "#/components/schemas/Max140Text"
+                  oneOf:
+                    - required:
+                        - creditor_account_identification
+                    - required:
+                        - creditor_account_proxy
+                  required:
+                    - instruction_identification
+                    - end_to_end_identification
+                    - instructed_amount
+                    - creditor_name
+                  additionalProperties: false
+            required:
+              - payment_information_identification
+              - requested_execution_date
+              - debtor_name
+              - debtor_account_identification
+              - credit_transfer_transaction_information
+            additionalProperties: false
+      required:
+        - creation_date_time
+        - number_of_transactions
+        - initiating_party_name
+        - payment_information
+      example:
+        - creation_date_time: 2021-12-16T00:00:00.00
+          number_of_transactions: "1"
+          control_sum: "1.23"
+          initiating_party_name: ANZ Sample
+          payment_information:
+            - payment_information_identification: SG-FAST-PMTINFID-1
+              batch_booking: true
+              category_purpose: SALA
+              requested_execution_date: 2021-12-16
+              debtor_name: SG FAST Payer
+              debtor_account_identification: "999999999"
+              credit_transfer_transaction_information:
+                - instruction_identification: SG-FAST-INSTRID-1
+                  end_to_end_identification: SG-FAST-E2EID-1
+                  instructed_amount:
+                    amount: "1.23"
+                    currency: SGD
+                  creditor_agent_name: ABC Bank
+                  creditor_agent_bicfi: ABCDSG22XXX
+                  creditor_name: SG FAST Payee
+                  creditor_account_proxy:
+                    identification: BENECODE123
+                  remittance_information_unstructured:
+                    - REM
+        - creation_date_time: 2021-12-16T00:00:00.00
+          number_of_transactions: "1"
+          control_sum: "1.23"
+          initiating_party_name: ANZ Sample
+          payment_information:
+            - payment_information_identification: SG-FAST-PMTINFID-1
+              batch_booking: false
+              requested_execution_date: 2021-12-16
+              debtor_name: SG FAST Payer
+              debtor_account_identification: "999999999"
+              credit_transfer_transaction_information:
+                - instruction_identification: SG-FAST-INSTRID-1
+                  end_to_end_identification: SG-FAST-E2EID-1
+                  instructed_amount:
+                    amount: "1.23"
+                    currency: SGD
+                  creditor_agent_name: ABC Bank
+                  creditor_agent_bicfi: ABCDSG22XXX
+                  creditor_name: SG FAST Payee
+                  creditor_contact_details:
+                    email_address: sg.fast@example.com
+                  creditor_account_identification: "111222333"
+                  remittance_information_unstructured:
+                    - REM
+        - creation_date_time: 2021-12-16T00:00:00.00
+          number_of_transactions: "1"
+          control_sum: "1.23"
+          initiating_party_name: ANZ Sample
+          payment_information:
+            - payment_information_identification: SG-FAST-PMTINFID-1
+              batch_booking: true
+              category_purpose: SALA
+              requested_execution_date: 2021-12-16
+              debtor_name: SG FAST Payer
+              debtor_account_identification: "999999999"
+              credit_transfer_transaction_information:
+                - instruction_identification: SG-FAST-INSTRID-1
+                  end_to_end_identification: SG-FAST-E2EID-1
+                  instructed_amount:
+                    amount: "1.23"
+                    currency: SGD
+                  creditor_agent_name: ABC Bank
+                  creditor_agent_bicfi: ABCDSG22XXX
+                  creditor_name: SG FAST Payee
+                  creditor_account_identification: "111222333"
+                  remittance_information_unstructured:
+                    - REM
+        - creation_date_time: 2021-12-07T00:00:00.00
+          number_of_transactions: "1"
+          control_sum: "1.23"
+          initiating_party_name: ANZ Sample
+          payment_information:
+            - payment_information_identification: HK-FAST-PMTINFID-1
+              batch_booking: false
+              requested_execution_date: 2021-12-07
+              debtor_name: HK FAST Payer
+              debtor_account_identification: "12345678901"
+              credit_transfer_transaction_information:
+                - instruction_identification: HK-FAST-INSTRID-1
+                  end_to_end_identification: HK-FAST-E2EID-1
+                  instructed_amount:
+                    amount: "1.23"
+                    currency: HKD
+                  creditor_agent_name: The Hongkong and Shanghai Banking Corp L
+                  creditor_agent_bicfi: HSBCHKHHHKH
+                  creditor_name: HK FAST Payee
+                  creditor_account_identification: "111222333"
+                  remittance_information_unstructured:
+                    - REM
+        - creation_date_time: 2021-12-07T00:00:00.00
+          number_of_transactions: "1"
+          control_sum: "200"
+          initiating_party_name: ANZ Sample
+          payment_information:
+            - payment_information_identification: HK-FAST-PMTINFID-2
+              requested_execution_date: 2021-12-07
+              debtor_name: HK FAST Payer
+              debtor_account_identification: "12345678901"
+              credit_transfer_transaction_information:
+                - instruction_identification: HK-FAST-INSTRID-2
+                  end_to_end_identification: HK-FAST-E2EID-2
+                  instructed_amount:
+                    amount: "200"
+                    currency: CNY
+                  creditor_agent_name: The Hongkong and Shanghai Banking Corp L
+                  creditor_agent_bicfi: HSBCHKHHHKH
+                  creditor_agent_member_identification: "004002"
+                  creditor_name: HK FAST Payee
+                  creditor_account_identification: "111222333"
+                  purpose:
+                    proprietary: CXBSNS
+                  remittance_information_unstructured:
+                    - REM
+      additionalProperties: false
+    CustomerPaymentStatusReportV10:
+      description: >-
+        ISO 20022 JSON Schema CustomerPaymentStatusReportV10 derived from
+        pain.002.001.10 and aligned to CGI-MP guidelines. Generated by ANZ 2021-09-27
+      type: object
+      properties:
+        group_status:
+          description: Specifies the status of a group of payments.
+          $ref: '#/components/schemas/ExternalPaymentGroupStatus1Code'
+        group_status_reason_code:
+          description: 'Reason for the status, as published in an external reason code list.'
+          $ref: '#/components/schemas/ExternalStatusReason1Code'
+        group_status_additional_information:
+          description: Additional information relating to the status code and reason.
+          type: array
+          items:
+            $ref: '#/components/schemas/Max105Text'
+        original_payment_information_and_status_details:
+          description: Details concerning the status of the individual transactions.
+          type: array
+          items:
+            $ref: '#/components/schemas/OriginalPaymentInformationAndStatus'
+      required:
+        - group_status
+      additionalProperties: false
+    DecimalNumber:
+      type: string
+      minLength: 1
+      maxLength: 19
+    ExternalCategoryPurpose1Code:
+      type: string
+      enum:
+        - OTHR
+        - SALA
+    ExternalPaymentGroupStatus1Code:
+      description: >-
+        Specifies the status of a group of payment instructions, as published in
+        an external payment group status code set.
+      type: string
+      minLength: 1
+      maxLength: 4
+      enum:
+        - RCVD
+        - ACTC
+        - RJCT
+        - PART
+        - PDNG
+        - ACSC
+    ExternalPaymentTransactionStatus1Code:
+      description: >-
+        Specifies the status of an individual payment instructions, as published
+        in an external payment transaction status code set. External code sets can
+        be downloaded from www.iso20022.org.
+      type: string
+      minLength: 1
+      maxLength: 4
+      enum:
+        - RCVD
+        - ACTC
+        - RJCT
+        - PDNG
+        - ACSC
+    ExternalPurpose1Code:
+      description: Specifies the external purpose code in the format of character
+        string with a maximum length of 4 characters. The list of valid codes is
+        an external code list published separately.
+      type: string
+      minLength: 1
+      maxLength: 4
+    ExternalStatusReason1Code:
+      description: >-
+        Specifies the status reason, as published in an external status reason
+        code list.
+      maxLength: 4
+      minLength: 1
+      example: NARR
+      type: string
+    ISODate:
+      type: string
+      description: >
+        'A particular point in the progression of time in a calendar year
+        expressed in the YYYY-MM-DD format. This representation is defined in
+        XML Schema Part Datatypes Second Edition - W3C Recommendation 28 October
+        2004 which is aligned with ISO 8601.'
+      pattern: >-
+        ^(?:[1-9]\\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)$        
+    ISODateTime:
+      pattern: >-
+        ^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.[0-9]+)?(?:Z|[+-][01]\d:[0-5]\d)?$
+      type: string
+      description: >-
+        A particular point in the progression of time defined by a mandatory
+        date and a mandatory time component, expressed in either UTC time format
+        (YYYY-MM-DDThh:mm:ss.sssZ), local time with UTC offset format
+        (YYYY-MM-DDThh:mm:ss.sss+/-hh:mm), or local time format
+        (YYYY-MM-DDThh:mm:ss.sss). These representations are defined in 'XML
+        Schema Part 2: Datatypes Second Edition - W3C Recommendation 28 October
+        2004' which is aligned with ISO 8601.
+
+        Note on the time format:
+
+        1) beginning / end of calendar day
+
+        00:00:00 = the beginning of a calendar day
+
+        24:00:00 = the end of a calendar day
+
+        2) fractions of second in time format
+
+        Decimal fractions of seconds may be included. In this case, the involved
+        parties shall agree on the maximum number of digits that are allowed.
+    Max105Text:
+      maxLength: 105
+      minLength: 1
+      type: string
+      description: Specifies a character string with a maximum length of 105 characters.
+    Max140Text:
+      type: string
+      minLength: 1
+      maxLength: 140
+    Max15NumericText:
+      type: string
+      minLength: 1
+      maxLength: 15
+      pattern: ^[0-9]{1,15}$
+    Max2048Text:
+      description: Specifies a character string with a maximum length of 140 characters.
+      type: string
+      minLength: 1
+      maxLength: 2048
+    Max34Text:
+      type: string
+      minLength: 1
+      maxLength: 34
+    Max35Text:
+      type: string
+      minLength: 1
+      maxLength: 35
+    OriginalPaymentInformationAndStatus:
+      description: >-
+        Information related to the status of individual payments with a single API
+        submission.
+      type: object
+      properties:
+        original_payment_information_identification:
+          description: >-
+            Unique identification, as assigned in the API submission to
+            unambiguously identify the original payment batch.
+          $ref: '#/components/schemas/Max35Text'
+        original_payment_information_status:
+          description: Specifies the status of the payment batch.
+          $ref: '#/components/schemas/ExternalPaymentGroupStatus1Code'
+        original_payment_information_status_reason_code:
+          description: 'Reason for the status, as published in an external reason code list.'
+          $ref: '#/components/schemas/ExternalStatusReason1Code'
+        original_payment_information_status_additional_information:
+          description: Additional information relating to the status code and reason.
+          type: array
+          items:
+            $ref: '#/components/schemas/Max105Text'
+        transaction_information_and_status:
+          description: Details concerning the status of the individual transactions.
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionInformationAndStatus'
+      required:
+        - original_payment_information_identification
+        - original_payment_information_status
+      additionalProperties: false
+    PaymentInformation:
+      description: Information related to the individual payments with a single API
+        submission.
+      type: object
+      properties:
+        payment_information_identification:
+          description: Unique identification, as assigned by a sending party, to
+            unambiguously identify the payment batch within the message.
+          example: BATCH REF
+          $ref: "#/components/schemas/Max35Text"
+        batch_booking:
+          $ref: "#/components/schemas/BatchBookingIndicator"
+        category_purpose:
+          description: Specifies the high level purpose of the instruction based on a set
+            of pre-defined categories
+          example: OTHR
+          $ref: "#/components/schemas/ExternalCategoryPurpose1Code"
+        requested_execution_date:
+          description: Date at which the initiating party requests the clearing agent to
+            process the payment.
+          example: 2020-12-17
+          $ref: "#/components/schemas/ISODate"
+        debtor_name:
+          description: Name by which a party is known and which is usually used to
+            identify that party.
+          example: Payer Name
+          $ref: "#/components/schemas/Max140Text"
+        debtor_organisation_identification:
+          description: Unique and unambiguous way to identify an organisation.
+          example: "123456"
+          $ref: "#/components/schemas/Max35Text"
+        debtor_account_identification:
+          description: Unique and unambiguous identification for the account between the
+            account owner and the account servicer.
+          example: "012001999888777"
+          $ref: "#/components/schemas/Max34Text"
+        debtor_agent_member_identification:
+          $ref: "#/components/schemas/Max35Text"
+        debtor_agent_postal_address:
+          $ref: "#/components/schemas/PostalAddress24"
+        credit_transfer_transaction_information:
+          description: Information related to the individual transaction within a payment.
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/CreditTransferTransactionInformation"
+      required:
+        - payment_information_identification
+        - requested_execution_date
+        - debtor_name
+        - debtor_account_identification
+        - credit_transfer_transaction_information
+    PaymentSubmitResponse:
+      required:
+        - status
+      type: object
+      properties:
+        status:
+          type: string
+          description: |
+            'RCVD - RECEIVED  RJCT - REJECTED'
+          example: RCVD
+          enum:
+            - RCVD
+            - RJCT
+    PostalAddress24:
+      description: Information that locates and identifies a specific address, as
+        defined by postal services.
+      type: object
+      properties:
+        country:
+          $ref: "#/components/schemas/CountryCode"
+      required:
+        - country
+    ProxyAccountIdentification1:
+      description: Information related to a proxy identification of the account.
+      type: object
+      properties:
+        type:
+          description: Type of the proxy identification.
+          type: string
+          enum:
+            - TELI
+            - EMAL
+            - AUBN
+            - ORGN
+          example: TELI
+        identification:
+          description: Identification used to indicate the account identification under
+            another specified name.
+          type: string
+          example: proxy.example@example.com
+          $ref: "#/components/schemas/Max2048Text"
+      required:
+        - identification
+      additionalProperties: false
+    Purpose2Choice:
+      description: Specifies the underlying reason for the payment transaction.
+      type: object
+      properties:
+        code:
+          $ref: "#/components/schemas/ExternalPurpose1Code"
+        proprietary:
+          description: Purpose, in a proprietary form.   
+          $ref: "#/components/schemas/Max35Text"
+      oneOf:
+        - required:
+            - code
+        - required:
+            - proprietary
+      additionalProperties: false
+    Scopes:
+      description: |
+        Available scopes for creating payments and reading responses 
+      type: string
+      enum:
+        - AU.INSTO.PAYMENT.DE.CREATE
+        - AU.INSTO.PAYMENT.READ
+        - IN.INSTO.PAYMENT.ACH.CREATE
+        - IN.INSTO.PAYMENT.READ
+        - HK.INSTO.PAYMENT.ACH.CREATE
+        - HK.INSTO.PAYMENT.FAST.CREATE
+        - HK.INSTO.PAYMENT.READ
+        - SG.INSTO.PAYMENT.ACH.CREATE
+        - SG.INSTO.PAYMENT.FAST.CREATE
+        - SG.INSTO.PAYMENT.READ
+    SecuredPaymentSubmissionResource:
+      required:
+        - secured_payload
+      type: object
+      properties:
+        secured_payload:
+          type: string
+          description: Encrypted and secured payment payload
+          x-jws-signature:
+            algorithm: RS256
+          x-jwe-encryption:
+            algorithm: RSA-OAEP
+            encryption: A256CBC-HS512
+      example:
+        secured_payload: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpbnN0cnVjdGlvbl9pZGVudGlmaWNhdGlvbiI6IlRDMTIxLzE0NzE4NzM4MjMiLCJlbmRfdG9fZW5kX2lkZW50aWZpY2F0aW9uIjoiTk9UUFJPVklERUQiLCJjcmVhdGlvbl9kYXRlX3RpbWUiOiIyMDE4LTA5LTE3VDA5OjQ1OjQ3WiIsImluaXRpYXRpbmdfcGFydHlfbmFtZSI6IkN1c3RvbWVyQSIsInJlcXVlc3RlZF9leGVjdXRpb25fZGF0ZSI6IjIwMTgtMDktMTciLCJkZWJ0b3JfbmFtZSI6IkJJTEJPIEJBR0dJTlMiLCJkZWJ0b3JfYWNjb3VudF9pZGVudGlmaWNhdGlvbiI6IjAxMzQyMTIzNDU2NyIsImRlYnRvcl9hY2NvdW50X3R5cGUiOiJCQkFOIiwiaW5zdHJ1Y3RlZF9hbW91bnQiOnsiY3VycmVuY3kiOiJBVUQiLCJhbW91bnQiOiI1NjIuODkifSwiY3JlZGl0b3JfbmFtZSI6IlNBTVdJU0UgR0FNR0VFIiwiY3JlZGl0b3JfYWNjb3VudF9pZGVudGlmaWNhdGlvbiI6IjAxMDE2OTg3NjU0MzIxIiwiY3JlZGl0b3JfYWNjb3VudF90eXBlIjoiQkJBTiIsImNyZWRpdG9yX2FnZW50X2JpYyI6Ik5PVFBST1ZJREVEIiwicmVtaXR0YW5jZV9pbmZvcm1hdGlvbl91bnN0cnVjdHVyZWQiOlsiRklSU1QgTElORSIsIlNFQ09ORCBMSU5FIl19.aR2RMEVTuOOI1YuUCf2Ppo3Bwtf2_91WMvLd3IIA0ToHBDn0II36FumIz2RrwiUNHBMZo41Qmjv_zt9TQbq61csx2lRZcQNNsstAXKZWI4oZjlBaenj3HvY2_ztxS2IPNZNlVUQrw8A51-1dm-EeVTsqwhxs-Ir6d1FCee5SaNBrhtfaDBGAwjtXolPJuyYve0J3F8X-JwKPLBUaQH5LgGlTOSasC0vsKqhfpZOc-3rS39UA7q0jHQyqcJKrhinEyWlTFU9PcOh2W4-0hXiPaLJ_PA-_EkY5kYBnBvUWofVy35ZnB_u0wv0gxvVVDYKLGUpOGblaWRUY09SHx52Njw'
+    TransactionInformationAndStatus:
+      description: >-
+        Information related to the status of individual transactions within a
+        payment.
+      type: object
+      properties:
+        original_instruction_identification:
+          description: >-
+            Unique identification as assigned by an instructing party for an
+            instructed party to unambiguously identify the instruction.
+          $ref: '#/components/schemas/Max35Text'
+        original_end_to_end_identification:
+          $ref: '#/components/schemas/Max35Text'
+        transaction_status:
+          description: 'Specifies the status of a transaction, in a coded form.'
+          $ref: '#/components/schemas/ExternalPaymentTransactionStatus1Code'
+        transaction_status_reason_code:
+          description: 'Reason for the status, as published in an external reason code list.'
+          $ref: '#/components/schemas/ExternalStatusReason1Code'
+        transaction_status_additional_information:
+          type: array
+          items:
+            $ref: '#/components/schemas/Max105Text'
+        acceptance_date_time:
+          description: >-
+            Point in time when the payment order from the initiating party meets
+            the processing conditions of the account servicing agent. This means
+            that the account servicing agent has received the payment order and
+            has applied checks such as authorisation, availability of funds.
+          $ref: '#/components/schemas/ISODateTime'
+      required:
+        - transaction_status
+      additionalProperties: false
+    UUID:
+      type: string
+      example: 71d6fb19-7515-40dc-b045-e17550b67600
+      pattern: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+tags:
+  - name: Authorisation
+    description: |
+      Operations related to authentication & authorisation.
+  - name: Australia Payments
+    description: |
+      Operations related to Australian payments.
+  - name: India Payments
+    description: |
+      Operations related to Indian payments.
+  - name: Hong Kong Payments
+    description: |
+      Operations related to Hong Kong payments.
+  - name: Singapore Payments
+    description: |
+      Operations related to Singapore payments.
+  - name: CustomerCreditTransferInitiationV09
+    description: <SchemaDefinition schemaRef="#/components/schemas/CustomerCreditTransferInitiationV09" />
+    x-displayName: CustomerCreditTransferInitiationV09
+  - name: CustomerPaymentStatusReportV10
+    description: <SchemaDefinition schemaRef="#/components/schemas/CustomerPaymentStatusReportV10" />
+    x-displayName: CustomerPaymentStatusReportV10
+x-tagGroups:
+  - name: Paths
+    tags: 
+      - Authorisation
+      - Australia Payments
+      - India Payments
+      - Hong Kong Payments
+      - Singapore Payments
+  - name: Models
+    tags: 
+      - CustomerCreditTransferInitiationV09
+      - CustomerPaymentStatusReportV10

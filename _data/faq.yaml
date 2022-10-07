@@ -1,0 +1,188 @@
+- section: General
+  questions:
+    - title: How do I access Fileactive APIs?
+      answer: |-
+        Contact your ANZ Account Manager to discuss requirements and arrange for access. A technical consultant will be assigned to provide advice and assitance throughout the process. 
+    - title: Are Fileactive APIs subject to rate limits or throttling?
+      answer: |-
+        By default the following rate limits are applied:   
+
+        | Type               | TPH (Transactions Per Hour) | TPM (Transactions Per Minute) | TPS (Transactions Per Second) |
+        |:-------------------|:---------------------------:|:-----------------------------:|:-----------------------------:|
+        | Authorisation      | 10                          | n/a                           | 2                             |
+        | NPP Single Payment | n/a                         | 30                            | 2                             |
+        | Payments           | n/a                         | 30                            | 2                             |
+        | Payment Enquiry    | n/a                         | 90                            | 2                             |
+        | Statement / BTR    | 25                          | n/a                           | n/a                           |
+        | FX RFQ             | 500                         | n/a                           | 10                            |
+
+        Non-default limits will be considered on request. Please discuss with your ANZ account or relationship manager to request a non-default limit. Temporary limits may also be requested for specific ad hoc use cases.  
+    - title: Which rate limiting algorithms do you use?
+      answer: |-
+        For most use cases one of two algorithms is implemented for rate limiting:   
+           
+        **Fixed Window**   
+        The system uses a window size of n seconds (typically using human-friendly values, such as 60 or 3600 seconds) to track the fixed window algorithm rate. 
+        Each incoming request increments the counter for the window. It discards the request if the counter exceeds a threshold. 
+        The current timestamp floor typically defines the windows, so 12:00:03, with a 60-second window length, would be in the 12:00:00 window.   
+           
+        **Sliding Window**   
+        Sliding Window is a hybrid approach. Like the fixed window algorithm, we track a counter for each fixed window. 
+        Next, we account for a weighted value of the previous window's request rate based on the current timestamp to smooth out bursts of traffic.    
+           
+        Sliding window example:   
+        - Given a limit of 100 transaction per hour.
+        - **Window 1 (13:00 - 14:00)** 
+          - Between 13:00 - 14:00, 80 requests are received. This is within the 100 tph limit so all are allowed.
+        - **Window 2 (14:00 - 15:00)** 
+          - By **14:15**, 20 requests are received. This is 25% (15 minutes) in to window 2, so weighted average would include 75% from the previous window.    
+            Request rate: *20 (all requests within window 2) + 60 (75% of requests from window 1) = 80 requests*.    
+            Request rate is still within the 100 tph maximum.
+          - By **14:30**, 75 requests have been received. This is 50% (30 minutes) in to window 2, so weighted average would include 50% from the previous window.    
+            Request rate is: *75 (all requests within window 2) + 40 (50% weighted average from previous window) = 115 requests*.    
+            This exceeds the 100 tph limit so further requests would return an HTTP `429` (Too Many Requests) status code until the weighted request rate is below the agreed limit.
+          - By **14:45**, no further requests have been made. This is 75% (45 minutes) through window 2.   
+            Request rate is *75 (current window) + 20 (25% weighted average from previous window) = 95 requests*.    
+            As this is below the 100 tph limit further requests will be accepted. 
+    - title: Where are changes to the site and specifications documented?
+      answer: |-
+        Significant changes to the site and documentation will be listed in the [Change Log](change-log).
+
+- section: Security
+  questions:
+    - title: What is OAuth 2.0?
+      answer: |-
+        OAuth 2.0 supported APIs are tagged with `OAuth2.0`. Detailed information can be found on the [RFC 6749 OAuth 2.0 Authorization Framework](https://www.rfc-editor.org/rfc/rfc6749) page.   
+
+        ANZ's OAuth 2.0 API is used for authentication and authorization and is OpenID Connect compliant, requesting a token involves calling the ANZ token issuer endpoint with a valid `client credential` grant.  ANZ will issue a reference token that can be used for subsequent calls to ANZ for the lifetime of the token.
+
+        <aside class="alert alert-primary" role="alert">
+        A Client Credential Grant is required to obtain an access token.  The customers public key must be pre-exchanged for ANZ to verify the signed Client Credential Grant.
+        </aside>
+    - title: What is a Client Credential Grant?
+      answer: |-
+        The Client Credential Grant is a messsage based interaction used to obtain a token, called a **Bearer Token**, from ANZ.
+
+
+        The Client Credential Grant is constructed as follows:
+
+        | Field  | Value                                                                                                                                                                                           |
+        |:-------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+        | Header | Content-Type: `application/x-www-form-urlencoded`                                                                                                                                               |
+        | Header | apikey: `[ANZ issued apikey]`                                                                                                                                                                   |
+        | Body   | grant_type=`client_credentials`&<br />client_assertion_type=`urn:ietf:params:oauth:client-assertion-type:jwt-bearer`&<br />scope=`scope1 scope2`&<br />client_assertion=`[Customer Signed JWT]`  |
+
+        <aside class="alert alert-primary" role="alert">
+        The client credential grant includes a customer signed JWT as a `client_assertion`
+        </aside>
+
+        **Example Request**
+
+        `POST https://api.fileactive.uat.anzgcis.com/v1.0/auth`
+
+        ```shell
+        curl --request POST \
+          --url https://api.fileactive.uat.anzgcis.com/v1.0/auth \
+          --header 'apikey: [ANZ issued apikey]' \
+          --header 'content-type: application/x-www-form-urlencoded' \
+          --data 'grant_type=client_credentials&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&scope=SCOPE1+SCOPE2&client_assertion=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.ewoJInN1YiI6ICJDVVNUT01FUkNPREUiLAogICJleHAiOiAiMTY2MjUzMDkwMiIsCiAgImF1ZCI6ICJodHRwczovL2FwaS5maWxlYWN0aXZlLnVhdC5hbnpnY2lzLmNvbS9hdXRoIgp9.ewWggi_ti3LyCc_X84XbeHDh1GU-J2uVx-vC_jZN2ZnO_CjwrUlAC3LXwEh2DX6IPTeP2jpX1IdWt-IaQlzendnfBYmq7YqxAWKhJiZATNM15YxSqQH67Z3Ic3UscXNMvRPClnfHBuIfalSnBAVOzm-WhQ9gboEpSGJ9-wQB7qN5pBXR4IiWUy6NX2wWLXGdLnQozg_A1nTp0Wwr_xQO4_qcIAUnAxG7SaJ1zlOq_QLMMdvczgHt1_DCTnIYetH5Wy4Y47Jyb0GrzfcTjcIR1z6jS-e4gcMyom6hOO-QH5vWFW3t5hhCaM8la7o8LhEhYzXoXXUYCO7Q7qfMK-vBVg'
+        ```
+        **Example Response**
+
+        Header:   
+
+        ```http
+        HTTP/1.1 200 OK
+        X-RequestKey: 5c9707f9-0ecf-4543-aa03-7c5b48b441d1
+        ```
+        Body:   
+
+        ```json
+        {
+          "expires_in": 3600,
+          "token_type": "Bearer",
+          "access_token": "66118dbe-f3a9-8ccd-be7e-06864aaac613"
+        }
+        ```
+
+        <aside class="alert alert-success" role="alert">
+        HTTP: 200
+        </aside>
+
+        | Field  | Name         | Description                                 |
+        |:-------|:-------------|:--------------------------------------------|
+        | Header | X-RequestKey | ANZ Request Key                             |
+        | Body   | expires_in   | The lifetime in seconds of the access token |
+        | Body   | token_type   | Bearer token type                           |
+        | Body   | access_token | Token value to be used as Bearer token      |
+
+
+
+        <aside class="alert alert-warning" role="alert">
+        HTTP: 401 Unauthorized
+        </aside>
+        If the Client Credential Grant is invalid or is not verified against the Customer Public Key a `401` Unauthorized is returned.
+
+        <aside class="alert alert-warning" role="alert">
+        HTTP: 400 BadRequest
+        </aside>
+        If required fields are not provided or if auth request is invalid a `400` Bad Request is returned.
+    - title: What is a JWT?
+      answer: |-
+        A [JSON Web Token](https://jwt.io) or JWT, pronouced jot is an internet standard RFC 7519 used to transfer claims from a server to a client in a secured and URL-safe means. 
+        Clients are then authorised to access claims as specified in the scope specified by the client in the `Client Credential Grant Request`. 
+    - title: How to constuct a valid JWT?
+      answer: |-
+        Refer to [jwt.io](https://jwt.io) for detailed information.   
+
+        JWT consists of three parts:
+        * Header
+        * Payload
+        * Signature
+
+        The three parts are encoded using `Base64url Encoding` and concatenated. Each part is seperated using a period `.`   
+        JWT = header.payload.signature   
+
+        **Header**   
+        JWT Header is only two fields, these fields contain fixed values:
+
+        | Field | Name       | Description                                       |  Value  |
+        |:------|:-----------|:--------------------------------------------------|:-------:|
+        | alg   | alogorithm | Identifies the algorithm is used in the signature | `RS256` |
+        | typ   | JWT        | Identifies the token type                         |  `jwt`  |
+
+
+        **Payload**
+
+        | Field | Name       | Description                                                                             | Value                                         | Example                                     |
+        |:------|:-----------|:----------------------------------------------------------------------------------------|:---------------------------------------------:|:--------------------------------------------|
+        | sub   | subscriber | ANZ provided Customer Code, ALL CAPS                                                    | PROVIDED VALUE                                | CUSTOMERCODE                                |
+        | exp   | JWT expiry | Set the time, using UNIX EPOCH, after which the token cannot be accepted for processing | GENERATED EPOCH VALUE                         | 1662530902                                  |
+        | aud   | audience   | provides an identification of the intended recipient. Token cannot be processed         | `https://api.fileactive.uat.anzgcis.com/auth` | https://api.fileactive.uat.anzgcis.com/auth |
+
+        **Signature**
+          
+        JWT signatures are used to generate a Message Authentication Code (MAC) to verify that the message is correct and true. 
+        ANZ verifies the signature of a JWT using a `public key` as provided by the **customer**. Customers must generate the signature/MAC value using the corresponding `Private Key`
+
+        **Example JWT**
+
+        Example JWT with signed and encoded content:
+
+        ```plaintext
+        eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.ewoJInN1YiI6ICJDVVNUT01FUkNPREUiLAogICJleHAiOiAiMTY2MjUzMDkwMiIsCiAgImF1ZCI6ICJodHRwczovL2FwaS5maWxlYWN0aXZlLnVhdC5hbnpnY2lzLmNvbS9hdXRoIgp9.ewWggi_ti3LyCc_X84XbeHDh1GU-J2uVx-vC_jZN2ZnO_CjwrUlAC3LXwEh2DX6IPTeP2jpX1IdWt-IaQlzendnfBYmq7YqxAWKhJiZATNM15YxSqQH67Z3Ic3UscXNMvRPClnfHBuIfalSnBAVOzm-WhQ9gboEpSGJ9-wQB7qN5pBXR4IiWUy6NX2wWLXGdLnQozg_A1nTp0Wwr_xQO4_qcIAUnAxG7SaJ1zlOq_QLMMdvczgHt1_DCTnIYetH5Wy4Y47Jyb0GrzfcTjcIR1z6jS-e4gcMyom6hOO-QH5vWFW3t5hhCaM8la7o8LhEhYzXoXXUYCO7Q7qfMK-vBVg
+        ```
+    - title: What is a Bearer Token?
+      answer: |-
+        Bearer Tokens are generated by and returned to a customer during a Client Credential Interaction.
+        Customer must provide a valid JWT with an `exp` field that dates **not more than 60 minutes into the future**.
+        Bearer Tokens are GUIDs, 32 character hypenated strings.
+    - title: How are scopes used?
+      answer: |-
+        A scope is a mechanism in OAuth 2.0 to define what an application can access (such as payments) and whether the access is read or write. An application can request one or more scopes during a credential grant request. 
+        The `bearer token` issued will be limited to the scopes granted.
+- section: Support
+  questions:
+    - title: What is X-RequestKey used for?
+      answer: |-
+        ANZ Support requires the `X-RequestKey` value when engaged, the `X-RequestKey` is a GUID assigned to each request sent to ANZ for processing. ANZ applications are developed to retain context and information on the `X-RequestKey` value, providing the `X-RequestKey` will allow ANZ Support to uniquely identify the API call in question.
