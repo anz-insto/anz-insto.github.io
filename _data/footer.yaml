@@ -1,0 +1,8 @@
+- name: ANZ Website
+  url: "https://www.anz.com"
+- name: Disclaimer
+  url: "https://institutional.anz.com/about-anz-institutional/disclaimer"
+- name: Security & Privacy Statement
+  url: "https://www.anz.com.au/privacy/centre/"
+- name: Website Terms of Use
+  url: "https://www.anz.com.au/support/help/website-terms-use/"

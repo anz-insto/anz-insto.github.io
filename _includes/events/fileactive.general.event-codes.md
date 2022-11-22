@@ -1,4 +1,4 @@
-### General API Event Codes
+### Default API Event Codes
 
 | Event Code | Name                   | HTTP <BR> Response | Description                                    |
 | :--------- | :--------------------- | :----------------: | :--------------------------------------------- |

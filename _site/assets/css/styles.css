@@ -2759,7 +2759,7 @@ p, .dropdown-item, td, th, .search-item { color: #494949; font-weight: 400; lett
 p:link, .dropdown-item:link, td:link, th:link, .search-item:link { color: #0072AC; }
 
 small { color: #494949; font-weight: 400; letter-spacing: 0px; margin-bottom: 16px; font-size: 14px; line-height: 20px; }
-small:link { color: #0072AC; }
+small:link { color: #494949; }
 
 th { font-weight: 600; }
 
@@ -2793,6 +2793,10 @@ header { background-color: #004165; }
 .search-item:hover { background-color: #F7F7F7; }
 
 footer { background-color: #F7F7F7; width: 100%; }
+footer ul { list-style: none; margin-bottom: 0; }
+footer ul li { display: inline-block; }
+footer ul li:not(:last-child)::after { content: "|"; }
+footer a:hover { color: #494949; }
 
 .toc-container { background-color: #FFFFFF; padding-left: 0; }
 .toc-container #toc-title { font-weight: 600; font-size: 1.25rem; line-height: 1.75rem; color: #004165; }

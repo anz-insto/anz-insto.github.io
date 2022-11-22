@@ -43,3 +43,6 @@
     - title: Event Codes
       description: Fileactive API event and error codes
       url: /event-codes
+    - title: Additional RTN Information
+      description: RTN FAQs and NPP Payment Return Codes
+      url: /rtn-info

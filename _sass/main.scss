@@ -98,7 +98,7 @@ small {
     font-size: 14px; //0.875rem;
     line-height: 20px; //1.25rem;
     &:link {
-        color: $html-link-blue;
+        color: $granite;
     }
 }
 
@@ -208,6 +208,24 @@ header {
 footer {
     background-color: $off-white;
     width: 100%;
+    ul {
+        list-style: none;
+        margin-bottom: 0;
+        li {
+            display: inline-block;
+            
+        }
+        li:not(:last-child){
+            &::after {
+                content: "|";
+            }
+        }
+    }
+    a {
+        &:hover {
+            color: $granite;
+        }
+    }
 }
 
 .toc-container {

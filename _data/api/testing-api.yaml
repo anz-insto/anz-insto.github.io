@@ -17,6 +17,9 @@ paths:
       tags:
         - Receivables
       operationId: submitRTNRequest
+      externalDocs:
+        description: RTN Additional Information
+        url: "https://anz-insto.github.io/fileactive/rtn-info.html"  
       parameters:
         - $ref: '#/components/parameters/correlationID'
         - $ref: '#/components/parameters/messageID'
@@ -114,9 +117,6 @@ components:
               code: EC013_003
               severity: Fatal
               text: The provided account_identification = 013999012345678 is not authorised to receive real time notifications. Provide an authorised account or please contact support
-    404NotFound:
-      description: Not Found
-      content: {}
     429TooManyRequests:
       description: Action exceeds allocated limits
       content: {}
@@ -129,8 +129,8 @@ components:
           example:
             status:
               code: EC000_001
-              title: Fatal
-              detail: Internal Server Error, please contact support
+              severity: Fatal
+              text: Internal Server Error, please contact support
     502BadGateway:
       description: Bad Gateway, contact support
       content: {}
