@@ -1,9 +1,25 @@
+
 <footer class="py-5 row d-print-none mx-0 w-100">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-12 col-sm-4 text-center py-2 order-sm-2 mx-auto ">
-        <small>© {{ 'now' | date: "%Y" }} {{ site.author }} All Rights Reserved</small>
-        {% if site.privacy %}<small class="ml-1"><a href="{{ site.privacy }}" target="_blank">Privacy Policy</a></small>{% endif %}
+      <div class="py-2 mx-auto">
+        <ul>
+
+{% for item in site.data.footer %}
+<li>
+  <a href="{{ item.url }}">
+    <small>{{ item.name }}</small>
+  </a>
+</li>
+
+{% endfor %}
+
+        </ul>
+    </div>
+    </div>
+    <div class="row">
+      <div class="col-12 text-center py-2 mx-auto ">
+        <small>© {{ 'now' | date: "%Y" }} {{ site.author }} All Rights Reserved. ANZ's colour blue is a trade mark of ANZ.</small>
       </div>
     </div>
   </div>

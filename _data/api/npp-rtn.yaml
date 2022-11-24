@@ -2,7 +2,11 @@ openapi: 3.0.1
 info:
   title: Fileactive Real Time Notification API
   description: |-
-    Fileactive Real Time Notification API.
+    Fileactive Real Time Notification API.<br><br>
+
+    It is important for customers using the NPP Real Time Payment Notification service to
+    verify the `x-Notification-Signature` prior to processing the Notification. JWS Algorithm
+    is RS256.<br><br>
 
     It is important for customers using the NPP Real Time Payment Notification service to
     check for duplicate notifications. Duplicate notifications can arise when
@@ -10,20 +14,27 @@ info:
     recommends duplicate checking be based on the transaction identifier
     `account_servicer_reference` . Performing this check will ensure multiple
     instances of the same notification are not processed more than once.
-  version: 1.0.1
+  version: 1.1.3
 servers:
   - url: 'https://api.uat.example.com/v1.0'
     description: UAT Environment
   - url: 'https://api.example.com.au/v1.0'
     description: Production Environment
+security:
+  - apiKeyAuth: []    
 paths:
   /npp/payment-notification:
     post:
       tags: 
-        - payment-notification
+        - Payment Notification
+      summary: Real Time Notification
       description: >-
         API publishes a notification when settled funds sent via NPP are credited to a
         customers ANZ bank account.
+      operationId: submitPaymentNotification
+      externalDocs:
+        description: RTN Additional Information
+        url: "https://anz-insto.github.io/fileactive/rtn-info.html"  
       parameters:
         - name: x-Message-Id
           in: header
@@ -34,23 +45,25 @@ paths:
           schema:
             type: string
             format: uuid
-            example: a690be37-9caf-44e4-bae1-475b50a8cb18
-          required: true
-        - name: apikey
-          in: header
-          description: >-
-            The webhook includes a `apikey` header, the header name and value can be customised based on the customer requirements.  The purpose of this header is for the consumer to validate the request is sent with an exampled `apikey` in order to authenticate ANZ as the sending party.  If the `apikey` is not valid, the consumer should return a HTTP `401 Unauthorized` response.
-          schema:
-            type: string
-            example: c343809b-f236-45e6-a7c6-8f0fa9d4d63b
+            example: 2157f49a-01d7-4e1a-aa0e-422073a312b8
           required: true
         - name: x-Notification-Signature
           in: header
-          description: >-
-            The webhook includes a `x-Notification-Signature` header, the consumer is required to verify the signature validates against the relevant ANZ public key which is issued to the customer during onboarding.
+          description: |
+            The webhook includes a singature of the payload. The consumer is required to verify the signature prior to processing the RTN.  
+
+            To verify the signature  
+            1. Reconstruct the JWT
+                1. BASE64 encode the JWT header i.e. `{"alg":"RS256","typ":"JWT"}`
+                2. BASE64 encode the JWT payload i.e. `Request Body` 
+                3. Extract signature from header `x-Notification-Signature`
+                4. Concatenate all 3 components separated by "." (period) i.e. `header.payload.signature`
+            2. Call JWT function to verify the signature using the ANZ provided public key, algorithm RS256 and the reconstructed JWT
+                1. If valid signature then process RTN
+                2. If invalid signature then reject RTN with a HTTP 401 (unauthorised)  
           schema:
             type: string
-            example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZXNzYWdlX2lkZW50aWZpZXIiOiI4OEJFRDJBNzM3NzU0MzlBOUQzNTI3M0M5Q0QyMDlEQSIsImNyZWF0aW9uX2RhdGVfdGltZSI6IjIwMjEtMTAtMTlUMDU6MDc6MzkuMzUwMzM5OCswMDowMCIsIm5vdGlmaWNhdGlvbiI6W3siaWRlbnRpZmljYXRpb24iOiJERDNDNEYxRDNENDI0M0REQUQ4QTkwNTc4OTBCN0EzRSIsImNyZWF0aW9uX2RhdGVfdGltZSI6IjIwMjEtMTAtMTlUMDU6MDc6MzkuMzUwMzQ4NSswMDowMCIsImFjY291bnRfaWRlbnRpZmljYXRpb24iOiIxNDgxNDgwMDAwMDAxMDAiLCJhY2NvdW50X2lzc3VlciI6IjE0ODE0OCIsImVudHJ5IjpbeyJlbnRyeV9yZWZlcmVuY2UiOiJyZWZlcmVuY2UgZW50ZXJlZCBpbiBjaGFubmVsIDEiLCJhbW91bnQiOnsiQGN1cnJlbmN5IjoiQVVEIiwiJCI6IjExMDAuMDAifSwiY3JlZGl0X2RlYml0X2luZGljYXRvciI6IkNSRFQiLCJzdGF0dXMiOiJCT09LIiwiYm9va2luZ19kYXRlIjoiMjAyMS0wNy0xN1QyMDoyNDoyOCsxMDowMCIsInZhbHVlX2RhdGUiOiIyMDIxLTA3LTE3VDIwOjI0OjI1KzEwOjAwIiwiZG9tYWluIjoiUE1OVCIsImZhbWlseSI6IlJDRFQiLCJzdWJfZmFtaWx5X2NvZGUiOiJTRFZBIiwiZW50cnlfZGV0YWlscyI6W3sidHJhbnNhY3Rpb25fZGV0YWlscyI6W3siYWNjb3VudF9zZXJ2aWNlcl9yZWZlcmVuY2UiOiJQVE0wMDAwNjg5MjQwODAwIiwiZW5kX3RvX2VuZF9pZGVudGlmaWNhdGlvbiI6InJlZmVyZW5jZSBlbnRlcmVkIGluIGNoYW5uZWwgMSIsInVldHIiOiJjMTdjZDFlZC01MzlhLTRjNGUtODBmYy00ZTU3MDI0NTQ0OWQiLCJ0cmFuc2FjdGlvbl9pZGVudGlmaWNhdGlvbiI6IjdhNmQ0MTAwLTMwOWEtMTFlYy04MmUwLTMxMjI1ZmUzOGNmYyIsInByb3ByaWV0YXJ5Ijp7InByb3ByaWV0YXJ5X3R5cGUiOiJTZXJ2aWNlTGV2ZWwiLCJwcm9wcmlldGFyeV9yZWZlcmVuY2UiOiIifSwiYW1vdW50Ijp7IkBjdXJyZW5jeSI6IkFVRCIsIiQiOiIxMTAwLjAwIn0sImNyZWRpdF9kZWJpdF9pbmRpY2F0b3IiOiJDUkRUIiwiYW1vdW50X2RldGFpbHMiOnsiaW5zdHJ1Y3RlZF9hbW91bnQiOnsiQGN1cnJlbmN5IjoiQVVEIiwiJCI6IjExMDAuMDAifSwidHJhbnNhY3Rpb25fYW1vdW50Ijp7IkBjdXJyZW5jeSI6IkFVRCIsIiQiOiIxMTAwLjAwIn19LCJkZWJ0b3JfbmFtZSI6IkFuZHJhcyBBcmF0byIsImNyZWRpdG9yX25hbWUiOiJIb2xkZW4gSG9sZGluZ3MiLCJjcmVkaXRvcl9hY2NvdW50X2lkZW50aWZpY2F0aW9uIjoiMTQ4MTQ4MDAwMDAwMTAwIiwiY3JlZGl0b3JfYWNjb3VudF9pc3N1ZXIiOiIxNDgxNDgiLCJjcmVkaXRvcl9hY2NvdW50X3Byb3h5Ijp7InR5cGUiOiJFTUFMIiwiaWRlbnRpZmljYXRpb24iOiJucHAtY29ycG9yYXRlLXJ0bi10ZXN0aW5nQGFuei5jb20ifSwicmVtaXR0YW5jZV9pbmZvcm1hdGlvbl91bnN0cnVjdHVyZWQiOlsi8J-RqOKAjfCfkanigI3wn5Gn4oCN8J-RpkxvcmVtIGlwc3VtIGRvbG9yIHNpdCBhbWV0LCBjb25zZWN0ZXR1ciBhZGlwaXNjaW5nIGVsaXQsIHNlZCBkbyBlaXVzbW9kIHRlbXBvciBpbmNpZGlkdW50IHV0IGxhYm9yZSBldCBkb2xvcmUgbWFnbmEgYWxpcXVhLiBVdCBlbmltIGEiLCJkIG1pbmltIHZlbmlhbSwgcXVpcyBub3N0cnVkIGV4ZXJjaXRhdGlvbiB1bGxhbWNvIGxhYm9yaXMgbmlzaSB1dCBhbGlxdWlwIGV4IGVhIGNvbW1vZG8gY29uc2VxdWF0LiBEdWlzIGF1dGUgaXJ1cmUgZG9sb3IgaW4gcmVwcmVoZW5kZXJpdCBpIl19XX1dfV19XX0.UQ1YQmeMWp867wHExjhDfMWzYsXDxLIyVAy-pjQvaB38_WoQFLt4_Q4NdxJEil2gTuxM1seAmjGG3d6lqD7Ao_xlA60OG5LfNdFnbRBStgicMqMfDKHi_nUXXAmazRGkqkOd6PQaZsd1BcYz1EDfoo7NVfL9MCvFFbRmongBfseXmN1BsSQP5lfKZ2mINItYSbBUKukODSwBCiUF79C7qbH3HsMOapPGNclX02ldV82sbs3KZbl_ztS92HRq6_vb_AnbWy1K4Ef9HHqiFaO04xCc7xUptDw-7zcjTfbCNU5mlrV6mMzzgJGkuRWyX48L5v36Ri0gCupGqFo0tUXq3Q
+            example: chyG_yfwgiYigKenK3RF0mkB6-qQhYRECxF6ls-P6n4lpfgg8Q9naMuOcYu1-xW4MiaOWdB3uqmfck_KjFzYy3QF46TzFft2JqWvqOCB2_ZkNAZppRGFnjHd0vJ7STZt4dFA3GcU5gUpr3hLQfPDjqdofp0Z44_4Aat4DopEqRnNK9PdntkkbXgyKeDBx7NJV7dC1UstodLHG7nPZ3L0eVGXfw97lKEDcXAKgfrE-A-7_UbGixO7J2eX_PlfyEQt9h1L-2-Q5pRtyYpyY9XSp6kMl4bN9geuDsqtE5iFh68dV7Nl0ykdo68CYmEQpVY_6G3j79vPeeSyhs11eTlt6g
           required: true
       requestBody:
         description: Notification to customer of an NPP payment
@@ -85,6 +98,13 @@ paths:
           description: Gateway Timeout
           content: {}
 components:
+  securitySchemes: 
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
+      description: >-
+        API key to authorise requests. The webhook includes a `apikey` header, the header name and value can be customised based on the customer requirements.  The purpose of this header is for the consumer to validate the request is sent with an exampled `apikey` in order to authenticate ANZ as the sending party.  If the `apikey` is not valid, the consumer should return a HTTP `401 Unauthorized` response.
   responses:
     200Received:
       description: OK - Notification Received
@@ -127,12 +147,12 @@ components:
           minLength: 1
           maxLength: 35
           description: Point to point reference, as assigned by the account servicing institution, and sent to the account owner or the party authorised to receive the message, to unambiguously identify the message.
-          example: A690BE379CAF44E4BAE1475B50A8CB18
+          example: 2157F49A01D74E1AAA0E422073A312B8
         creation_date_time:
           allOf:  
           - $ref: '#/components/schemas/iso_date_time'
           description: UTC Date/Time the message was generated ISODateTime YYYY-MM-DDTHH:MM:SSZ
-          example: '2021-07-17T15:49:16.8784355+00:00'
+          example: '2022-10-13T22:46:26.8382745+00:00'
         notification:
           type: array
           minItems: 1
@@ -148,34 +168,34 @@ components:
                 minLength: 1
                 maxLength: 35
                 description: Unique identifier generated by ANZ to identify the notification.
-                example: E9DCF5C496C64B1EB55EB748F5792E21
+                example: 257A4C86AA134B4FA1F988448E783EB2
               creation_date_time:
                 allOf:
                 - $ref: '#/components/schemas/iso_date_time'
                 description: >
                   UTC Date/Time the message was generated ISODateTime YYYY-MM-DDTHH:MM:SSZ
-                example: '2021-07-17T15:49:16.8784355+00:00'
+                example: '2022-10-13T22:46:26.8382745+00:00'
               account_identification:
                 type: string
                 minLength: 1
                 maxLength: 34
                 description: Account identification assigned by an institution, includes BSB
-                example: '014814800000010'
+                example: '165165000000100'
               account_issuer:
                 type: string
                 minLength: 1
                 maxLength: 35
                 description: Entity that assigns the identification
-                example: '014814'
+                example: '165165'
               entry:
                 $ref: '#/components/schemas/entry'
     amount:
       type: object
       required:
-        - '@currency'
-        - $
+        - currency
+        - amount
       properties:
-        '@currency':
+        currency:
           type: string
           pattern: '^[A-Z]{3,3}$'
           description: >
@@ -184,7 +204,7 @@ components:
             of the international standard ISO 4217 "Codes for the representation of
             currencies and funds"
           example: AUD
-        $:
+        amount:
           type: string
           maxLength: 19
           description: >-
@@ -215,8 +235,8 @@ components:
               type: string
               minLength: 1
               maxLength: 35
-              description: Reference entered in the initiating party channel. Defaults to "NOTPROVIDED"
-              example: INV0123
+              description: Bank Reference entered in the initiating party channel. Defaults to "NOTPROVIDED". For ARM transactions will populate with the ARM account number.
+              example: '845780010'
             amount:
               $ref: '#/components/schemas/amount'
             credit_debit_indicator:
@@ -236,14 +256,14 @@ components:
               - $ref: '#/components/schemas/iso_date'
               description: >
                 Date when an entry is posted to an account on the account servicer's books	
-              example: '2021-07-17'
+              example: '2022-10-13'
             value_date:
               allOf:
               - $ref: '#/components/schemas/iso_date'
               description: >
                 Date at which assets become available to the account owner in case of a credit 
                 entry, or cease to be available to the account owner in case of a debit entry.
-              example: '2021-07-17'
+              example: '2022-10-13'
             domain:
               type: string
               description: >
@@ -317,7 +337,7 @@ components:
           minLength: 1
           maxLength: 35
           description: Debtor account issuer. Will be masked for most customers
-          example: '000123'   
+          example: '000999'   
         creditor_account_identification:
           type: string
           minLength: 1
@@ -326,6 +346,12 @@ components:
             Creditor account identification. Will be ARM account when available, 
             otherwise will be posting account 
           example: '845780010'
+        debtor_name:
+          type: string
+          minLength: 1
+          maxLength: 140
+          description: Debtor (payer) account name. Defaults to "NOTPROVIDED" 
+          example: Andras Arato
         creditor_account_issuer:
           type: string
           minLength: 1
@@ -354,6 +380,12 @@ components:
               maxLength: 2048
               description: Creditor account proxy identifier value.
               example: '+61403736550'
+        creditor_name:
+          type: string
+          minLength: 1
+          maxLength: 140
+          description: Creditor (payer) account name. Defaults to "NOTPROVIDED"
+          example: Holden Holdings 
     transaction_details:
       type: array
       description: Only one transaction will be provided per notification
@@ -374,7 +406,7 @@ components:
               recommends duplicate checking be based on the transaction identifier
               `account_servicer_reference` . Performing this check will ensure multiple
               instances of the same notification are not processed more than once.
-            example: PTM0000689240800
+            example: PTM2022101389715
           end_to_end_identification:
             type: string
             minLength: 1
@@ -386,14 +418,14 @@ components:
             - $ref: '#/components/schemas/uuid_vs_identifier'
             description: > 
               Universally unique identifier to provide an end-to-end reference of a payment transaction.
-            example: 189a2c88-1deb-419c-b571-412f9ff12bf9
+            example: a690be37-9caf-44e4-bae1-475b50a8cb18
           transaction_identification:
             type: string
             minLength: 1
             maxLength: 35
             description: > 
               Unique identification as assigned by ANZ (for outward) or counter party FI for inward	
-            example: CTBAAUSNXXXN20220510000000085259970
+            example: CTBAAUSNXXXN20221013000310791599310
           proprietary:
             type: object
             required:
@@ -432,18 +464,6 @@ components:
                 $ref: '#/components/schemas/amount'
               transaction_amount:
                 $ref: '#/components/schemas/amount'
-          debtor_name:
-            type: string
-            minLength: 1
-            maxLength: 140
-            description: Debtor (payer) account name. Defaults to "NOTPROVIDED" 
-            example: Andras Arato
-          creditor_name:
-            type: string
-            minLength: 1
-            maxLength: 140
-            description: Creditor (payer) account name. Defaults to "NOTPROVIDED"
-            example: Holden Holdings
           related_parties:
             $ref: '#/components/schemas/related_parties' 
           remittance_information:
@@ -455,7 +475,7 @@ components:
                   Information supplied to enable the matching/reconciliation of an entry 
                   with the items that the payment is intended to settle, such as commercial 
                   invoices in an accounts' receivable system, in an unstructured form.
-                example: ['👨‍👩‍👧‍👦My remittance info','INV0123']
+                example: ['👨 My emittance info','INV0123']
                 items:
                   type: string
                   minLength: 1
@@ -463,11 +483,9 @@ components:
                 minItems: 1
                 maxItems: 2
           return_information:
-            type: array
+            type: object
             description: Only a single return reason will be provided for returned payments
-            items:
-              type: object
-              properties:
+            properties:
                 reason:
                   type: object
                   description: Refer to list of Return Reason Codes for possible values

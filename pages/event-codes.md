@@ -5,6 +5,8 @@ description: Fileactive API event and error codes
 permalink: /event-codes
 toc: true
 ---
+
+## General
 {% include events/fileactive.general.event-codes.md %}
 
 ## Payments
