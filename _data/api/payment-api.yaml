@@ -339,6 +339,78 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default' 
+  /payment/hk/v1.0/rtgs:
+    post:
+      summary: HK RTGS Submit
+      description: |-
+        Hong Kong RTGS API using pain.001.001.09 derived json message format. Payment Initiation request using Hong Kong RTGS (Real Time Gross Settlement) service from single debtor to single or multiple creditors.   
+        Refer to **CustomerCreditTransferInitiationV09_ASIA_RTGS** for unencrypted payload object.
+      tags:
+        - Hong Kong Payments
+      operationId: submitHKRtgs
+      parameters:
+        - $ref: '#/components/parameters/correlationID'
+        - $ref: '#/components/parameters/messageID'
+      requestBody:
+        description: >-
+          Secured resource to instruct movement of funds from the debtor account
+          to creditor.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecuredPaymentSubmissionResource'
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/201Created'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorised'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalError'
+        '502':
+          $ref: '#/components/responses/502BadGateway'
+        '503':
+          $ref: '#/components/responses/503Unavailable'
+        '504':
+          $ref: '#/components/responses/504Timeout'
+        default:
+          $ref: '#/components/responses/default'
+  /payment/hk/v1.0/rtgs/{x-Message-Id}:  
+    get:
+      summary: HK RTGS Status
+      description: |
+        Retrieve and return the status of a submited message. 
+      tags:
+        - Hong Kong Payments
+      operationId: getHKRtgsStatus
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/correlationID'
+      responses:
+        '200':
+          $ref: '#/components/responses/200OK'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorised'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalError'
+        '502':
+          $ref: '#/components/responses/502BadGateway'
+        '503':
+          $ref: '#/components/responses/503Unavailable'
+        '504':
+          $ref: '#/components/responses/504Timeout'
+        default:
+          $ref: '#/components/responses/default'
   /payment/sg/v1.0/ach:
       post:
         summary: SG ACH Submit
@@ -652,6 +724,7 @@ components:
             IN.INSTO.PAYMENT.READ: Retrieve information for specific payment resource   
             HK.INSTO.PAYMENT.ACH.CREATE: Create Hong Kong ACH Payment Resource   
             HK.INSTO.PAYMENT.FAST.CREATE: Create Hong Kong FAST Payment Resource   
+            HK.INSTO.PAYMENT.RTGS.CREATE: Create Hong Kong RTGS Payment Resource  
             HK.INSTO.PAYMENT.READ: Retrieve information for specific payment resource   
             SG.INSTO.PAYMENT.ACH.CREATE: Create Singapore ACH Payment Resource   
             SG.INSTO.PAYMENT.FAST.CREATE: Create Singapore FAST Payment Resource   
@@ -2406,6 +2479,7 @@ components:
         IN.INSTO.PAYMENT.READ - Retrieve information for specific payment resource   
         HK.INSTO.PAYMENT.ACH.CREATE - Create Hong Kong ACH Payment Resource   
         HK.INSTO.PAYMENT.FAST.CREATE - Create Hong Kong FAST Payment Resource   
+        HK.INSTO.PAYMENT.RTGS.CREATE - Create Hong Kong RTGS Payment Resource  
         HK.INSTO.PAYMENT.READ - Retrieve information for specific payment resource   
         SG.INSTO.PAYMENT.ACH.CREATE - Create Singapore ACH Payment Resource   
         SG.INSTO.PAYMENT.FAST.CREATE - Create Singapore FAST Payment Resource   
@@ -2421,6 +2495,7 @@ components:
         - IN.INSTO.PAYMENT.READ
         - HK.INSTO.PAYMENT.ACH.CREATE
         - HK.INSTO.PAYMENT.FAST.CREATE
+        - HK.INSTO.PAYMENT.RTGS.CREATE
         - HK.INSTO.PAYMENT.READ
         - SG.INSTO.PAYMENT.ACH.CREATE
         - SG.INSTO.PAYMENT.FAST.CREATE

@@ -8,10 +8,56 @@ toc: true
 
 ## Contents
 
+- [1.1.2 - Hong Kong RTGS API specifications](#1.1.2)
+- [1.1.1 - Statement API stub specifications](#1.1.1)
 - [1.1.0 - Payment, NPP and RTN updates](#1.1.0)
 - [1.0.0 - Site creation](#1.0.0)
 
 ---
+<a name="1.1.2"></a>
+
+### [1.1.2 - 2023-02-09]
+
+#### Added
+- [Payment API]({{ site.baseurl }}/fileactive/api/payment-api) add HK RTGS
+
+#### Changed
+- Nothing changed
+
+#### Deprecated
+- Nothing deprecated.
+
+#### Removed
+- Nothing removed.
+
+#### Fixed
+- Nothing fixed
+
+#### Security
+- No security updates.
+
+<a name="1.1.1"></a>
+
+### [1.1.1 - 2022-11-25]
+
+#### Added
+- Nothing added
+
+#### Changed
+- Add test account list to [statement api stub specification](https://anz-insto.github.io/fileactive/fileactive/stub/accounts-statement.html)
+
+#### Deprecated
+- Nothing deprecated.
+
+#### Removed
+- Nothing removed.
+
+#### Fixed
+- Fix broken link on [statement api](https://anz-insto.github.io/fileactive/fileactive/api/statement-api)
+
+#### Security
+- No security updates.
+
 <a name="1.1.0"></a>
 
 ### [1.1.0 - 2022-11-22]
