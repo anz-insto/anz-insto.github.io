@@ -281,8 +281,8 @@ components:
       description: Message payload. Provided as camt.052.001.06 xml.
       example: '[camt.052.001.06 XML]'
       externalDocs:
-        description: Refer here for **camt.052.001.06 xml message implementation guide** with examples
-        url: 'https://anz-insto.github.io/fileactive/specs/accounts-statement.html'
+        description: CAMT.052.001.06 xml message implementation guide with examples
+        url: 'https://anz-insto.github.io/fileactive/fileactive/specs/accounts-statement.html'
     ClientAssertion:
       required:
         - sub

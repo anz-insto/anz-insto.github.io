@@ -8,12 +8,36 @@ toc: true
 
 ## Contents
 
+- [1.1.3 - Statement API specifications](#1.1.3)
 - [1.1.2 - Hong Kong RTGS API specifications](#1.1.2)
 - [1.1.1 - Statement API stub specifications](#1.1.1)
 - [1.1.0 - Payment, NPP and RTN updates](#1.1.0)
 - [1.0.0 - Site creation](#1.0.0)
 
 ---
+<a name="1.1.3"></a>
+
+### [1.1.32 - 2023-03-20]
+
+#### Added
+- Nothing added
+
+#### Changed
+- Nothing changed
+
+#### Deprecated
+- Nothing deprecated.
+
+#### Removed
+- Nothing removed.
+
+#### Fixed
+- Fix [Statement API]({{ site.baseurl }}/fileactive/api/statement-api) broken link in statement response
+
+#### Security
+- No security updates.
+
+
 <a name="1.1.2"></a>
 
 ### [1.1.2 - 2023-02-09]
