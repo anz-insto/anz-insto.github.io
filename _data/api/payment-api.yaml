@@ -911,7 +911,7 @@ components:
         group_status: ACSC
         original_payment_information_and_status_details:
           - original_payment_information_identification: BATCH REF
-            original_payment_information_status: ACSC
+            payment_information_status: ACSC
             transaction_information_and_status:
               - original_instruction_identification: SENDER REF
                 original_end_to_end_identification: TRANSACTION REF
@@ -923,7 +923,7 @@ components:
         group_status: RJCT
         original_payment_information_and_status_details:
           - original_payment_information_identification: BATCH REF
-            original_payment_information_status: RJCT
+            payment_information_status: RJCT
             original_payment_information_status_reason_code: NARR
             original_payment_information_status_additional_information:
               - Insufficient funds
@@ -933,7 +933,7 @@ components:
         group_status: RJCT
         original_payment_information_and_status_details:
           - original_payment_information_identification: BATCH REF
-            original_payment_information_status: RJCT
+            payment_information_status: RJCT
             transaction_information_and_status:
               - original_instruction_identification: SENDER REF
                 original_end_to_end_identification: TRANSACTION REF
@@ -948,7 +948,7 @@ components:
         group_status: ACTC
         original_payment_information_and_status_details:
           - original_payment_information_identification: BATCH REF
-            original_payment_information_status: ACTC
+            payment_information_status: ACTC
             transaction_information_and_status:
               - original_instruction_identification: SENDER REF
                 original_end_to_end_identification: TRANSACTION REF
@@ -2328,7 +2328,7 @@ components:
             Unique identification, as assigned in the API submission to
             unambiguously identify the original payment batch.
           $ref: '#/components/schemas/Max35Text'
-        original_payment_information_status:
+        payment_information_status:
           description: Specifies the status of the payment batch.
           $ref: '#/components/schemas/ExternalPaymentGroupStatus1Code'
         original_payment_information_status_reason_code:
@@ -2346,7 +2346,7 @@ components:
             $ref: '#/components/schemas/TransactionInformationAndStatus'
       required:
         - original_payment_information_identification
-        - original_payment_information_status
+        - payment_information_status
       additionalProperties: false
     OrganisationIdentification29:
       description: Unique and unambiguous way to identify an organisation.
@@ -2414,10 +2414,10 @@ components:
         - credit_transfer_transaction_information
     PaymentSubmitResponse:
       required:
-        - status
+        - transaction_status
       type: object
       properties:
-        status:
+        transaction_status:
           type: string
           description: |
             'RCVD - RECEIVED  RJCT - REJECTED'
