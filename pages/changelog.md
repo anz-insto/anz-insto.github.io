@@ -8,6 +8,7 @@ toc: true
 
 ## Contents
 
+- [1.1.4 - Incorrect tag fixes](#1.1.4)
 - [1.1.3 - Statement API specifications](#1.1.3)
 - [1.1.2 - Hong Kong RTGS API specifications](#1.1.2)
 - [1.1.1 - Statement API stub specifications](#1.1.1)
@@ -15,6 +16,29 @@ toc: true
 - [1.0.0 - Site creation](#1.0.0)
 
 ---
+<a name="1.1.4"></a>
+
+### [1.1.4 - 2023-03-28]
+
+#### Added
+- Nothing added
+
+#### Changed
+- Nothing changed
+
+#### Deprecated
+- Nothing deprecated.
+
+#### Removed
+- Nothing removed.
+
+#### Fixed
+- Fixed the incorrect response tag/schema names
+
+#### Security
+- No security updates.
+
+
 <a name="1.1.3"></a>
 
 ### [1.1.32 - 2023-03-20]
@@ -36,7 +60,6 @@ toc: true
 
 #### Security
 - No security updates.
-
 
 <a name="1.1.2"></a>
 
