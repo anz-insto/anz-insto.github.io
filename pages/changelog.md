@@ -8,6 +8,8 @@ toc: true
 
 ## Contents
 
+- [1.1.6 - Coming Soon PayTo Payee APIs](#1.1.6)
+- [1.1.5 - Singapore PAYNOW API specifications](#1.1.5)
 - [1.1.4 - Incorrect tag fixes](#1.1.4)
 - [1.1.3 - Statement API specifications](#1.1.3)
 - [1.1.2 - Hong Kong RTGS API specifications](#1.1.2)
@@ -16,6 +18,53 @@ toc: true
 - [1.0.0 - Site creation](#1.0.0)
 
 ---
+<a name="1.1.6"></a>
+
+### [1.1.6- 2023-05-02]
+
+#### Added
+- [PayTo API]({{ site.baseurl }}/fileactive/api/payto-api) 
+- [PayTo API Webhook]({{ site.baseurl }}/fileactive/api/payto-api-webhook)
+
+#### Changed
+- Nothing changed
+
+#### Deprecated
+- Nothing deprecated.
+
+#### Removed
+- Nothing removed.
+
+#### Fixed
+- Nothing fixed
+
+#### Security
+- No security updates.
+
+
+<a name="1.1.5"></a>
+
+### [1.1.5 - 2023-04-11]
+
+#### Added
+- [Payment API]({{ site.baseurl }}/fileactive/api/payment-api) add SG PAYNOW
+
+#### Changed
+- Nothing changed
+
+#### Deprecated
+- Nothing deprecated.
+
+#### Removed
+- Nothing removed.
+
+#### Fixed
+- Nothing fixed
+
+#### Security
+- No security updates.
+
+
 <a name="1.1.4"></a>
 
 ### [1.1.4 - 2023-03-28]
@@ -41,7 +90,7 @@ toc: true
 
 <a name="1.1.3"></a>
 
-### [1.1.32 - 2023-03-20]
+### [1.1.3 - 2023-03-20]
 
 #### Added
 - Nothing added
