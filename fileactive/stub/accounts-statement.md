@@ -15,6 +15,7 @@ description: |-
 - [Successful Intraday call with NPP Extended Narrative Information](#sample-success-narrative)
 - [Successful Intraday ARM call with NPP Extended Narrative Information](#sample-arm-success-narrative)
 - [Account Statement request with Incorrect/Invalid accountId](#sample-invalid-accountId)
+- [Available test account numbers](#test-accounts)
 - [Reserved accounts list to not use](#reserved-accounts)
 
 ---
@@ -24,12 +25,12 @@ description: |-
 
 To simulate a successful response, use the following test values:
 
-| Field     | Path      | Value                                               |
-|:----------|:----------|:----------------------------------------------------|
-| AccountId | accountId | any account id [exception list](#reserved-accounts) |
+| Field     | Path      | Value                                                                                                                                                           |
+|:----------|:----------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| AccountId | accountId | Any account id as listed in [Test Accounts](#test-accounts) section.<br/>Restricted account numbers are listed in [reserved accounts](#reserved-accounts) list. |
 
 
-#### **HTTP Method : __POST__**
+#### **HTTP Method : POST**
 
 #### **Sample Request Details :**
 
@@ -80,7 +81,7 @@ To simulate a successful response, use the following test values:
 | AccountId         | accountId        | 011222814766535 |
 | Include Narrative | includeNarrative | true            |
 
-#### **HTTP Method : __POST__**
+#### **HTTP Method : POST**
 
 #### **Sample Request Details :**
 
@@ -132,7 +133,7 @@ To simulate a successful response, use the following test values:
 | AccountId         | accountId        | 011222814766538 or 011222814766539 |
 | Include Narrative | includeNarrative | true                               |
 
-#### **HTTP Method : __POST__**
+#### **HTTP Method : POST**
 
 #### **Sample Request Details :**
 
@@ -188,7 +189,7 @@ To simulate a successful response, use the following test values:
 |:----------|:----------|:----------------|
 | AccountId | accountId | 000000000000000 |
 
-#### **HTTP Method : __POST__**
+#### **HTTP Method : POST**
 
 #### **Sample Request Details :**
 
@@ -230,16 +231,37 @@ To simulate a successful response, use the following test values:
 <br/>
 
 [back to top](#top)
+
 ---
 
 <br/>
 <br/>
 
-<a name="reserved-accounts"></a>
-## Accounts Reserved for Internal error cases 
+<a name="test-accounts"></a>
 
-###### Note:  These below listed accounts (with any BSB) are used for INTERNAL negative testing only and not be used.
-<br/>
+## Test Accounts 
+Accounts available for testing against various currencies.    
+**Note:** Additional account numbers may be used as documented for specific use cases. 
+
+| Account Number  | Currency |
+|:----------------|:--------:|
+| 011222814766535 | AUD      |
+| 123456USD00099  | USD      |
+| 9999999         | SBD      |
+| 123456HKD00099  | HKD      |
+| 123456SGD00099  | SGD      |
+| 123456INR00099  | INR      |
+| 123456PNG00099  | PGK      |
+| 123456VND00099  | VND      |
+
+
+
+<a name="reserved-accounts"></a>
+
+## Reserved Accounts
+
+Accounts Reserved for Internal error cases.   
+**Note:**  These below listed accounts (with any BSB) are used for INTERNAL negative testing only and not be used.
 
 | Account numbers |
 |:----------------|
