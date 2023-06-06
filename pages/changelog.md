@@ -8,6 +8,7 @@ toc: true
 
 ## Contents
 
+- [1.1.7 - Statement API changes for NZ Systematics](#1.1.7)
 - [1.1.6 - Coming Soon PayTo Payee APIs](#1.1.6)
 - [1.1.5 - Singapore PAYNOW API specifications](#1.1.5)
 - [1.1.4 - Incorrect tag fixes](#1.1.4)
@@ -18,6 +19,28 @@ toc: true
 - [1.0.0 - Site creation](#1.0.0)
 
 ---
+<a name="1.1.7"></a>
+
+### [1.1.7- 2023-05-16]
+
+#### Added
+- Added new field "Debtor Account Identification" for NZ Systematics account
+
+#### Changed
+- Nothing changed
+
+#### Deprecated
+- Nothing deprecated.
+
+#### Removed
+- Nothing removed.
+
+#### Fixed
+- Nothing fixed
+
+#### Security
+- No security updates.
+
 <a name="1.1.6"></a>
 
 ### [1.1.6- 2023-05-02]

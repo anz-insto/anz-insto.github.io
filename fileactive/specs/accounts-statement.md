@@ -77,17 +77,18 @@ _Use case: Fileactive customer requests intraday statement_
 | Credit Debit Indicator                      | NtryDtls/TxDtls/CdtDbtInd                | Indicates whether the amount is a credit or a debit amount                                                                                                                                                                                                                                                                                                    | String    | 4          |    1..1     |
 | **Related Parties**                         | NtryDtls/TxDtls/RltdPties                | Aggregate                                                                                                                                                                                                                                                                                                                                                     | n/a       | n/a        |    0..1     |
 | Debtor Name                                 | RltdPties/Dbtr/Nm                        | Returned only if includeNarrative=true. Debtor (payer) account name                                                                                                                                                                                                                                                                                           | String    | 140        |    0..1     |
+| Debtor Account Identification              | RltdPties/DbtrAcct/Id/Othr/Id            | Returned only if includeNarrative=true. Debtor account identification. Payee account number (NZ Systematics account)                                                                                                                                                                                                                                           | String    | 34         |    0..1     |
 | Creditor Name                               | RltdPties/Cdtr/Nm                        | Returned only if includeNarrative=true. Creditor (payer) account name                                                                                                                                                                                                                                                                                         | String    | 140        |    0..1     |
 | Creditor Alias Name                         | RltdPties/Cdtr/CtctDtls/Nm               | Returned only if includeNarrative=true. Creditor alias name                                                                                                                                                                                                                                                                                                   | String    | 140        |    0..1     |
 | Creditor Alias Value                        | RltdPties/Cdtr/CtctDtls/EmailAdr         | Returned only if includeNarrative=true. Creditor alias value, e.g. "email@npp.com"                                                                                                                                                                                                                                                                            | String    | 2048       |    0..1     |
-| Creditor Account Identification             | RltdPties/CdtrAcct/Id/Othr/Id            | Returned only if includeNarrative=true. Creditor account identification. Payee account number (ARM virtual account)                                                                                                                                                                                                                                           | String    | 34         |    0..1     |
+| Creditor Account Identification             | RltdPties/CdtrAcct/Id/Othr/Id            | Returned only if includeNarrative=true. Creditor account identification. Payee account number (NZ Systematics/ARM virtual account)                                                                                                                                                                                                                                           | String    | 34         |    0..1     |
 | Creditor Account Issuer                     | RltdPties/CdtrAcct/Id/Othr/Issr          | Returned only if includeNarrative=true. Creditor account issuer. Payee account issuer - BSB (ARM Off System BSB)                                                                                                                                                                                                                                              | String    | 35         |    0..1     |
 | Remittance Information Unstructured         | NtryDtls/TxDtls/RmtInf/Ustrd             | Remittance information of the transaction                                                                                                                                                                                                                                                                                                                     | String    | 140        |    0..*     |
 
 
 ---
 
-<a name="sample"></a>
+<a name="sample 1"></a>
 ### Sample
 
 {% highlight xml linenos %}
@@ -201,6 +202,133 @@ _Use case: Fileactive customer requests intraday statement_
                   </Othr>
                 </Id>
               </CdtrAcct>
+            </RltdPties>
+            <RmtInf>
+              <Ustrd>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever sinc</Ustrd>
+              <Ustrd>e the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five cent</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+    </Rpt>
+  </BkToCstmrAcctRpt>
+</Document>
+{% endhighlight %}
+
+---
+<a name="sample 2"></a>
+### Sample
+
+{% highlight xml linenos %}
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:iso:std:iso:20022:tech:xsd:camt.052.001.06">
+  <BkToCstmrAcctRpt>
+    <GrpHdr>
+      <MsgId>6c1c21ac0781458e9db328e4fbc10c8a</MsgId>
+      <CreDtTm>2017-12-14T16:24:23.5977875+11:00</CreDtTm>
+    </GrpHdr>
+    <Rpt>
+      <Id>0da5827bee6e406aa7152c120a3e705b</Id>
+      <CreDtTm>2017-12-14T16:24:23.5977875+11:00</CreDtTm>
+      <RptgSrc>
+        <Prtry>CMM</Prtry>
+      </RptgSrc>
+      <Acct>
+        <Id>
+          <Othr>
+            <Id>010071000289801</Id>
+          </Othr>
+        </Id>
+        <Ccy>AUD</Ccy>
+        <Nm>BLOGGS,JOE</Nm>
+      </Acct>
+      <Bal>
+        <Tp>
+          <CdOrPrtry>
+            <Cd>ITAV</Cd>
+          </CdOrPrtry>
+          <SubTp>
+            <Prtry>Current</Prtry>
+          </SubTp>
+        </Tp>
+        <Amt Ccy="AUD">10.0000</Amt>
+        <CdtDbtInd>DBIT</CdtDbtInd>
+        <Dt>
+          <Dt>2017-12-14</Dt>
+        </Dt>
+      </Bal>
+      <TxsSummry>
+        <TtlNtries>
+          <NbOfNtries>2</NbOfNtries>
+          <Sum>2.5000</Sum>
+          <TtlNetNtry>
+            <Amt>0.0000</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+          </TtlNetNtry>
+        </TtlNtries>
+        <TtlCdtNtries>
+          <NbOfNtries>1</NbOfNtries>
+          <Sum>5.0000</Sum>
+        </TtlCdtNtries>
+        <TtlDbtNtries>
+          <NbOfNtries>1</NbOfNtries>
+          <Sum>2.5000</Sum>
+        </TtlDbtNtries>
+      </TxsSummry>
+      <Ntry>
+        <NtryRef>Ref 1234</NtryRef>
+        <Amt Ccy="AUD">213.12</Amt>
+        <CdtDbtInd>DBIT</CdtDbtInd>
+        <Sts>BOOK</Sts>
+        <BookgDt>
+          <Dt>2017-05-30</Dt>
+        </BookgDt>
+        <ValDt>
+          <Dt>2017-05-30</Dt>
+        </ValDt>
+        <AcctSvcrRef>Ref 567</AcctSvcrRef>
+        <Avlbty>
+          <Dt>
+            <ActlDt>2017-05-30</ActlDt>
+          </Dt>
+          <Amt Ccy="AUD">246340.00</Amt>
+          <CdtDbtInd>DBIT</CdtDbtInd>
+        </Avlbty>
+        <BkTxCd>
+          <Domn>
+            <Cd>PMNT</Cd>
+            <Fmly>
+              <Cd>RCDT</Cd>
+              <SubFmlyCd>DMCT</SubFmlyCd>
+            </Fmly>
+          </Domn>
+        </BkTxCd>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <AcctSvcrRef>1234567890123456789</AcctSvcrRef>
+              <EndToEndId>my_e2e_id_1234_1</EndToEndId>
+              <Prtry>
+                <Tp>ServiceLevel</Tp>
+                <Ref>ics1.clear.V01</Ref>
+              </Prtry>
+            </Refs>
+            <Amt Ccy="AUD">213.12</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+            <RltdPties>
+              <Dbtr>
+                <Nm>Adam Atawneh</Nm>
+              </Dbtr>
+              <DbtrAcct>
+                <Id>
+                  <Othr>
+                    <Id>123456789</Id>
+                  </Othr>
+                </Id>
+              </DbtrAcct>
+              <Cdtr>
+                <Nm>Daniel Holden</Nm>
+              </Cdtr>
             </RltdPties>
             <RmtInf>
               <Ustrd>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever sinc</Ustrd>
