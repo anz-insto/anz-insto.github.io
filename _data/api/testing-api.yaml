@@ -165,10 +165,16 @@ components:
           example: Reference entered in the initiating channel     
         amount:
           type: string
-          description: Notifiyied amount in AUD
+          description: Notified amount in AUD
           minLength: 1
           maxLength: 19
           example: 7120.86
+        puid:
+          type: string
+          minLength: 1
+          maxLength: 16
+          description: An optionally provided identifier which is returned in the requested RTN
+          example: "PTM2022101389715"
         debtor_name:
           type: string
           minLength: 1
