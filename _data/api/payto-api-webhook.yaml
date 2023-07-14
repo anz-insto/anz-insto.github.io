@@ -37,6 +37,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/requestKey"
         - $ref: "#/components/parameters/messageID"
+        - $ref: "#/components/parameters/correlationID"
         - $ref: "#/components/parameters/priority"
       requestBody:
         content:
@@ -80,7 +81,7 @@ paths:
           - Bilateral Amend Mandate Resolution
           - Bilateral Amend Mandate Timeout          
           - Unilateral Amend Mandate
-          - Change Mandate Status
+          - Unilateral Change Mandate Status
       operationId: mandateNotifications
       parameters:
         - $ref: "#/components/parameters/messageID"
@@ -151,6 +152,18 @@ components:
       schema:
         $ref: '#/components/schemas/UUID'
       example: 325ea624-ac19-47e2-94ef-a1ab4e487275
+    correlationID:  
+      name: X-Correlation-Id
+      in: header
+      description: |-
+        Optional correlation ID provided by the data consumer that should
+        be reflected back in the response headers. Can be used for reporting and
+        logging.
+
+        Echoed from the mandate request
+      schema:
+        $ref: '#/components/schemas/UUID'
+      example: '71d6fb19-7515-40dc-b045-e17550b67600'
   responses:
     200:
       description: OK - Processing Outcome Received
@@ -296,6 +309,8 @@ components:
           type: string
           description: |-
             MPS User Id which is associated with the mandate request
+          minLength: 1
+          maxLength: 10    
         request_id:
           type: string
           description: |-
@@ -331,6 +346,9 @@ components:
           type: boolean
           description: Boolean flag indicating if the action was created as bilateral or unilateral. This will only be present for mandate creation and amendment actions. 
           example: true
+        debtor_alias_name:
+          type: string
+          description: Debtor Alias Name. Only provided where a debtor alias was provided in the Mandate Creation request or Mandate Amendment request.
         error:
           $ref: '#/components/schemas/GenericStatus1'
       required:
@@ -355,8 +373,8 @@ components:
       enum:
       - CMPL
       - DECL
-      - RECL
       - PEND
+      - RECL
       - TIMO 
     MandateActionType1Code:
       type: string
@@ -387,6 +405,8 @@ components:
           type: string
           description: |-
             MPS User Id which is associated with the mandate request
+          minLength: 1
+          maxLength: 10    
         mandate_identification:
           type: string
           description: "Unique ID, as assigned by the MMS, to unambiguously identify the mandate. This ID must be used to identify the mandate for all further operations on the mandate.\nUniversally Unique IDentifier (UUID) version 1, as described in IETC RFC 4122 \"Universally Unique IDentifier (UUID) URN Namespace\" without the 4 hyphen separators.\r\nFor example: '00000000000010008000000000000000' instead of  '00000000-0000-1000-8000-000000000000' (without quotes)"
@@ -403,6 +423,17 @@ components:
           $ref: '#/components/schemas/MandateActionType1Code'
         action_status:
           $ref: '#/components/schemas/MandateActionStatus1Code'
+        details:
+          type: object
+          description: "Details of an action performed on a mandate by the **Payer** i.e. unilateral changes or MMS in case of mandate timeout. Depending on the type of action, only one of the following objects will be present: Amendment, Porting or StatusChange.\n  \n**Property descriptions**:\n - **amendment** - Mandate amendment details provided in the request.\n - **porting** - Mandate porting details. These details are only present when the port finalisation has been performed.\n - **status_change** - Mandate status change details provided in the request."
+          additionalProperties: false
+          properties:
+ #           amendment:
+ #             $ref: '#/components/schemas/MandateAmendmentRequest1'
+ #           porting:
+ #             $ref: '#/components/schemas/MandatePortFinalisationDetails1'
+            status_change:
+              $ref: '#/components/schemas/MandateStatusChangeDetails1'  
       required:
       - creation_date_time
       - trigger
@@ -421,7 +452,38 @@ components:
       - ACTV
       - CNCD
       - CRTD
-      - SUSD  
+      - SUSD
+    MandateStatusChange1Code:
+      type: string
+      description: |-
+        Enumeration of possible status changes.
+        <table><tr><th>Code</th><th>Name</th><th>Description</th></tr><tr><td>CNCL</td><td>Cancel</td><td>Cancel a mandate.</td></tr><tr><td>RELS</td><td>Release</td><td>Unsuspend a suspended mandate.</td></tr><tr><td>SUSP</td><td>Suspend</td><td>Suspend an active mandate.</td></tr></table>
+      enum:
+      - CNCL
+      - RELS
+      - SUSP  
+    MandateStatusChangeDetails1:
+      type: object
+      description: "Request to change the status of a mandate."
+      additionalProperties: false
+      properties:
+        change:
+          $ref: '#/components/schemas/MandateStatusChange1Code'
+        reason_code:
+          type: string
+          description: |-
+            Code defining the reason for the status change to the mandate.
+            Specifies an alphanumeric string with a length of 4 characters.
+          pattern: ^[a-zA-Z0-9]{4}$
+        reason_description:
+          type: string
+          description: |-
+            Description of the change reason.
+            Specifies a character string with a maximum length of 256 characters.
+          minLength: 1
+          maxLength: 256
+      required:
+      - change
     NotificationPriority1Code:
       type: string
       description: |-
@@ -477,7 +539,7 @@ components:
           example: RCVD    
     UUID:
       type: string
-      example: '71d6fb19-7515-40dc-b045-e17550b67600'
+      example: '3d003c66-2d00-4092-8d8a-e55ba9bf8b2b'
       pattern: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
 tags:
   - name: Mandate
