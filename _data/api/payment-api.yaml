@@ -123,6 +123,76 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+  /payment/au/v1.0/cbft:
+    post:
+      summary: AU CBFT Submit
+      description: |-
+        Australian Cross Border Fund Transfer API using pain.001.001.09 derived json message format. Payment Initiation request using AU CBFT from single debtor to single or multiple creditors.   
+        Refer to **CustomerCreditTransferInitiationV09_AU_CBFT** for unencrypted payload object.
+      tags:
+        - Australia Payments
+      operationId: submitAuCbft
+      parameters:
+        - $ref: '#/components/parameters/correlationID'
+        - $ref: '#/components/parameters/messageID'
+      requestBody:
+        description: Resource to instruct movement of funds from the debtor account to creditor
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecuredPaymentSubmissionResourceAUCBFT'
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/201Created'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorised'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalError'
+        '502':
+          $ref: '#/components/responses/502BadGateway'
+        '503':
+          $ref: '#/components/responses/503Unavailable'
+        '504':
+          $ref: '#/components/responses/504Timeout'
+        default:
+          $ref: '#/components/responses/default'
+  /payment/au/v1.0/cbft/{x-Message-Id}:
+    get:
+      summary: AU CBFT Status
+      description: |
+        Retrieve and return the status of a submited message. 
+      tags:
+        - Australia Payments
+      operationId: getAuCbftStatus
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/correlationID'
+      responses:
+        '200':
+          $ref: '#/components/responses/200OK'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorised'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalError'
+        '502':
+          $ref: '#/components/responses/502BadGateway'
+        '503':
+          $ref: '#/components/responses/503Unavailable'
+        '504':
+          $ref: '#/components/responses/504Timeout'
+        default:
+          $ref: '#/components/responses/default'
   /payment/in/v1.0/ach:
     post:
       summary: IN ACH Submit
@@ -955,6 +1025,84 @@ components:
                 creditor_agent_member_identification: '012999'
                 creditor_name: AU DE Payee
                 creditor_account_identification: '012999111222333'
+    CustomerCreditTransferInitiationV09_AU_CBFT_Ex01:
+      summary: AU CBFT payment initiation example
+      value: 
+        creation_date_time: '2020-12-17T00:00:00'
+        number_of_transactions: 1
+        control_sum: '200.00'
+        initiating_party_name: ANZ Sample
+        initiating_party_bic: AANZBAU3MXX
+        initiating_party_identification: xxx
+        payment_information: 
+          - payment_information_identification: AU-CBFT-PMTINFID-22
+            requested_execution_date: '2020-12-17T00:00:00'
+            batch_booking: true
+            category_purpose: OTHR
+            debtor_name: AU CBFT Payer
+            debtor_account_identification: '123456789091234'
+            debtor_postal_address: 
+              postcode: '3000'
+              town_name: Melbourne
+              country_subdivision: Victoria
+              country: AU
+              address_line: '100 Melbourne st'
+            debtor_agent_bicfi: USBKUS44IMT
+            debtor_agent_postal_address: 
+              postcode: '3000'
+              town_name: Melbourne
+              country_subdivision: Victoria
+              country: AU
+              address_line: 333 Melbourne st
+            credit_transfer_transaction_information: 
+              - instruction_identification: AU-CBFT-INSTRID-11
+                end_to_end_identification: AU-CBFT-E2EID-11
+                equivalent_amount: 
+                    amount: 
+                      amount: '200.00'
+                      currency: USD
+                    currency_of_transfer: AUD
+                charge_bearer: CRED
+                intermediary_agent_bicfi: RRRRBAU3MXX
+                intermediary_agent_name: AU CBFT Agent
+                intermediary_agent_clearing_system: 
+                    id: 
+                      proprietary: SSSTTTRR
+                intermediary_agent_postal_address: 
+                    postcode: '3000'
+                    town_name: Melbourne
+                    country_subdivision: Victoria
+                    country: AU
+                    address_line: '555 Melbourne st'
+                exchange_rate_information: 
+                    contract_identification: ContractIden01
+                    exchange_rate: '1.02'
+                creditor_agent_bicfi: TDOMCATTTOR
+                creditor_agent_name: CERDITOR AGENT TST
+                creditor_agent_postal_address: 
+                  postcode: M5K 1A2
+                  town_name: Toronto
+                  country_subdivision: 'Ontario            country: ON'
+                  address_line: 222 Bay St
+                creditor_agent_clearing_system_code: DEBLZ
+                creditor_agent_member_identification: CDT MEMB IDENT
+                creditor_name: AU CBFT Payee
+                creditor_postal_address: 
+                  postcode: '8989Z'
+                  country_subdivison: XXX
+                  country: FR
+                  address_line: 333 riveria st Paris 9987467
+                  town_name: xyz
+                  department: HR
+                  sub_department: SUB
+                  street_name: riveria st
+                  building_number: 2
+                creditor_account_identification: 12345678901
+                purpose: 
+                  proprietary: PROP
+                remittance_information_unstructured: 
+                  REM1
+                  REM2
     CustomerCreditTransferInitiationV09_IN_ACH_Ex01:
       summary: IN ACH payment initiation example
       value:
@@ -1069,6 +1217,20 @@ components:
         of the international standard ISO 4217 "Codes for the representation of
         currencies and funds"
       example: AUD
+    EquivalentAmount2:
+      required:
+        - amount
+        - currency_of_transfer
+      type: object
+      properties:
+        currency_of_transfer:
+          $ref: '#/components/schemas/ActiveOrHistoricCurrencyCode'
+        amount:
+          description: Amount of money to be moved between the debtor and creditor, before
+            deduction of charges, expressed in the currency as ordered by the
+            initiating party.
+          example: "1.23"
+          $ref: "#/components/schemas/ActiveOrHistoricCurrencyAndAmount"
     AnyBICIdentifier:
       description: >-
         Code allocated to organisations by the ISO 9362 Registration Authority,
@@ -1462,6 +1624,239 @@ components:
         - payment_information
       example:
         $ref: '#/components/examples/CustomerCreditTransferInitiationV09_AU_DE_Ex01'
+      additionalProperties: false
+    CustomerCreditTransferInitiationV09_AU_CBFT:
+      description: >-
+        Payment initiation AU CBFT. Request to instruct movement of funds from the debtor account to creditor. 
+      type: object
+      properties:
+        creation_date_time:
+          description: Date and time at which the request was created.
+          example: '2020-12-17T00:00:00'
+          $ref: '#/components/schemas/ISODateTime'
+        number_of_transactions:
+          description: The number of transactions contained in the request
+          example: '1'
+          $ref: '#/components/schemas/Max15NumericText'
+        control_sum:
+          description: The sum of the transaction amounts in the request
+          example: '1.23'
+          $ref: '#/components/schemas/DecimalNumber'
+        initiating_party_name:
+          description: Party that initiates the payment.
+          example: ANZ Sample
+          $ref: '#/components/schemas/Max140Text'
+        initiating_party_bic:
+          description: Code allocated to organisations by the ISO 9362 Registration
+            Authority, under an international identification scheme, as described in
+            the latest version of the standard ISO 9362 Banking (Banking
+            telecommunication messages, Bank Identifier Codes).
+          $ref: "#/components/schemas/AnyBICIdentifier"
+        initiating_party_identification:
+          description: Unique identification of an organisation, as assigned by an
+            institution, using an identification scheme.
+          $ref: "#/components/schemas/Max35Text"
+        payment_information:
+          description: >-
+            Information related to the individual payments with a single API
+            submission.
+          type: array
+          minItems: 1
+          items:
+            description: >-
+              Set of characteristics that applies to the debit side of the payment
+              transactions included in the credit transfer initiation.
+            type: object
+            properties:
+              payment_information_identification:
+                description: >-
+                  Unique identification, as assigned by a sending party, to
+                  unambiguously identify the payment batch within the message.
+                example: 'BATCH REF'
+                $ref: '#/components/schemas/Max35Text'
+              batch_booking:
+                description: >-
+                  Identifies whether a single entry per individual transaction or a
+                  batch entry for the sum of the amounts of all transactions within the
+                  group of a message is requested. Usage: Batch booking is used to
+                  request and not order a possible batch booking.
+                $ref: '#/components/schemas/BatchBookingIndicator'
+              category_purpose:
+                description: >-
+                  Specifies the high level purpose of the instruction based on a set of
+                  pre-defined categories
+                example: 'SALA'
+                $ref: '#/components/schemas/ExternalCategoryPurpose1Code'
+              requested_execution_date:
+                description: >-
+                  Date at which the initiating party requests the clearing agent to
+                  process the payment.
+                example: '2020-12-17'
+                $ref: '#/components/schemas/ISODate'
+              debtor_name:
+                description: Name of Remitter. Produced on the recipient's Account Statement.
+                example: 'AU CBFT Payer'
+                type: string
+                minLength: 1
+                maxLength: 16
+              debtor_account_identification:
+                description: BSB and Account number of debtor. Must include any leading zeros.
+                example: '012001999888777'
+                type: string
+                pattern: '^[0-9]{12,15}$'
+              debtor_postal_address:
+                $ref: "#/components/schemas/PostalAddress24"
+              debtor_agent_member_identification:
+                $ref: "#/components/schemas/Max35Text"
+              debtor_agent_postal_address:
+                $ref: "#/components/schemas/PostalAddress24"
+              debtor_agent_bicfi:
+                description: Code allocated to organisations by the ISO 9362 Registration
+                  Authority, under an international identification scheme, as described in
+                  the latest version of the standard ISO 9362 Banking (Banking
+                  telecommunication messages, Bank Identifier Codes).
+                $ref: "#/components/schemas/AnyBICIdentifier"
+              credit_transfer_transaction_information:
+                description: Information related to the individual transaction within a payment.
+                type: array
+                minItems: 1
+                items:
+                  description: >-
+                    Set of elements used to provide information on the individual
+                    transaction(s) included in the message.
+                  type: object
+                  properties:
+                    instruction_identification:
+                      description: >-
+                        Unique identification as assigned by an instructing party for an
+                        instructed party to unambiguously identify the instruction.
+                      example: 'SENDER REF'
+                      $ref: '#/components/schemas/Max35Text'
+                    end_to_end_identification:
+                      description: Lodgement Reference. Produced on the recipient’s Account Statement.
+                      example: 'TRANSACTION REF'
+                      type: string
+                      minLength: 1
+                      maxLength: 18
+                    instructed_amount:
+                      description: >-
+                        Amount of money to be moved between the debtor and creditor, before
+                        deduction of charges, expressed in the currency as ordered by the
+                        initiating party.
+                      example: '1.23'
+                      $ref: '#/components/schemas/ActiveOrHistoricCurrencyAndAmount'
+                    equivalent_amount:
+                      description: >-
+                        Amount of money to be moved between the debtor and creditor, before
+                        deduction of charges, expressed in the currency as ordered by the
+                        initiating party.
+                      example: '1.23'
+                      $ref: '#/components/schemas/EquivalentAmount2'
+                    exchange_rate_information:
+                      description: Exchange rate information
+                      $ref: '#/components/schemas/ExchangeRate1'
+                    charge_bearer:
+                      description: Currency of Transfer
+                      example: 'CRED'
+                      $ref: '#/components/schemas/ChargeBearerType1Code'
+                    creditor_name:
+                      description: Title of account to be CREDITED
+                      example: AU CBFT Payee
+                      type: string
+                      minLength: 1
+                      maxLength: 32
+                    creditor_account_identification:
+                      description: BSB and Account number of creditor. Must include any leading zeros.
+                      example: '012999111222333'
+                      type: string
+                      pattern: '^[0-9]{12,15}$'
+                    creditor_agent_name:
+                      description: Title of creditor agent
+                      example: AU CBFT Payee
+                      type: string
+                      minLength: 1
+                      maxLength: 140
+                    creditor_postal_address:
+                      description: Creditor Postal Address.
+                      $ref: "#/components/schemas/PostalAddress24"
+                    creditor_agent_bicfi:
+                      description: >-
+                        Code allocated to organisations by the ISO 9362 Registration
+                        Authority, under an international identification scheme, as described in
+                        the latest version of the standard ISO 9362 Banking (Banking
+                        telecommunication messages, Bank Identifier Codes).
+                      $ref: "#/components/schemas/AnyBICIdentifier"
+                    creditor_agent_clearing_system_code:
+                      description: Title of creditor agent
+                      example: AU CBFT Payee
+                      type: string
+                      minLength: 1
+                      maxLength: 5
+                    creditor_agent_postal_address:
+                      description: Creditor Postal Address.
+                      $ref: "#/components/schemas/PostalAddress24"
+                    creditor_agent_member_identification:
+                      description: Identification of a member of a clearing system.
+                      example: "012123"
+                      $ref: "#/components/schemas/Max35Text"
+                    intermediary_agent_bicfi:
+                      description: >-
+                        Code allocated to organisations by the ISO 9362 Registration
+                        Authority, under an international identification scheme, as described in
+                        the latest version of the standard ISO 9362 Banking (Banking
+                        telecommunication messages, Bank Identifier Codes).
+                      $ref: "#/components/schemas/AnyBICIdentifier"
+                    intermediary_agent_clearing_system:
+                      description: Clearing System Information
+                      $ref: "#/components/schemas/ClearingSystemMemberIdentification2"  
+                    intermediary_agent_name:
+                      description: Title of Intermediary agent
+                      example: AU CBFT Agent
+                      type: string
+                      minLength: 1
+                      maxLength: 140
+                    intermediary_agent_postal_address:
+                      description: Intermediary agent Postal Address.
+                      $ref: "#/components/schemas/PostalAddress24"
+                    instruction_for_creditor_agent:
+                      description: Instruction for creditor agent.
+                      example: AU CBFT Payee
+                      type: string
+                      minLength: 1
+                      maxLength: 140
+                    purpose:
+                      description: Underlying reason for the payment transaction. Refer to ANZ contact for list of valid in country purpose codes.
+                      $ref: "#/components/schemas/Purpose2Choice"
+                    remittance_information_unstructured:
+                      description: Information supplied to enable the matching/reconciliation of an
+                        entry with the items that the payment is intended to settle, such as
+                        commercial invoices in an accounts' receivable system, in an
+                        unstructured form.
+                      type: array
+                      minItems: 1
+                      maxItems: 1
+                      items:
+                        $ref: "#/components/schemas/Max140Text"
+                  required:
+                    - end_to_end_identification
+                    - creditor_agent_member_identification
+                    - creditor_name
+                    - creditor_account_identification
+                  additionalProperties: false
+            required:
+              - payment_information_identification
+              - requested_execution_date
+              - debtor_name
+              - debtor_account_identification
+              - credit_transfer_transaction_information
+            additionalProperties: false
+      required:
+        - creation_date_time
+        - number_of_transactions
+        - initiating_party_name
+        - payment_information
+      example:
+        $ref: '#/components/examples/CustomerCreditTransferInitiationV09_AU_CBFT_Ex01'
       additionalProperties: false
     CustomerCreditTransferInitiationV09_ASIA_ACH:
       description: |
@@ -2564,6 +2959,10 @@ components:
             agreed between the initiating party/creditor and the debtor agent.
           example: ABCD12345
           $ref: "#/components/schemas/Max35Text"
+        exchange_rate:
+          description: Exchange rate.
+          example: '1.23'
+          $ref: '#/components/schemas/BaseOneRate'
     ExternalCategoryPurpose1Code:
       type: string
       enum:
@@ -2676,6 +3075,14 @@ components:
       type: string
       minLength: 1
       maxLength: 35
+    Max16Text:
+      type: string
+      minLength: 1
+      maxLength: 16
+    Max70Text:
+      type: string
+      minLength: 1
+      maxLength: 70
     OriginalPaymentInformationAndStatus:
       description: >-
         Information related to the status of individual payments with a single API
@@ -2803,6 +3210,23 @@ components:
       properties:
         country:
           $ref: "#/components/schemas/CountryCode"
+        PostCode:
+          $ref: "#/components/schemas/Max16Text"
+        TownName:
+          $ref: "#/components/schemas/Max35Text"
+        CountrySubDivision:
+          $ref: "#/components/schemas/Max35Text"
+        AddressLine:
+          $ref: "#/components/schemas/Max70Text"
+        department:
+          $ref: "#/components/schemas/Max70Text"
+        sub_department:
+          $ref: "#/components/schemas/Max70Text"
+        street_name:
+          $ref: "#/components/schemas/Max70Text"
+        building_number:
+          $ref: "#/components/schemas/Max16Text"
+
       required:
         - country
     ProxyAccountIdentification1:
@@ -2842,9 +3266,36 @@ components:
         - required:
             - proprietary
       additionalProperties: false
+    BaseOneRate:
+      description: Exchange Rate
+      type: integer
+      minLength: 1
+      maxLength: 11
+    ChargeBearerType1Code:
+      type: string
+      enum:
+        - DEBT
+        - CRED
+        - SHAR
+        - SLEV
+    ClearingSystemMemberIdentification2:
+      type: object
+      properties:
+        id:
+          description: Member Identification
+          example: ABCD12345
+          $ref: "#/components/schemas/ClearingSystemIdentification2Choice"
+    ClearingSystemIdentification2Choice:
+      type: object
+      properties:
+        proprietary:
+          description: Proprietary Info
+          example: ABCD12345
+          $ref: "#/components/schemas/Max35Text"
     Scopes:
       description: |
         AU.INSTO.PAYMENT.DE.CREATE - Create Australia DE Payment Resource   
+        AU.INSTO.PAYMENT.CBFT.CREATE - Create Australia CBFT Payment Resource   
         AU.INSTO.PAYMENT.READ - Retrieve information for specific payment resource   
         IN.INSTO.PAYMENT.ACH.CREATE - Create India ACH Payment Resource   
         IN.INSTO.PAYMENT.READ - Retrieve information for specific payment resource   
@@ -2862,6 +3313,7 @@ components:
       type: string
       enum:
         - AU.INSTO.PAYMENT.DE.CREATE
+        - AU.INSTO.PAYMENT.CBFT.CREATE
         - AU.INSTO.PAYMENT.READ
         - IN.INSTO.PAYMENT.ACH.CREATE
         - IN.INSTO.PAYMENT.READ
@@ -2891,6 +3343,21 @@ components:
             encryption: A256CBC-HS512
       example:
         secured_payload: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpbnN0cnVjdGlvbl9pZGVudGlmaWNhdGlvbiI6IlRDMTIxLzE0NzE4NzM4MjMiLCJlbmRfdG9fZW5kX2lkZW50aWZpY2F0aW9uIjoiTk9UUFJPVklERUQiLCJjcmVhdGlvbl9kYXRlX3RpbWUiOiIyMDE4LTA5LTE3VDA5OjQ1OjQ3WiIsImluaXRpYXRpbmdfcGFydHlfbmFtZSI6IkN1c3RvbWVyQSIsInJlcXVlc3RlZF9leGVjdXRpb25fZGF0ZSI6IjIwMTgtMDktMTciLCJkZWJ0b3JfbmFtZSI6IkJJTEJPIEJBR0dJTlMiLCJkZWJ0b3JfYWNjb3VudF9pZGVudGlmaWNhdGlvbiI6IjAxMzQyMTIzNDU2NyIsImRlYnRvcl9hY2NvdW50X3R5cGUiOiJCQkFOIiwiaW5zdHJ1Y3RlZF9hbW91bnQiOnsiY3VycmVuY3kiOiJBVUQiLCJhbW91bnQiOiI1NjIuODkifSwiY3JlZGl0b3JfbmFtZSI6IlNBTVdJU0UgR0FNR0VFIiwiY3JlZGl0b3JfYWNjb3VudF9pZGVudGlmaWNhdGlvbiI6IjAxMDE2OTg3NjU0MzIxIiwiY3JlZGl0b3JfYWNjb3VudF90eXBlIjoiQkJBTiIsImNyZWRpdG9yX2FnZW50X2JpYyI6Ik5PVFBST1ZJREVEIiwicmVtaXR0YW5jZV9pbmZvcm1hdGlvbl91bnN0cnVjdHVyZWQiOlsiRklSU1QgTElORSIsIlNFQ09ORCBMSU5FIl19.aR2RMEVTuOOI1YuUCf2Ppo3Bwtf2_91WMvLd3IIA0ToHBDn0II36FumIz2RrwiUNHBMZo41Qmjv_zt9TQbq61csx2lRZcQNNsstAXKZWI4oZjlBaenj3HvY2_ztxS2IPNZNlVUQrw8A51-1dm-EeVTsqwhxs-Ir6d1FCee5SaNBrhtfaDBGAwjtXolPJuyYve0J3F8X-JwKPLBUaQH5LgGlTOSasC0vsKqhfpZOc-3rS39UA7q0jHQyqcJKrhinEyWlTFU9PcOh2W4-0hXiPaLJ_PA-_EkY5kYBnBvUWofVy35ZnB_u0wv0gxvVVDYKLGUpOGblaWRUY09SHx52Njw'
+    SecuredPaymentSubmissionResourceAUCBFT:
+      required:
+        - secured_payload
+      type: object
+      properties:
+        secured_payload:
+          type: string
+          description: Encrypted and secured payment payload
+          x-jws-signature:
+            algorithm: RS256
+          x-jwe-encryption:
+            algorithm: RSA-OAEP
+            encryption: A256CBC-HS512
+          example:
+            secured_payload: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdW1tYXJ5IjoiQVUgQ0JGVCBwYXltZW50IGluaXRpYXRpb24gZXhhbXBsZSIsInZhbHVlIjp7ImNyZWF0aW9uX2RhdGVfdGltZSI6InslIG5vdyAnaXNvLTg2MDEnLCAnJyAlfSIsIm51bWJlcl9vZl90cmFuc2FjdGlvbnMiOiIxIiwiY29udHJvbF9zdW0iOiIyMDAuMDAiLCJpbml0aWF0aW5nX3BhcnR5X25hbWUiOiJBTlogU2FtcGxlIiwiaW5pdGlhdGluZ19wYXJ0eV9iaWMiOiJBQU5aQkFVM01YWCIsImluaXRpYXRpbmdfcGFydHlfaWRlbnRpZmljYXRpb24iOiJ4eHgiLCJwYXltZW50X2luZm9ybWF0aW9uIjpbeyJyZXF1ZXN0ZWRfZXhlY3V0aW9uX2RhdGUiOiJ7JSBub3cgJ2N1c3RvbScsICdZWVlZLU1NLUREJyAlfSIsInBheW1lbnRfaW5mb3JtYXRpb25faWRlbnRpZmljYXRpb24iOiJBVS1DQkZULVBNVElORklELTIyIiwiYmF0Y2hfYm9va2luZyI6dHJ1ZSwiY2F0ZWdvcnlfcHVycG9zZSI6Ik9USFIiLCJkZWJ0b3JfbmFtZSI6IkFVIENCRlQgUGF5ZXIiLCJkZWJ0b3JfYWNjb3VudF9pZGVudGlmaWNhdGlvbiI6IjEyMzQ1Njc4OTA5MTIzNCIsImRlYnRvcl9wb3N0YWxfYWRkcmVzcyI6eyJwb3N0Y29kZSI6IjMwMDAiLCJ0b3duX25hbWUiOiJNZWxib3VybmUiLCJjb3VudHJ5X3N1YmRpdmlzaW9uIjoiVmljdG9yaWEiLCJjb3VudHJ5IjoiQVUiLCJhZGRyZXNzX2xpbmUiOiIxMDAgTWVsYm91cm5lIHN0In0sImRlYnRvcl9hZ2VudF9iaWNmaSI6IlVTQktVUzQ0SU1UIiwiZGVidG9yX2FnZW50X3Bvc3RhbF9hZGRyZXNzIjp7InBvc3Rjb2RlIjoiMzAwMCIsInRvd25fbmFtZSI6Ik1lbGJvdXJuZSIsImNvdW50cnlfc3ViZGl2aXNpb24iOiJWaWN0b3JpYSIsImNvdW50cnkiOiJBVSIsImFkZHJlc3NfbGluZSI6IjMzMyBNZWxib3VybmUgc3QifSwiY3JlZGl0X3RyYW5zZmVyX3RyYW5zYWN0aW9uX2luZm9ybWF0aW9uIjpbeyJpbnN0cnVjdGlvbl9pZGVudGlmaWNhdGlvbiI6IkFVLUNCRlQtSU5TVFJJRC0xMSIsImVuZF90b19lbmRfaWRlbnRpZmljYXRpb24iOiJBVS1DQkZULUUyRUlELTExIiwiZXF1aXZhbGVudF9hbW91bnQiOnsiYW1vdW50Ijp7ImFtb3VudCI6IjIwMC4wMCIsImN1cnJlbmN5IjoiVVNEIn0sImN1cnJlbmN5X29mX3RyYW5zZmVyIjoiQVVEIn0sImNoYXJnZV9iZWFyZXIiOiJDUkVEIiwiaW50ZXJtZWRpYXJ5X2FnZW50X2JpY2ZpIjoiUlJSUkJBVTNNWFgiLCJpbnRlcm1lZGlhcnlfYWdlbnRfbmFtZSI6IkFVIENCRlQgQWdlbnQiLCJpbnRlcm1lZGlhcnlfYWdlbnRfY2xlYXJpbmdfc3lzdGVtIjp7ImlkIjp7InByb3ByaWV0YXJ5IjoiU1NTVFRUUlIifX0sImludGVybWVkaWFyeV9hZ2VudF9wb3N0YWxfYWRkcmVzcyI6eyJwb3N0Y29kZSI6IjMwMDAiLCJ0b3duX25hbWUiOiJNZWxib3VybmUiLCJjb3VudHJ5X3N1YmRpdmlzaW9uIjoiVmljdG9yaWEiLCJjb3VudHJ5IjoiQVUiLCJhZGRyZXNzX2xpbmUiOiI1NTUgTWVsYm91cm5lIHN0In0sImV4Y2hhbmdlX3JhdGVfaW5mb3JtYXRpb24iOnsiY29udHJhY3RfaWRlbnRpZmljYXRpb24iOiJDb250cmFjdElkZW4wMSIsImV4Y2hhbmdlX3JhdGUiOiIxLjAyIn0sImNyZWRpdG9yX2FnZW50X2JpY2ZpIjoiVERPTUNBVFRUT1IiLCJjcmVkaXRvcl9hZ2VudF9uYW1lIjoiQ0VSRElUT1IgQUdFTlQgVFNUIiwiY3JlZGl0b3JfYWdlbnRfcG9zdGFsX2FkZHJlc3MiOnsicG9zdGNvZGUiOiJNNUsgMUEyIiwidG93bl9uYW1lIjoiVG9yb250byIsImNvdW50cnlfc3ViZGl2aXNpb24iOiJPbnRhcmlvIiwiY291bnRyeSI6Ik9OIiwiYWRkcmVzc19saW5lIjoiMjIyIEJheSBTdCJ9LCJjcmVkaXRvcl9hZ2VudF9jbGVhcmluZ19zeXN0ZW1fY29kZSI6IkRFQkxaIiwiY3JlZGl0b3JfYWdlbnRfbWVtYmVyX2lkZW50aWZpY2F0aW9uIjoiQ0RUIE1FTUIgSURFTlQiLCJjcmVkaXRvcl9uYW1lIjoiQVUgQ0JGVCBQYXllZSIsImNyZWRpdG9yX3Bvc3RhbF9hZGRyZXNzIjp7InBvc3Rjb2RlIjoiODk4OVoiLCJjb3VudHJ5X3N1YmRpdmlzb24iOiJYWFgiLCJjb3VudHJ5IjoiRlIiLCJhZGRyZXNzX2xpbmUiOiIzMzMgcml2ZXJpYSBzdCBQYXJpcyA5OTg3NDY3IiwidG93bl9uYW1lIjoieHl6IiwiZGVwYXJ0bWVudCI6IkhSIiwic3ViX2RlcGFydG1lbnQiOiJTVUIiLCJzdHJlZXRfbmFtZSI6InJpdmVyaWEgc3QiLCJidWlsZGluZ19udW1iZXIiOiIyIn0sImNyZWRpdG9yX2FjY291bnRfaWRlbnRpZmljYXRpb24iOiIxMjM0NTY3ODkwMSIsInB1cnBvc2UiOnsicHJvcHJpZXRhcnkiOiJQUk9QIn0sInJlbWl0dGFuY2VfaW5mb3JtYXRpb25fdW5zdHJ1Y3R1cmVkIjpbIlJFTTEiLCJSRU0yIl19XX1dfSwieC13aWRkZXJzaGlucy1vbGRSZWYiOiIjL2NvbXBvbmVudHMvZXhhbXBsZXMvQ3VzdG9tZXJDcmVkaXRUcmFuc2ZlckluaXRpYXRpb25WMDlfQVVfQ0JGVF9FeDAxIn0.5SkYJH5THbQFxLm0iZ09bIiVL-U7jP0h-WZEE1uoWzM'    
     TransactionInformationAndStatus:
       description: >-
         Information related to the status of individual transactions within a
@@ -2962,6 +3429,9 @@ tags:
   - name: CustomerCreditTransferInitiationV09_AU_DE
     description: <SchemaDefinition schemaRef="#/components/schemas/CustomerCreditTransferInitiationV09_AU_DE" />
     x-displayName: CustomerCreditTransferInitiationV09_AU_DE
+  - name: CustomerCreditTransferInitiationV09_AU_CBFT
+    description: <SchemaDefinition schemaRef="#/components/schemas/CustomerCreditTransferInitiationV09_AU_CBFT" />
+    x-displayName: CustomerCreditTransferInitiationV09_AU_CBFT
 x-tagGroups:
   - name: Paths
     tags: 
@@ -2982,3 +3452,4 @@ x-tagGroups:
       - CustomerCreditTransferInitiationV09_ASIA_RTGS
       - CustomerCreditTransferInitiationV09_ASIA_PAYNOW
       - CustomerCreditTransferInitiationV09_AU_DE
+      - CustomerCreditTransferInitiationV09_AU_CBFT
