@@ -8,6 +8,7 @@ toc: true
 
 ## Contents
 
+- [1.1.8 - Australia Cross Border Fund Transfer API specifications](#1.1.8)
 - [1.1.7 - Statement API changes for NZ Systematics](#1.1.7)
 - [1.1.6 - Coming Soon PayTo Payee APIs](#1.1.6)
 - [1.1.5 - Singapore PAYNOW API specifications](#1.1.5)
@@ -19,6 +20,28 @@ toc: true
 - [1.0.0 - Site creation](#1.0.0)
 
 ---
+<a name="1.1.8"></a>
+
+### [1.1.8 - 2023-08-03]
+
+#### Added
+- [Payment API]({{ site.baseurl }}/fileactive/api/payment-api) add AU CBFT
+
+#### Changed
+- Nothing changed
+
+#### Deprecated
+- Nothing deprecated.
+
+#### Removed
+- Nothing removed.
+
+#### Fixed
+- Nothing fixed
+
+#### Security
+- No security updates.
+
 <a name="1.1.7"></a>
 
 ### [1.1.7- 2023-05-16]
