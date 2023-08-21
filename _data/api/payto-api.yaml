@@ -236,7 +236,7 @@ components:
     priority3:
       name: priority
       in: header
-      description: Paymemnt Priority (attended/unattended). Will be included in any generated notification. 
+      description: MPIR Priority (attended/unattended). Urgency or order of importance that the originator would like the recipient of the payment instruction to apply to the processing of the payment instruction. Will be included in any generated notification. 
       required: true
       schema:
         $ref: '#/components/schemas/NotificationPriority1Code'            
@@ -316,10 +316,12 @@ components:
           type: string
           description: A code allocated to a currency by a Maintenance Agency under an international identification scheme as described in the latest edition of the international standard ISO 4217 "Codes for the representation of currencies and funds".
           pattern: ^[A-Z]{3,3}$
+          enum: 
+            - AUD
         amount:
           type: string
           maxLength: 19
-          pattern: ^(?=.{1,19}$)[0-9]{0,18}(?:\.[0-9]{0,2})?$
+          pattern: ^(0|[1-9][0-9]{0,15})\.\d{2}$
       required: 
         - currency
         - amount    
@@ -437,7 +439,8 @@ components:
           description: |-
             MPS User Id associated with this create mandate request
           minLength: 1
-          maxLength: 10  
+          maxLength: 10
+          example: 10002005  
         request_id:
           allOf: 
           - $ref: '#/components/schemas/UUID'            
@@ -741,7 +744,8 @@ components:
           description: |-
             MPS User Id associated with this change mandate status request
           minLength: 1
-          maxLength: 10    
+          maxLength: 10
+          example: 10002005    
         request_id:
           allOf: 
           - $ref: '#/components/schemas/UUID'            
@@ -754,6 +758,9 @@ components:
           description: |-
             Code defining the reason for the status change to the mandate.
             Specifies an alphanumeric string with a length of 4 characters.
+            <table><tr><th>Code</th><th>Name</th><th>Description</th></tr><tr><td>MD17</td><td>RequestedByInitiatingParty</td><td>Requested By Initiating Party.</td></tr></table>
+          enum:
+          - MD17
           pattern: ^[a-zA-Z0-9]{4}$
         reason_description:
           type: string
@@ -795,7 +802,8 @@ components:
           description: |-
             MPS User Id associated with this MPIR
           minLength: 1
-          maxLength: 10    
+          maxLength: 10
+          example: 10002005    
         instruction_details:
           type: object
           description: Instruction details specific to MPIR
@@ -803,17 +811,13 @@ components:
           properties: 
             instruction_identification:
               type: string
-              description: Unique identification as assigned by an instructing party for an
-                instructed party to unambiguously identify the instruction. 
+              description: Unique identification as assigned by an instructing party for an instructed party to unambiguously identify the instruction. 
               minLength: 1
               maxLength: 35              
               example: TC121/1471873823
             end_to_end_identification:
               type: string
-              description: Unique identification assigned by the initiating party to
-                unambiguously identify the transaction. This identification is passed
-                on, unchanged, throughout the entire end-to-end chain. <br><br>
-                ANZ recommends populating with something meaningful as contents will flow through to statement narrative. Populating with "NOT PROVIDED" or similar is not recommended.
+              description: Unique identification assigned by the initiating party to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain. <br><br> ANZ recommends populating with something meaningful as contents will flow through to statement narrative. Populating with "NOT PROVIDED" or similar is not recommended.
               minLength: 1
               maxLength: 35
               example: BILL00237679          
