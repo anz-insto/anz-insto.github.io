@@ -481,6 +481,78 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+  /payment/hk/v1.0/cbft:
+    post:
+      summary: HK CBFT Submit
+      description: |-
+        Hong Kong CBFT API using pain.001.001.09 derived json message format. Payment Initiation request using Hong Kong CBFT (Cross Border Fund Transfer) service from single debtor to single or multiple creditors.   
+        Refer to **CustomerCreditTransferInitiationV09_ASIA_CBFT** for unencrypted payload object.
+      tags:
+        - Hong Kong Payments
+      operationId: submitHKCbft
+      parameters:
+        - $ref: '#/components/parameters/correlationID'
+        - $ref: '#/components/parameters/messageID'
+      requestBody:
+        description: >-
+          Secured resource to instruct movement of funds from the debtor account
+          to creditor.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecuredPaymentSubmissionResourceASIACBFT'
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/201Created'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorised'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalError'
+        '502':
+          $ref: '#/components/responses/502BadGateway'
+        '503':
+          $ref: '#/components/responses/503Unavailable'
+        '504':
+          $ref: '#/components/responses/504Timeout'
+        default:
+          $ref: '#/components/responses/default'
+  /payment/hk/v1.0/cbft/{x-Message-Id}:  
+    get:
+      summary: HK CBFT Status
+      description: |
+        Retrieve and return the status of a submited message. 
+      tags:
+        - Hong Kong Payments
+      operationId: getHKCbftStatus
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/correlationID'
+      responses:
+        '200':
+          $ref: '#/components/responses/200OK'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorised'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalError'
+        '502':
+          $ref: '#/components/responses/502BadGateway'
+        '503':
+          $ref: '#/components/responses/503Unavailable'
+        '504':
+          $ref: '#/components/responses/504Timeout'
+        default:
+          $ref: '#/components/responses/default'
   /payment/sg/v1.0/ach:
       post:
         summary: SG ACH Submit
@@ -769,6 +841,78 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+  /payment/sg/v1.0/cbft:
+    post:
+      summary: SG CBFT Submit
+      description: |-
+        Singapore CBFT API using pain.001.001.09 derived json message format. Payment Initiation request using Singapore CBFT (Cross Border Fund Transfer) service from single debtor to single or multiple creditors.   
+        Refer to **CustomerCreditTransferInitiationV09_ASIA_CBFT** for unencrypted payload object.
+      tags:
+        - Singapore Payments
+      operationId: submitSgCbft
+      parameters:
+        - $ref: '#/components/parameters/correlationID'
+        - $ref: '#/components/parameters/messageID'
+      requestBody:
+        description: >-
+          Secured resource to instruct movement of funds from the debtor account
+          to creditor.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecuredPaymentSubmissionResourceASIACBFT'
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/201Created'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorised'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalError'
+        '502':
+          $ref: '#/components/responses/502BadGateway'
+        '503':
+          $ref: '#/components/responses/503Unavailable'
+        '504':
+          $ref: '#/components/responses/504Timeout'
+        default:
+          $ref: '#/components/responses/default'
+  /payment/sg/v1.0/cbft/{x-Message-Id}:  
+    get:
+      summary: SG CBFT Status
+      description: |
+        Retrieve and return the status of a submited message. 
+      tags:
+        - Singapore Payments
+      operationId: getSgCbftStatus
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/correlationID'
+      responses:
+        '200':
+          $ref: '#/components/responses/200OK'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorised'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalError'
+        '502':
+          $ref: '#/components/responses/502BadGateway'
+        '503':
+          $ref: '#/components/responses/503Unavailable'
+        '504':
+          $ref: '#/components/responses/504Timeout'
+        default:
+          $ref: '#/components/responses/default'
   /payment/vn/v1.0/ach:
       post:
         summary: VN ACH Submit
@@ -866,12 +1010,14 @@ components:
             IN.INSTO.PAYMENT.READ: Retrieve information for specific payment resource   
             HK.INSTO.PAYMENT.ACH.CREATE: Create Hong Kong ACH Payment Resource   
             HK.INSTO.PAYMENT.FAST.CREATE: Create Hong Kong FAST Payment Resource   
-            HK.INSTO.PAYMENT.RTGS.CREATE: Create Hong Kong RTGS Payment Resource  
+            HK.INSTO.PAYMENT.RTGS.CREATE: Create Hong Kong RTGS Payment Resource
+            HK.INSTO.PAYMENT.CBFT.CREATE: Create Hong Kong CBFT Payment Resource  
             HK.INSTO.PAYMENT.READ: Retrieve information for specific payment resource   
             SG.INSTO.PAYMENT.ACH.CREATE: Create Singapore ACH Payment Resource   
             SG.INSTO.PAYMENT.FAST.CREATE: Create Singapore FAST Payment Resource   
             SG.INSTO.PAYMENT.RTGS.CREATE: Create Singapore RTGS Payment Resource  
-            SG.INSTO.PAYMENT.PAYNOW.CREATE: Create Singapore PAYNOW Payment Resource   
+            SG.INSTO.PAYMENT.PAYNOW.CREATE: Create Singapore PAYNOW Payment Resource 
+            SG.INSTO.PAYMENT.CBFT.CREATE: Create Singapore CBFT Payment Resource  
             SG.INSTO.PAYMENT.READ: Retrieve information for specific payment resource   
             VN.INSTO.PAYMENT.ACH.CREATE: Create Vietnam ACH Payment Resource    
             VN.INSTO.PAYMENT.READ: Retrieve information for specific payment resource 
@@ -1842,6 +1988,11 @@ components:
                     - creditor_agent_member_identification
                     - creditor_name
                     - creditor_account_identification
+                  oneOf:
+                    - required:
+                      - instructed_amount
+                    - required:
+                      - equivalent_amount 
                   additionalProperties: false
             required:
               - payment_information_identification
@@ -2486,6 +2637,13 @@ components:
                       example: "1.23"
                       $ref: "#/components/schemas/ActiveOrHistoricCurrencyAndAmount"
                       additionalProperties: false
+                    equivalent_amount:
+                      description: >-
+                        Amount of money to be moved between the debtor and creditor, before
+                        deduction of charges, expressed in the currency as ordered by the
+                        initiating party.
+                      example: '1.23'
+                      $ref: '#/components/schemas/EquivalentAmount2'
                     exchange_rate_information:
                       $ref: "#/components/schemas/ExchangeRate1"
                     creditor_agent_name:
@@ -2921,6 +3079,322 @@ components:
                   remittance_information_unstructured:
                     - REM
       additionalProperties: false
+    CustomerCreditTransferInitiationV09_ASIA_CBFT:
+      description: |
+          Payment initiation ASIA CBFT. Request to instruct movement of funds from the debtor account to creditor.   
+          Countries in scope for Asia CBFT:   
+          - HK   
+          - SG   
+      type: object
+      properties:
+        creation_date_time:
+          description: Date and time at which the request was created.
+          example: '2020-12-17T00:00:00'
+          $ref: '#/components/schemas/ISODateTime'
+        number_of_transactions:
+          description: The number of transactions contained in the request
+          example: '1'
+          $ref: '#/components/schemas/Max15NumericText'
+        control_sum:
+          description: The sum of the transaction amounts in the request
+          example: '1.23'
+          $ref: '#/components/schemas/DecimalNumber'
+        initiating_party_name:
+          description: Party that initiates the payment.
+          example: ANZ Sample
+          $ref: '#/components/schemas/Max140Text'
+        initiating_party_bic:
+          description: Code allocated to organisations by the ISO 9362 Registration
+            Authority, under an international identification scheme, as described in
+            the latest version of the standard ISO 9362 Banking (Banking
+            telecommunication messages, Bank Identifier Codes).
+          $ref: "#/components/schemas/AnyBICIdentifier"
+        initiating_party_identification:
+          description: Unique identification of an organisation, as assigned by an
+            institution, using an identification scheme.
+          $ref: "#/components/schemas/Max35Text"
+        payment_information:
+          description: Information related to the individual payments with a single API submission.
+          type: array
+          minItems: 1
+          items:
+            description: >-
+              Set of characteristics that applies to the debit side of the payment
+              transactions included in the credit transfer initiation.
+            type: object
+            properties:
+              payment_information_identification:
+                description: Unique identification, as assigned by a sending party, to
+                  unambiguously identify the payment batch within the message.
+                example: BATCH REF
+                type: string
+                minLength: 1
+                maxLength: 20               
+              category_purpose_proprietary:
+                description: Specifies the high level purpose proprietary code of the instruction based on a set
+                  of pre-defined categories
+                example: CSTRDR
+                $ref: "#/components/schemas/Max35Text"
+              requested_execution_date:
+                description: Date at which the initiating party requests the clearing agent to
+                  process the payment.
+                example: 2020-12-17
+                $ref: "#/components/schemas/ISODate"
+              debtor_name:
+                description: Name by which a party is known and which is usually used to
+                  identify that party.
+                example: Payer Name
+                $ref: "#/components/schemas/Max140Text"
+              debtor_account_identification:
+                description: Unique and unambiguous identification for the account between the
+                  account owner and the account servicer.
+                example: "012001999888777"
+                $ref: "#/components/schemas/Max34Text"
+              credit_transfer_transaction_information:
+                description: Information related to the individual transaction within a payment.
+                type: array
+                minItems: 1
+                items:
+                  description: Information related to the individual transactions within a payment.
+                  type: object
+                  properties:
+                    instruction_identification:
+                      description: >-
+                        Unique identification as assigned by an instructing party for an
+                        instructed party to unambiguously identify the instruction.
+                      example: SENDER REF
+                      type: string
+                      minLength: 1
+                      maxLength: 20
+                    end_to_end_identification:
+                      description: >-
+                        Unique identification assigned by the initiating party to
+                        unambiguously identify the transaction. This identification is passed
+                        on, unchanged, throughout the entire end-to-end chain. 
+                      type: string
+                      minLength: 1
+                      maxLength: 20
+                      example: TRANSACTION REF
+                    instructed_amount:
+                      description: Amount of money to be moved between the debtor and creditor, before
+                        deduction of charges, expressed in the currency as ordered by the
+                        initiating party.
+                      example: "1.23"
+                      $ref: "#/components/schemas/ActiveOrHistoricCurrencyAndAmount"
+                      additionalProperties: false
+                    equivalent_amount:
+                      description: >-
+                        Amount of money to be moved between the debtor and creditor, before
+                        deduction of charges, expressed in the currency as ordered by the
+                        initiating party.
+                      example: '1.23'
+                      $ref: '#/components/schemas/EquivalentAmount2'
+                    exchange_rate_information:
+                      $ref: "#/components/schemas/ExchangeRate1"
+                    creditor_name:
+                      description: Name by which a party is known and which is usually used to
+                        identify that party.
+                      example: Payee Name
+                      $ref: "#/components/schemas/Max140Text"
+                    creditor_organisation_identification:
+                      description: Unique and unambiguous way to identify an organisation.
+                      $ref: "#/components/schemas/OrganisationIdentification29"
+                    creditor_contact_details:
+                      description: Unique and unambiguous identification for the account between the
+                        account owner and the account servicer.
+                      $ref: "#/components/schemas/Contact4"
+                    creditor_postal_address:
+                      description: Creditor Postal Address.
+                      $ref: "#/components/schemas/PostalAddress24"
+                    creditor_account_identification:
+                      description: |
+                        Unique and unambiguous identification for the account between the account owner and the account servicer.
+                        Must provide one of:
+                        - creditor_account_identification
+                        - creditor_account_proxy
+                      example: "012999111222333"
+                      $ref: "#/components/schemas/Max34Text"
+                    intermediary_agent_bicfi:
+                      description: >-
+                        Code allocated to organisations by the ISO 9362 Registration
+                        Authority, under an international identification scheme, as described in
+                        the latest version of the standard ISO 9362 Banking (Banking
+                        telecommunication messages, Bank Identifier Codes).
+                      $ref: "#/components/schemas/AnyBICIdentifier"
+                    charge_bearer:
+                      description: Charge bearer Copde
+                      example: 'CRED'
+                      $ref: '#/components/schemas/ChargeBearerType1Code'
+                    creditor_agent_name:
+                      description: Name of financial institution servicing an account for the creditor.
+                      example: ABC Bank
+                      $ref: "#/components/schemas/Max140Text"
+                    creditor_agent_bicfi:
+                      description: SWIFT BIC of the financial institution servicing an account for the creditor. Mandatory for FAST payments.
+                      $ref: "#/components/schemas/BICFIDec2014Identifier"
+                    creditor_agent_clearing_system_code:
+                      description: Title of creditor agent
+                      example: AU CBFT Payee
+                      type: string
+                      minLength: 1
+                      maxLength: 5
+                    creditor_agent_postal_address:
+                      description: Creditor Agent Postal Address.
+                      $ref: "#/components/schemas/PostalAddress24"
+                    creditor_agent_clearing_system_proprietary:
+                      $ref: "#/components/schemas/Max35Text"
+                    creditor_agent_member_identification:
+                      description: Identification of a member of a clearing system.
+                      example: "012123"
+                      $ref: "#/components/schemas/Max35Text"
+                    instruction_for_creditor_agent_info:
+                      description: Further information related to the processing of the payment
+                        instruction, provided by the initiating party, and intended for the
+                        creditor agent.
+                      $ref: "#/components/schemas/InstructionForCreditorAgent1"
+                      type: array
+                      minItems: 0
+                      maxItems: 1
+                    remittance_information_unstructured:
+                      description: Information supplied to enable the matching/reconciliation of an
+                        entry with the items that the payment is intended to settle, such as
+                        commercial invoices in an accounts' receivable system, in an
+                        unstructured form.
+                      type: array
+                      minItems: 1
+                      maxItems: 1
+                      items:
+                        $ref: "#/components/schemas/Max140Text"
+                  required:
+                    - instruction_identification
+                    - end_to_end_identification
+                    - creditor_name
+                  oneOf:
+                    - required:
+                      - instructed_amount
+                    - required:
+                      - equivalent_amount  
+                  additionalProperties: false
+            required:
+              - payment_information_identification
+              - requested_execution_date
+              - debtor_name
+              - debtor_account_identification
+              - credit_transfer_transaction_information
+            additionalProperties: false
+      required:
+        - creation_date_time
+        - number_of_transactions
+        - initiating_party_name
+        - payment_information
+      example:
+        - creation_date_time: '2020-12-17T00:00:00'
+          number_of_transactions: 1
+          initiating_party_name: ANZ Sample
+          initiating_party_bic: AANZBHK3MXX
+          initiating_party_identification: xxx
+          payment_information: 
+            - payment_information_identification: HK-CBFT-PMTINFID-22
+              requested_execution_date: '2020-12-17T00:00:00'
+              category_purpose_proprietary: CSTRDR
+              debtor_name: HK CBFT Payer
+              debtor_account_identification: '123456789091234'
+              credit_transfer_transaction_information: 
+                - instruction_identification: HK-CBFT-INSTRID-11
+                  end_to_end_identification: HK-CBFT-E2EID-11
+                  equivalent_amount: 
+                    amount: 
+                      amount: '200.00'
+                      currency: USD
+                    currency_of_transfer: HKD
+                  charge_bearer: CRED
+                  creditor_organisation_identification:
+                    identification: BENE12345
+                    scheme_name: BENEFICARY CODE
+                  creditor_contact_details:
+                    email_address: hk.cbft@example.com
+                  intermediary_agent_bicfi: RRRRBHK3MXX
+                  exchange_rate_information: 
+                    contract_identification: ContractIden01
+                    exchange_rate: '1.02'
+                  creditor_agent_bicfi: TDOMCATTTOR
+                  creditor_agent_name: CERDITOR AGENT TST
+                  creditor_agent_postal_address: 
+                    postcode: M5K 1A2
+                    town_name: Toronto
+                    country_subdivision: 'Ontario'
+                    address_line: 222 Bay St
+                    country: CA
+                  creditor_agent_clearing_system_code: DEBLZ
+                  creditor_agent_clearing_system_proprietary: CACPA
+                  creditor_agent_member_identification: CDT MEMB IDENT
+                  creditor_name: HK CBFT Payee
+                  creditor_postal_address: 
+                    postcode: '8989Z'
+                    country_subdivison: XXX
+                    country: FR
+                    address_line: 333 riveria st Paris 9987467
+                    town_name: xyz
+                  creditor_account_identification: 12345678901
+                  instruction_for_creditor_agent_info: 
+                    instruction_info: sample
+                  remittance_information_unstructured: 
+                    REM1
+                    REM2  
+        - creation_date_time: '2020-12-17T00:00:00'
+          number_of_transactions: 1
+          initiating_party_name: ANZ Sample
+          initiating_party_bic: AANZBSG3MXX
+          initiating_party_identification: xxx
+          payment_information: 
+            - payment_information_identification: SG-CBFT-PMTINFID-22
+              requested_execution_date: '2020-12-17T00:00:00'
+              category_purpose_proprietary: CSTRDR
+              debtor_name: SG CBFT Payer
+              debtor_account_identification: '123456789091234'
+              credit_transfer_transaction_information: 
+                - instruction_identification: SG-CBFT-INSTRID-11
+                  end_to_end_identification: SG-CBFT-E2EID-11
+                  equivalent_amount: 
+                    amount: 
+                      amount: '200.00'
+                      currency: USD
+                    currency_of_transfer: HKD
+                  charge_bearer: CRED
+                  creditor_organisation_identification:
+                    identification: BENE12345
+                    scheme_name: BENEFICARY CODE
+                  creditor_contact_details:
+                    email_address: sg.cbft@example.com
+                  intermediary_agent_bicfi: RRRRBSG3MXX
+                  exchange_rate_information: 
+                    contract_identification: ContractIden01
+                    exchange_rate: '1.02'
+                  creditor_agent_bicfi: TDOMCATTTOR
+                  creditor_agent_name: CERDITOR AGENT TST
+                  creditor_agent_postal_address: 
+                    postcode: M5K 1A2
+                    town_name: Toronto
+                    country_subdivision: 'Ontario'
+                    address_line: 222 Bay St
+                    country: CA
+                  creditor_agent_clearing_system_code: DEBLZ
+                  creditor_agent_clearing_system_proprietary: CACPA
+                  creditor_agent_member_identification: CDT MEMB IDENT
+                  creditor_name: SG CBFT Payee
+                  creditor_postal_address: 
+                    postcode: '8989Z'
+                    country_subdivison: XXX
+                    country: FR
+                    address_line: 333 riveria st Paris 9987467
+                    town_name: xyz
+                  creditor_account_identification: 12345678901
+                  instruction_for_creditor_agent_info: 
+                    instruction_info: sample
+                  remittance_information_unstructured: 
+                    REM1
+                    REM2      
+      additionalProperties: false
     CustomerPaymentStatusReportV10:
       description: >-
         ISO 20022 JSON Schema CustomerPaymentStatusReportV10 derived from
@@ -3292,6 +3766,24 @@ components:
           description: Proprietary Info
           example: ABCD12345
           $ref: "#/components/schemas/Max35Text"
+    InstructionForCreditorAgent1:
+      type: object
+      properties:
+        code:
+          description: Code
+          example: CHQB
+          $ref: "#/components/schemas/Instruction3Code"
+        instruction_info:
+          description: Instruction Info
+          example: ABCD12345
+          $ref: "#/components/schemas/Max140Text"
+    Instruction3Code:
+      type: string
+      enum:
+        - CHQB
+        - HOLD
+        - PHOB
+        - TELB
     Scopes:
       description: |
         AU.INSTO.PAYMENT.DE.CREATE - Create Australia DE Payment Resource   
@@ -3302,11 +3794,13 @@ components:
         HK.INSTO.PAYMENT.ACH.CREATE - Create Hong Kong ACH Payment Resource   
         HK.INSTO.PAYMENT.FAST.CREATE - Create Hong Kong FAST Payment Resource   
         HK.INSTO.PAYMENT.RTGS.CREATE - Create Hong Kong RTGS Payment Resource  
+        HK.INSTO.PAYMENT.CBFT.CREATE - Create Hong Kong CBFT Payment Resource
         HK.INSTO.PAYMENT.READ - Retrieve information for specific payment resource   
         SG.INSTO.PAYMENT.ACH.CREATE - Create Singapore ACH Payment Resource   
         SG.INSTO.PAYMENT.FAST.CREATE - Create Singapore FAST Payment Resource   
         SG.INSTO.PAYMENT.RTGS.CREATE - Create Singapore RTGS Payment Resource    
         SG.INSTO.PAYMENT.PAYNOW.CREATE - Create Singapore PAYNOW Payment Resource 
+        SG.INSTO.PAYMENT.CBFT.CREATE - Create Singapore CBFT Payment Resource 
         SG.INSTO.PAYMENT.READ - Retrieve information for specific payment resource   
         VN.INSTO.PAYMENT.ACH.CREATE - Create Vietnam ACH Payment Resource     
         VN.INSTO.PAYMENT.READ - Retrieve information for specific payment resource   
@@ -3320,11 +3814,13 @@ components:
         - HK.INSTO.PAYMENT.ACH.CREATE
         - HK.INSTO.PAYMENT.FAST.CREATE
         - HK.INSTO.PAYMENT.RTGS.CREATE
+        - HK.INSTO.PAYMENT.CBFT.CREATE
         - HK.INSTO.PAYMENT.READ
         - SG.INSTO.PAYMENT.ACH.CREATE
         - SG.INSTO.PAYMENT.FAST.CREATE
         - SG.INSTO.PAYMENT.RTGS.CREATE
         - SG.INSTO.PAYMENT.PAYNOW.CREATE
+        - SG.INSTO.PAYMENT.CBFT.CREATE
         - SG.INSTO.PAYMENT.READ
         - VN.INSTO.PAYMENT.ACH.CREATE
         - VN.INSTO.PAYMENT.READ
@@ -3358,6 +3854,21 @@ components:
             encryption: A256CBC-HS512
           example:
             secured_payload: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdW1tYXJ5IjoiQVUgQ0JGVCBwYXltZW50IGluaXRpYXRpb24gZXhhbXBsZSIsInZhbHVlIjp7ImNyZWF0aW9uX2RhdGVfdGltZSI6InslIG5vdyAnaXNvLTg2MDEnLCAnJyAlfSIsIm51bWJlcl9vZl90cmFuc2FjdGlvbnMiOiIxIiwiY29udHJvbF9zdW0iOiIyMDAuMDAiLCJpbml0aWF0aW5nX3BhcnR5X25hbWUiOiJBTlogU2FtcGxlIiwiaW5pdGlhdGluZ19wYXJ0eV9iaWMiOiJBQU5aQkFVM01YWCIsImluaXRpYXRpbmdfcGFydHlfaWRlbnRpZmljYXRpb24iOiJ4eHgiLCJwYXltZW50X2luZm9ybWF0aW9uIjpbeyJyZXF1ZXN0ZWRfZXhlY3V0aW9uX2RhdGUiOiJ7JSBub3cgJ2N1c3RvbScsICdZWVlZLU1NLUREJyAlfSIsInBheW1lbnRfaW5mb3JtYXRpb25faWRlbnRpZmljYXRpb24iOiJBVS1DQkZULVBNVElORklELTIyIiwiYmF0Y2hfYm9va2luZyI6dHJ1ZSwiY2F0ZWdvcnlfcHVycG9zZSI6Ik9USFIiLCJkZWJ0b3JfbmFtZSI6IkFVIENCRlQgUGF5ZXIiLCJkZWJ0b3JfYWNjb3VudF9pZGVudGlmaWNhdGlvbiI6IjEyMzQ1Njc4OTA5MTIzNCIsImRlYnRvcl9wb3N0YWxfYWRkcmVzcyI6eyJwb3N0Y29kZSI6IjMwMDAiLCJ0b3duX25hbWUiOiJNZWxib3VybmUiLCJjb3VudHJ5X3N1YmRpdmlzaW9uIjoiVmljdG9yaWEiLCJjb3VudHJ5IjoiQVUiLCJhZGRyZXNzX2xpbmUiOiIxMDAgTWVsYm91cm5lIHN0In0sImRlYnRvcl9hZ2VudF9iaWNmaSI6IlVTQktVUzQ0SU1UIiwiZGVidG9yX2FnZW50X3Bvc3RhbF9hZGRyZXNzIjp7InBvc3Rjb2RlIjoiMzAwMCIsInRvd25fbmFtZSI6Ik1lbGJvdXJuZSIsImNvdW50cnlfc3ViZGl2aXNpb24iOiJWaWN0b3JpYSIsImNvdW50cnkiOiJBVSIsImFkZHJlc3NfbGluZSI6IjMzMyBNZWxib3VybmUgc3QifSwiY3JlZGl0X3RyYW5zZmVyX3RyYW5zYWN0aW9uX2luZm9ybWF0aW9uIjpbeyJpbnN0cnVjdGlvbl9pZGVudGlmaWNhdGlvbiI6IkFVLUNCRlQtSU5TVFJJRC0xMSIsImVuZF90b19lbmRfaWRlbnRpZmljYXRpb24iOiJBVS1DQkZULUUyRUlELTExIiwiZXF1aXZhbGVudF9hbW91bnQiOnsiYW1vdW50Ijp7ImFtb3VudCI6IjIwMC4wMCIsImN1cnJlbmN5IjoiVVNEIn0sImN1cnJlbmN5X29mX3RyYW5zZmVyIjoiQVVEIn0sImNoYXJnZV9iZWFyZXIiOiJDUkVEIiwiaW50ZXJtZWRpYXJ5X2FnZW50X2JpY2ZpIjoiUlJSUkJBVTNNWFgiLCJpbnRlcm1lZGlhcnlfYWdlbnRfbmFtZSI6IkFVIENCRlQgQWdlbnQiLCJpbnRlcm1lZGlhcnlfYWdlbnRfY2xlYXJpbmdfc3lzdGVtIjp7ImlkIjp7InByb3ByaWV0YXJ5IjoiU1NTVFRUUlIifX0sImludGVybWVkaWFyeV9hZ2VudF9wb3N0YWxfYWRkcmVzcyI6eyJwb3N0Y29kZSI6IjMwMDAiLCJ0b3duX25hbWUiOiJNZWxib3VybmUiLCJjb3VudHJ5X3N1YmRpdmlzaW9uIjoiVmljdG9yaWEiLCJjb3VudHJ5IjoiQVUiLCJhZGRyZXNzX2xpbmUiOiI1NTUgTWVsYm91cm5lIHN0In0sImV4Y2hhbmdlX3JhdGVfaW5mb3JtYXRpb24iOnsiY29udHJhY3RfaWRlbnRpZmljYXRpb24iOiJDb250cmFjdElkZW4wMSIsImV4Y2hhbmdlX3JhdGUiOiIxLjAyIn0sImNyZWRpdG9yX2FnZW50X2JpY2ZpIjoiVERPTUNBVFRUT1IiLCJjcmVkaXRvcl9hZ2VudF9uYW1lIjoiQ0VSRElUT1IgQUdFTlQgVFNUIiwiY3JlZGl0b3JfYWdlbnRfcG9zdGFsX2FkZHJlc3MiOnsicG9zdGNvZGUiOiJNNUsgMUEyIiwidG93bl9uYW1lIjoiVG9yb250byIsImNvdW50cnlfc3ViZGl2aXNpb24iOiJPbnRhcmlvIiwiY291bnRyeSI6Ik9OIiwiYWRkcmVzc19saW5lIjoiMjIyIEJheSBTdCJ9LCJjcmVkaXRvcl9hZ2VudF9jbGVhcmluZ19zeXN0ZW1fY29kZSI6IkRFQkxaIiwiY3JlZGl0b3JfYWdlbnRfbWVtYmVyX2lkZW50aWZpY2F0aW9uIjoiQ0RUIE1FTUIgSURFTlQiLCJjcmVkaXRvcl9uYW1lIjoiQVUgQ0JGVCBQYXllZSIsImNyZWRpdG9yX3Bvc3RhbF9hZGRyZXNzIjp7InBvc3Rjb2RlIjoiODk4OVoiLCJjb3VudHJ5X3N1YmRpdmlzb24iOiJYWFgiLCJjb3VudHJ5IjoiRlIiLCJhZGRyZXNzX2xpbmUiOiIzMzMgcml2ZXJpYSBzdCBQYXJpcyA5OTg3NDY3IiwidG93bl9uYW1lIjoieHl6IiwiZGVwYXJ0bWVudCI6IkhSIiwic3ViX2RlcGFydG1lbnQiOiJTVUIiLCJzdHJlZXRfbmFtZSI6InJpdmVyaWEgc3QiLCJidWlsZGluZ19udW1iZXIiOiIyIn0sImNyZWRpdG9yX2FjY291bnRfaWRlbnRpZmljYXRpb24iOiIxMjM0NTY3ODkwMSIsInB1cnBvc2UiOnsicHJvcHJpZXRhcnkiOiJQUk9QIn0sInJlbWl0dGFuY2VfaW5mb3JtYXRpb25fdW5zdHJ1Y3R1cmVkIjpbIlJFTTEiLCJSRU0yIl19XX1dfSwieC13aWRkZXJzaGlucy1vbGRSZWYiOiIjL2NvbXBvbmVudHMvZXhhbXBsZXMvQ3VzdG9tZXJDcmVkaXRUcmFuc2ZlckluaXRpYXRpb25WMDlfQVVfQ0JGVF9FeDAxIn0.5SkYJH5THbQFxLm0iZ09bIiVL-U7jP0h-WZEE1uoWzM'    
+    SecuredPaymentSubmissionResourceASIACBFT:
+      required:
+        - secured_payload
+      type: object
+      properties:
+        secured_payload:
+          type: string
+          description: Encrypted and secured payment payload
+          x-jws-signature:
+            algorithm: RS256
+          x-jwe-encryption:
+            algorithm: RSA-OAEP
+            encryption: A256CBC-HS512
+          example:
+            secured_payload: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdW1tYXJ5IjoiU0cgQ0JGVCBwYXltZW50IGluaXRpYXRpb24gZXhhbXBsZSIsInZhbHVlIjp7ImNyZWF0aW9uX2RhdGVfdGltZSI6IjIwMjAtMTItMTdUMDA6MDA6MDAiLCJudW1iZXJfb2ZfdHJhbnNhY3Rpb25zIjoxLCJpbml0aWF0aW5nX3BhcnR5X25hbWUiOiJBTlogU2FtcGxlIiwiaW5pdGlhdGluZ19wYXJ0eV9iaWMiOiJBQU5aQkhLM01YWCIsImluaXRpYXRpbmdfcGFydHlfaWRlbnRpZmljYXRpb24iOiJ4eHgiLCJwYXltZW50X2luZm9ybWF0aW9uIjpbeyJwYXltZW50X2luZm9ybWF0aW9uX2lkZW50aWZpY2F0aW9uIjoiSEstQ0JGVC1QTVRJTkZJRC0yMiIsInJlcXVlc3RlZF9leGVjdXRpb25fZGF0ZSI6IjIwMjAtMTItMTdUMDA6MDA6MDAiLCJjYXRlZ29yeV9wdXJwb3NlX3Byb3ByaWV0YXJ5IjoiQ1NUUkRSIiwiZGVidG9yX25hbWUiOiJISyBDQkZUIFBheWVyIiwiZGVidG9yX2FjY291bnRfaWRlbnRpZmljYXRpb24iOiIxMjM0NTY3ODkwOTEyMzQiLCJjcmVkaXRfdHJhbnNmZXJfdHJhbnNhY3Rpb25faW5mb3JtYXRpb24iOlt7Imluc3RydWN0aW9uX2lkZW50aWZpY2F0aW9uIjoiSEstQ0JGVC1JTlNUUklELTExIiwiZW5kX3RvX2VuZF9pZGVudGlmaWNhdGlvbiI6IkhLLUNCRlQtRTJFSUQtMTEiLCJlcXVpdmFsZW50X2Ftb3VudCI6eyJhbW91bnQiOnsiYW1vdW50IjoiMjAwLjAwIiwiY3VycmVuY3kiOiJVU0QifSwiY3VycmVuY3lfb2ZfdHJhbnNmZXIiOiJIS0QifSwiY2hhcmdlX2JlYXJlciI6IkNSRUQiLCJjcmVkaXRvcl9vcmdhbmlzYXRpb25faWRlbnRpZmljYXRpb24iOnsiaWRlbnRpZmljYXRpb24iOiJCRU5FMTIzNDUiLCJzY2hlbWVfbmFtZSI6IkJFTkVGSUNBUlkgQ09ERSJ9LCJjcmVkaXRvcl9jb250YWN0X2RldGFpbHMiOnsiZW1haWxfYWRkcmVzcyI6ImhrLmNiZnRAZXhhbXBsZS5jb20ifSwiaW50ZXJtZWRpYXJ5X2FnZW50X2JpY2ZpIjoiUlJSUkJISzNNWFgiLCJleGNoYW5nZV9yYXRlX2luZm9ybWF0aW9uIjp7ImNvbnRyYWN0X2lkZW50aWZpY2F0aW9uIjoiQ29udHJhY3RJZGVuMDEiLCJleGNoYW5nZV9yYXRlIjoiMS4wMiJ9LCJjcmVkaXRvcl9hZ2VudF9iaWNmaSI6IlRET01DQVRUVE9SIiwiY3JlZGl0b3JfYWdlbnRfbmFtZSI6IkNFUkRJVE9SIEFHRU5UIFRTVCIsImNyZWRpdG9yX2FnZW50X3Bvc3RhbF9hZGRyZXNzIjp7InBvc3Rjb2RlIjoiTTVLIDFBMiIsInRvd25fbmFtZSI6IlRvcm9udG8iLCJjb3VudHJ5X3N1YmRpdmlzaW9uIjoiT250YXJpbyIsImFkZHJlc3NfbGluZSI6IjIyMiBCYXkgU3QiLCJjb3VudHJ5IjoiQ0EifSwiY3JlZGl0b3JfYWdlbnRfY2xlYXJpbmdfc3lzdGVtX2NvZGUiOiJERUJMWiIsImNyZWRpdG9yX2FnZW50X2NsZWFyaW5nX3N5c3RlbV9wcm9wcmlldGFyeSI6IkNBQ1BBIiwiY3JlZGl0b3JfYWdlbnRfbWVtYmVyX2lkZW50aWZpY2F0aW9uIjoiQ0RUIE1FTUIgSURFTlQiLCJjcmVkaXRvcl9uYW1lIjoiSEsgQ0JGVCBQYXllZSIsImNyZWRpdG9yX3Bvc3RhbF9hZGRyZXNzIjp7InBvc3Rjb2RlIjoiODk4OVoiLCJjb3VudHJ5X3N1YmRpdmlzb24iOiJYWFgiLCJjb3VudHJ5IjoiRlIiLCJhZGRyZXNzX2xpbmUiOiIzMzMgcml2ZXJpYSBzdCBQYXJpcyA5OTg3NDY3IiwidG93bl9uYW1lIjoieHl6In0sImNyZWRpdG9yX2FjY291bnRfaWRlbnRpZmljYXRpb24iOjEyMzQ1Njc4OTAxLCJpbnN0cnVjdGlvbl9mb3JfY3JlZGl0b3JfYWdlbnRfaW5mbyI6eyJpbnN0cnVjdGlvbl9pbmZvIjoic2FtcGxlIn0sInJlbWl0dGFuY2VfaW5mb3JtYXRpb25fdW5zdHJ1Y3R1cmVkIjoiUkVNMSBSRU0yIn1dfV19LCJ4LXdpZGRlcnNoaW5zLW9sZFJlZiI6IiMvY29tcG9uZW50cy9leGFtcGxlcy9DdXN0b21lckNyZWRpdFRyYW5zZmVySW5pdGlhdGlvblYwOV9BU0lBX0NCRlRfRXgwMSJ9.C15jBqstxdKC7bglOsXBdSwx9KWTQlHx1At4R5ULjwY'            
     TransactionInformationAndStatus:
       description: >-
         Information related to the status of individual transactions within a
@@ -3426,6 +3937,9 @@ tags:
   - name: CustomerCreditTransferInitiationV09_ASIA_PAYNOW
     description: <SchemaDefinition schemaRef="#/components/schemas/CustomerCreditTransferInitiationV09_ASIA_PAYNOW" />
     x-displayName: CustomerCreditTransferInitiationV09_ASIA_PAYNOW
+  - name: CustomerCreditTransferInitiationV09_ASIA_CBFT
+    description: <SchemaDefinition schemaRef="#/components/schemas/CustomerCreditTransferInitiationV09_ASIA_CBFT" />
+    x-displayName: CustomerCreditTransferInitiationV09_ASIA_CBFT
   - name: CustomerCreditTransferInitiationV09_AU_DE
     description: <SchemaDefinition schemaRef="#/components/schemas/CustomerCreditTransferInitiationV09_AU_DE" />
     x-displayName: CustomerCreditTransferInitiationV09_AU_DE
@@ -3451,5 +3965,6 @@ x-tagGroups:
       - CustomerCreditTransferInitiationV09_ASIA_FAST
       - CustomerCreditTransferInitiationV09_ASIA_RTGS
       - CustomerCreditTransferInitiationV09_ASIA_PAYNOW
+      - CustomerCreditTransferInitiationV09_ASIA_CBFT
       - CustomerCreditTransferInitiationV09_AU_DE
       - CustomerCreditTransferInitiationV09_AU_CBFT
