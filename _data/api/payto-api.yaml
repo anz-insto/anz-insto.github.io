@@ -4,9 +4,13 @@ info:
   description: |-
     Fileactive PayTo API provides consumers the ability to
     * Create a Mandate
-    * Maintain a Mandate
-    * Retreive Mandate Details
+    * Amend a Mandate (coming soon)
+    * Change a Mandate Status
+    * Mandate Creation/Amendment Recall (coming soon)
+    * Retreive Mandate Details (coming soon)
     * Create a Mandated Payment Initiation Request (MPIR)
+    * Retry a Mandated Payment Initiation Request (MPIR) (coming soon)
+    * Create a PayTo Query Resolution
   version: 1.0.0
 servers:
   - url: https://api.fileactive.uat.anzgcis.com
@@ -172,6 +176,43 @@ paths:
           $ref: '#/components/responses/504'     
         default:
           $ref: '#/components/responses/default'
+  /payto/v1.0/query-resolutions:
+    post:
+      tags:
+      - Query
+      summary: PayTo query resolution.
+      description: "The purpose of this operation is to provide a resolution to a PayTo query raised by the **Payee's** Financial Institution. Queries are delivered via the **PayTo Query Webhook API**.  \n\nThe following rules apply to this API: \n- CaseDecisionSchemeRule1: `case_decision` = **ACPT** then `reject_reason_code`, `return_transaction_identification` and `narrative` **must not** be provided. \n- CaseDecisionSchemeRule2: `case_decision` = **FINO** then `reject_reason_code` and `return_transaction_identification` **must not** be provided. \n- CaseDecisionSchemeRule3: `case_decision` = **FINO** then `narrative` **must** be provided \n- CaseDecisionSchemeRule4: `case_decision` = **PEND** then `reject_reason_code`, `return_transaction_identification` and `narrative` **must not** be provided. \n- CaseDecisionSchemeRule5: `case_decision` = **RJCT** then `reject_reason_code` **must** be provided.   \n- RejectReasonSchemeRule1: `reject_reason_code` = **ARDT** then `return_transaction_identification` **must** be provided. \n- RejectReasonSchemeRule2: `reject_reason_code` = **ARDT** then `narrative` **must not** be provided. \n- RejectReasonSchemeRule3: `reject_reason_code` = **CUST** then `narrative` **must** be provided. \n- RejectReasonSchemeRule4: `reject_reason_code` = **CUST** then `return_transaction_identification` **must not** be provided."
+      operationId: queryResolution
+      parameters:
+        - $ref: "#/components/parameters/correlationID"
+        - $ref: "#/components/parameters/messageID"
+        - $ref: "#/components/parameters/priority4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecuredSubmissionResource'
+        description: Secured resource to create a mandate in the MMS. Refer to Model/Schema **QueryResolutionRequest** for unencrypted payload object
+        required: true
+      responses:
+        202:
+          $ref: '#/components/responses/202'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        429:
+          $ref: '#/components/responses/429'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503' 
+        504:
+          $ref: '#/components/responses/504'     
+        default:
+          $ref: '#/components/responses/default'        
 components:
   securitySchemes:
     bearerAuth:            
@@ -239,7 +280,14 @@ components:
       description: MPIR Priority (attended/unattended). Urgency or order of importance that the originator would like the recipient of the payment instruction to apply to the processing of the payment instruction. Will be included in any generated notification. 
       required: true
       schema:
-        $ref: '#/components/schemas/NotificationPriority1Code'            
+        $ref: '#/components/schemas/NotificationPriority1Code' 
+    priority4:
+      name: priority
+      in: header
+      description: Priority (attended/unattended) to be included in any generated notification. Urgency or order of importance that the originator would like the recipient of the PayTo query resolution to apply to the processing of the query resoluton.<br><br> Only **UNATTENDED** is supported for this request type.
+      required: true
+      schema:
+        $ref: '#/components/schemas/NotificationPriority2Code'               
   responses:
     200OKAuth:
       description: 'Bearer token (Opaque Token) returned after a token request'
@@ -914,11 +962,84 @@ components:
       enum:
       - ORGN
       - PERS
+    QueryResolutionRequest:
+      type: object
+      description: |-
+        PayTo Query Resolution
+      additionalProperties: false
+      properties:
+        mps_user_id:
+          type: string
+          description: |-
+            MPS User Id associated with this query resolution request
+          minLength: 1
+          maxLength: 10
+          example: 10002005  
+        request_id:
+          allOf: 
+          - $ref: '#/components/schemas/UUID'            
+          description: |-
+            Request UUID that identifies the query resolution operation to be performed. This must be a Universally Unique IDentifier (UUID). This UUID must be unique amongst all request_ids passed to this end-point by the same MPS User. If a request is encountered with a request ID that has previously been used then a duplicate check will be performed by comparing the digest of the current request with the digest of the previous request. If the digests match then the details of the previous mandate creation will be returned. If the digests do not match then an HTTP 409 will be returned.
+        case_id:
+          type: string
+          description: |-
+            Case Identifier. A unique case reference as assigned by ANZ. To be referenced when providing a Query Resolution.   
+          minLength: 1
+          maxLength: 20  
+          example: ANZAU230821-00002
+        case_decision:
+          type: string
+          description: |-
+            Case Decision.
+            <table><tr><th>Code</th><th>Name</th><th>Case Type</th></tr><tr><td>ACPT</td><td>Accept Payment Return</td><td>Mandate Query Payments</td></tr><tr><td>FINO</td><td>Final Outcome</td><td>Mandate Query Case</td></tr><tr><td>PEND</td><td>Pending Decision</td><td>ANY</td></tr><tr><td>RJCT</td><td>Reject Payment Return</td><td>Mandate Query Payments</td></tr></table>
+          enum:
+            - ACPT
+            - FINO
+            - PEND
+            - RJCT
+        mandate_identification:
+          type: string
+          description: "Unique ID, as assigned by the MMS, to unambiguously identify the mandate. This ID must be used to identify the mandate for all further operations on the mandate.\nUniversally Unique IDentifier (UUID) version 1, as described in IETC RFC 4122 \"Universally Unique IDentifier (UUID) URN Namespace\" without the 4 hyphen separators.\r\nFor example: '00000000000010008000000000000000' instead of  '00000000-0000-1000-8000-000000000000' (without quotes)"
+          pattern: ^[a-f0-9]{12}1[a-f0-9]{3}[89ab][a-f0-9]{15}$
+          example: 247de1c0c3a911edafa10242ac120002
+        reject_reason_code:
+          type: string
+          description: |-
+            Rejection Reason Code.
+            <table><tr><th>Code</th><th>Name</th></tr><tr><td>ARDT</td><td>Already Returned</td></tr><tr><td>CUST</td><td>Customer Decision</td></tr></table>
+            <br>
+            To be provided when case_decision = RJCT.
+          enum:
+            - ARDT
+            - CUST
+        return_transaction_identification:
+          type: string
+          description: >-
+            Unique reference, as assigned by the Payee, to unambiguously identify the return transaction. <br><br>
+            To be provided when reject_reason_code = ARDT.
+          minLength: 1
+          maxLength: 35
+          example: RETURN/123
+        narrative:
+          type: string
+          description: |-
+            Narrative as sent by Payee. <br><br>
+            To be provided when case_decision = FINO or reject_reason_code = CUST. <br><br> Specifies a character string with a maximum length of 1500 ASCII printable characters.
+          minLength: 1
+          maxLength: 1500  
+          pattern: ^[ -~]{1,1500}$
+          example: Some text
+      required:
+        - mps_user_id
+        - request_id
+        - case_id
+        - case_decision
+        - mandate_identification
     Scopes:
       type: string
       description: >-
         AU.INSTO.PAYTO.MANDATE.WRITE - Create & Maintain Mandate<br>
-        AU.INSTO.PAYTO.MANDATE.READ - Retrieve Mandate Details<br>
+        AU.INSTO.PAYTO.MANDATE.READ - Retrieve Mandate Details & Reply to a Query<br>
         AU.INSTO.PAYTO.MPIR.WRITE - Create Mandated Payment Initiation Request
       enum:
       - AU.INSTO.PAYTO.MANDATE.WRITE
@@ -956,6 +1077,8 @@ tags:
     description: <SchemaDefinition schemaRef="#/components/schemas/MandateStatusChangeRequest" />
   - name: MPIRCreationRequest
     description: <SchemaDefinition schemaRef="#/components/schemas/MPIRCreationRequest" />
+  - name: QueryResolutionRequest
+    description: <SchemaDefinition schemaRef="#/components/schemas/QueryResolutionRequest" />
   - name: SecuredSubmissionResource
     description: <SchemaDefinition schemaRef="#/components/schemas/SecuredSubmissionResource" />
 x-tagGroups:
@@ -964,10 +1087,12 @@ x-tagGroups:
       - Authorisation
       - Mandate
       - MPIR
+      - Query
   - name: Models
     tags: 
       - AuthTokenRequest
       - MandateCreationRequest
       - MandateStatusChangeRequest
       - MPIRCreationRequest
+      - QueryResolutionRequest
       - SecuredSubmissionResource
