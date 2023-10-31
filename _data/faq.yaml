@@ -181,6 +181,30 @@
       answer: |-
         A scope is a mechanism in OAuth 2.0 to define what an application can access (such as payments) and whether the access is read or write. An application can request one or more scopes during a credential grant request. 
         The `bearer token` issued will be limited to the scopes granted.
+    - title: How are Payloads secured?
+      answer: |-
+        **JOSE (JWT)**
+
+        Payload data is secured using a combination of JSON Web Signature (JWS) & JSON Web Encryption (JWE)
+    
+        Sequence to create a valid `secured_payload` object
+    
+        1. Create valid JSON payload
+        2. Sign JSON object using JWS
+        3. Encrypt payload using JWE
+        4. Encapsulate signed and encrypted payload in `secured_payload` object
+    
+        **JSON Web Signature (JWS)**
+    
+        | Algorithm | Supported Key Size |
+        |:----------|:-------------------|
+        |   RS256   |    2048 or 4096    |
+    
+        **JSON Web Encryption (JWE)**
+        
+        | Algorithm  | Encryption      | Key Size |
+        |------------|-----------------|----------|
+        |   RSA-OAEP |   A256CBC-HS512 |   2048   |
 - section: Support
   questions:
     - title: What is X-RequestKey used for?
