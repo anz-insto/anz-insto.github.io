@@ -8,6 +8,7 @@ toc: true
 
 ## Contents
 
+- [1.1.10 - Updated Testing API specification](#1.1.10)
 - [1.1.9 - Singapore & Hong Kong Cross Border Fund Transfer API specifications](#1.1.9)
 - [1.1.8 - Australia Cross Border Fund Transfer API specifications](#1.1.8)
 - [1.1.7 - Statement API changes for NZ Systematics](#1.1.7)
@@ -21,6 +22,29 @@ toc: true
 - [1.0.0 - Site creation](#1.0.0)
 
 ---
+<a name="1.1.10"></a>
+
+### [1.1.10 - 2023-10-27]
+
+#### Added
+- [Testing API]({{ site.baseurl }}/fileactive/api/testing-api) add /payto/notifications
+- [Testing API]({{ site.baseurl }}/fileactive/api/testing-api) add /payto/queries
+
+#### Changed
+- Nothing changed
+
+#### Deprecated
+- Nothing deprecated.
+
+#### Removed
+- Nothing removed.
+
+#### Fixed
+- Nothing fixed
+
+#### Security
+- No security updates.
+
 <a name="1.1.9"></a>
 
 ### [1.1.9 - 2023-08-29]

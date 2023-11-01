@@ -75,14 +75,17 @@ paths:
       tags:
       - Mandate
       summary: Mandate Notifications.
-      description: >-
+      description: |-
         The purpose of this operation is to provide a notification where the **Payer** has taken an action on a Mandate. The following notifications are supported:
           - Bilateral Create Mandate Resolution
           - Bilateral Create Mandate Timeout
           - Bilateral Amend Mandate Resolution (coming soon)
           - Bilateral Amend Mandate Timeout (coming soon)          
-          - Unilateral Amend Mandate (coming soon)
-          - Unilateral Change Mandate Status
+          - Unilateral Amend Mandate 
+          - Unilateral Change Mandate Status<br>
+
+        Duplicate checking should be based on **MMS** assigined identfier `action_identification`
+
       operationId: mandateNotifications
       parameters:
         - $ref: "#/components/parameters/messageID"
@@ -135,7 +138,7 @@ paths:
 
         If MPIR is invalid or fails settlement then `transaction_status_reason_code` will be **RJCT** Rejected. The `transaction_status_reason_code` will incidcate the reason for rejection.<br><br>
 
-        Duplicate checking should be based on **Payee** assigined identfier `original_instruction_identification`/ `original_uetr` and `transaction_status_reason_code` <br><br>
+        Duplicate checking should be based on **Payee** assigined identfier `instruction_identification`/ `uetr` and `transaction_status_reason_code` <br><br>
 
         Payee should also consider Processing Outcomes for the same MPIR arrving out of sequence.
       operationId: mandateOutcomes
@@ -179,10 +182,12 @@ paths:
       tags:
       - Query
       summary: PayTo Queries.
-      description: >-
+      description: |-
         The purpose of this operation is to provide a notification where the **Payer** has raised a PayTo query via the **Payer's** Financial Institution. The following notifications are supported:
-          - Mandate Query
-          - Mandate Query Payment
+        - Mandate Query
+        - Mandate Query Payment
+
+        Duplicate checking should be based on **ANZ** assigined identfier `case_id` and `reminder_count` and `re_open_case_indication`
       operationId: mandateQueries
       parameters:
         - $ref: "#/components/parameters/messageID"
@@ -462,13 +467,14 @@ components:
           maxLength: 10
           example: 10002005    
         request_id:
-          type: string
+          allOf: 
+            - $ref: '#/components/schemas/UUID'              
           description: |-
-            Request UUID that identifies the mandate operation to be performed. This must be a Universally Unique IDentifier (UUID) version 1.
+            Request UUID that identifies the mandate operation to be performed. This must be a Universally Unique IDentifier (UUID).
             
             Echoed from the mandate request 
-          pattern: ^[a-f0-9]{12}1[a-f0-9]{3}[89ab][a-f0-9]{15}$   
-          example: c8f59c8ac3a811edafa10242ac120002     
+          pattern: ^[a-f0-9]{12}1[a-f0-9]{3}[89ab][a-f0-9]{15}$
+          example: 2da9e0aa-5691-49bd-a772-af734c5c2340    
         mandate_identification:
           type: string
           description: "Unique ID, as assigned by the MMS, to unambiguously identify the mandate. This ID must be used to identify the mandate for all further operations on the mandate.\nUniversally Unique IDentifier (UUID) version 1, as described in IETC RFC 4122 \"Universally Unique IDentifier (UUID) URN Namespace\" without the 4 hyphen separators.\r\nFor example: '00000000000010008000000000000000' instead of  '00000000-0000-1000-8000-000000000000' (without quotes)"
@@ -692,7 +698,7 @@ components:
       required:
       - creation_date_time
       - trigger
-      - status
+      - mandate_status
       - mps_user_id
       - mandate_identification
       - action_identification
@@ -878,20 +884,12 @@ components:
       type: string
       description: |-
         Defines events that trigger a notification.
-        <table><tr><th>Code</th><th>Name</th><th>Description</th></tr><tr><td>MAMC</td><td>MandateAmendConfirmed</td><td>Sent to the initiator of a bilateral mandate amendment to indicate that the counterparty has confirmed the action.</td></tr><tr><td>MAMD</td><td>MandateAmendDeclined</td><td>Sent to the initiator of a bilateral mandate amendment to indicate that the counterparty has declined the action.</td></tr><tr><td>MAMN</td><td>MandateAmended</td><td>Sent to the counterparty of a unilateral mandate amendment to indicate that action has occurred.</td></tr><tr><td>MAMR</td><td>MandateAmendRecalled</td><td>Sent to the counterparty of a bilateral mandate amendment to indicate that the action has been recalled by the initiator.</td></tr><tr><td>MAMX</td><td>MandateAmendExpired</td><td>Sent to the initiator of an amend action once its expiry time has been reached and the status of the action is set to Timed Out (TIMO). For a bilateral amend action, this notification is also sent to the servicer of the Debtor Account.</td></tr><tr><td>MCRC</td><td>MandateCreateConfirmed</td><td>Sent to the initiator of a bilateral mandate creation to indicate that the counterparty has confirmed the action.</td></tr><tr><td>MCRD</td><td>MandateCreateDeclined</td><td>Sent to the initiator of a bilateral mandate creation to indicate that the counterparty has declined the action.</td></tr><tr><td>MCRX</td><td>MandateCreateExpired</td><td>Sent to the initiator of a mandate creation action once its expiry time has been reached and the status of the action is set to Timed Out (TIMO). For a bilateral creation action, this notification is also sent to the servicer of the Debtor Account.</td></tr><tr><td>MPOF</td><td>MandatePortFinalised</td><td>Sent to the old bank to indicate that the porting of a mandate has been finalised.</td></tr><tr><td>MPOT</td><td>MandatePorted</td><td>Sent to the counterparty of a mandate when the port is finalised.</td></tr><tr><td>MPOX</td><td>MandatePortExpired</td><td>Sent to the initiator of a mandate port action once its expiry time has been reached and the status of the action is set to Timed Out (TIMO).</td></tr><tr><td>MSCH</td><td>MandateStatusChanged</td><td>Sent to the counterparty of a unilateral mandate status change to indicate that action has occurred.</td></tr></table>
+        <table><tr><th>Code</th><th>Name</th><th>Description</th></tr><tr><td>MAMN</td><td>MandateAmended</td><td>Sent to the counterparty of a unilateral mandate amendment to indicate that action has occurred.</td></tr><tr><td>MCRC</td><td>MandateCreateConfirmed</td><td>Sent to the initiator of a bilateral mandate creation to indicate that the counterparty has confirmed the action.</td></tr><tr><td>MCRD</td><td>MandateCreateDeclined</td><td>Sent to the initiator of a bilateral mandate creation to indicate that the counterparty has declined the action.</td></tr><tr><td>MCRX</td><td>MandateCreateExpired</td><td>Sent to the initiator of a mandate creation action once its expiry time has been reached and the status of the action is set to Timed Out (TIMO). For a bilateral creation action, this notification is also sent to the servicer of the Debtor Account.</td></tr><tr><td>MSCH</td><td>MandateStatusChanged</td><td>Sent to the counterparty of a unilateral mandate status change to indicate that action has occurred.</td></tr></table>
       enum:
-      - MAMC
-      - MAMD
       - MAMN
-      - MAMR
-      - MAMX
       - MCRC
       - MCRD
-      - MCRR
       - MCRX
-      - MPOF
-      - MPOT
-      - MPOX
       - MSCH
     QueryMandateDetails:
       type: object
@@ -1007,7 +1005,7 @@ components:
             Reminder Count. Will be incremented by 1 each time ANZ generates the same PayTo query notiication where no Query Resolution has been received.   
           minLength: 1
           maxLength: 2  
-          example: 1
+          example: "1"
         re_open_case_indication:
           type: boolean
           description: |-
