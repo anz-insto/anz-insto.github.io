@@ -4,11 +4,11 @@ info:
   description: |-
     Fileactive Real Time Notification API.<br><br>
 
-    It is important for customers using the NPP Real Time Payment Notification service to
+    It is important for customers using the Real Time Payment Notification service to
     verify the `x-Notification-Signature` prior to processing the Notification. JWS Algorithm
     is RS256.<br><br>
 
-    It is important for customers using the NPP Real Time Payment Notification service to
+    It is important for customers using the Real Time Payment Notification service to
     check for duplicate notifications. Duplicate notifications can arise when
     there're system or network issues followed by automated or manual retries. ANZ
     recommends duplicate checking be based on the transaction identifier
@@ -27,10 +27,10 @@ paths:
     post:
       tags: 
         - Payment Notification
-      summary: Real Time Notification
+      summary: Real Time Notification NPP
       description: >-
         API publishes a notification when settled funds sent via NPP are credited to a
-        customers ANZ bank account.
+        customer's ANZ bank account.
       operationId: submitPaymentNotification
       externalDocs:
         description: RTN Additional Information
@@ -71,6 +71,80 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/bank_to_customer_debit_credit_notification'
+        required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/200Received'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          description: Unauthorized
+          content: {}
+        '403':
+          description: Forbidden
+          content: {}
+        '408':
+          description: Request Timeout
+          content: {}
+        '429':
+          description: Too Many Requests
+          content: {}
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          description: Service Unavailable
+          content: {}
+        '504':
+          description: Gateway Timeout
+          content: {}
+  /g3/payment-notification:
+    post:
+      tags: 
+        - Payment Notification
+      summary: Real Time Notification SG FAST
+      description: >-
+        API publishes a notification when settled funds sent via SG FAST are credited to a
+        customer's ANZ bank account.
+      operationId: submitPaymentNotificationG3
+      externalDocs:
+        description: RTN Additional Information
+        url: "https://anz-insto.github.io/fileactive/rtn-info.html"  
+      parameters:
+        - name: x-Message-Id
+          in: header
+          description: >-
+            Duplicate check using point to point reference, as assigned by the instructing party, and sent to the next party in the chain to unambiguously identify the message <br><br>
+            
+            Refer to `account_servicer_reference` for transaction level duplicate checking
+          schema:
+            type: string
+            format: uuid
+            example: 2157f49a-01d7-4e1a-aa0e-422073a312b8
+          required: true
+        - name: x-Notification-Signature
+          in: header
+          description: |
+            The webhook includes a singature of the payload. The consumer is required to verify the signature prior to processing the RTN.  
+
+            To verify the signature  
+            1. Reconstruct the JWT
+                1. BASE64 encode the JWT header i.e. `{"alg":"RS256","typ":"JWT"}`
+                2. BASE64 encode the JWT payload i.e. `Request Body` 
+                3. Extract signature from header `x-Notification-Signature`
+                4. Concatenate all 3 components separated by "." (period) i.e. `header.payload.signature`
+            2. Call JWT function to verify the signature using the ANZ provided public key, algorithm RS256 and the reconstructed JWT
+                1. If valid signature then process RTN
+                2. If invalid signature then reject RTN with a HTTP 401 (unauthorised)  
+          schema:
+            type: string
+            example: chyG_yfwgiYigKenK3RF0mkB6-qQhYRECxF6ls-P6n4lpfgg8Q9naMuOcYu1-xW4MiaOWdB3uqmfck_KjFzYy3QF46TzFft2JqWvqOCB2_ZkNAZppRGFnjHd0vJ7STZt4dFA3GcU5gUpr3hLQfPDjqdofp0Z44_4Aat4DopEqRnNK9PdntkkbXgyKeDBx7NJV7dC1UstodLHG7nPZ3L0eVGXfw97lKEDcXAKgfrE-A-7_UbGixO7J2eX_PlfyEQt9h1L-2-Q5pRtyYpyY9XSp6kMl4bN9geuDsqtE5iFh68dV7Nl0ykdo68CYmEQpVY_6G3j79vPeeSyhs11eTlt6g
+          required: true
+      requestBody:
+        description: Notification to customer of a SG FAST payment
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/bank_to_customer_debit_credit_notification_G3'
         required: true
       responses:
         '200':
@@ -400,7 +474,7 @@ components:
               Unique reference as assigned by the account servicing institution to 
               unambiguously identify the entry <br> <br>
 
-              It is important for customers using the NPP Real Time Payment Notification service to
+              It is important for customers using the Real Time Payment Notification service to
               check for duplicate notifications. Duplicate notifications can arise when
               there're system or network issues followed by automated or manual retries. ANZ
               recommends duplicate checking be based on the transaction identifier
@@ -438,9 +512,9 @@ components:
                 minLength: 1
                 maxLength: 35
                 description: >
-                  Identifies the type of reference reported. Used to indicate the type of NPP payment.
+                  Identifies the type of reference reported. Used to indicate the type of payment.
                   Value will be "ServiceLevel" 
-                example: ServiceLevel
+                example: 'ServiceLevel'
               proprietary_reference:
                 type: string
                 minLength: 1
@@ -506,6 +580,261 @@ components:
                     type: string
                     minLength: 1
                     maxLength: 105
+    bank_to_customer_debit_credit_notification_G3:
+      type: object
+      required:
+        - message_identifier
+        - creation_date_time
+        - notification
+      properties:
+        message_identifier:
+          type: string
+          minLength: 1
+          maxLength: 35
+          description: Point to point reference, as assigned by the account servicing institution, and sent to the account owner or the party authorised to receive the message, to unambiguously identify the message.
+          example: 2157F49A01D74E1AAA0E422073A312B8
+        creation_date_time:
+          allOf:  
+          - $ref: '#/components/schemas/iso_date_time'
+          description: UTC Date/Time the message was generated ISODateTime YYYY-MM-DDTHH:MM:SSZ
+          example: '2022-10-13T22:46:26.8382745+00:00'
+        notification:
+          type: array
+          minItems: 1
+          description: Only a single notification per message will be provided
+          items:
+            type: object
+            required:
+              - identification
+              - account_identification
+            properties:
+              identification:
+                type: string
+                minLength: 1
+                maxLength: 35
+                description: Unique identifier generated by ANZ to identify the notification.
+                example: 257A4C86AA134B4FA1F988448E783EB2
+              creation_date_time:
+                allOf:
+                - $ref: '#/components/schemas/iso_date_time'
+                description: >
+                  UTC Date/Time the message was generated ISODateTime YYYY-MM-DDTHH:MM:SSZ
+                example: '2022-10-13T22:46:26.8382745+00:00'
+              account_identification:
+                type: string
+                minLength: 1
+                maxLength: 34
+                description: Account identification assigned by an institution
+                example: '165165000000100'
+              account_issuer:
+                type: string
+                minLength: 1
+                maxLength: 35
+                description: Entity that assigns the identification
+                example: '165165'
+              entry:
+                $ref: '#/components/schemas/entryG3'
+    entryG3:
+      type: array
+      description: Only one entry will be provided per notification
+      items:
+          type: object
+          required:
+            - amount
+            - credit_debit_indicator
+            - status
+          properties:
+            entry_reference:
+              type: string
+              minLength: 1
+              maxLength: 35
+              description: Customer Reference from the Initiating Party, if not available defaults to "NOTPROVIDED".
+              example: '845780010'
+            amount:
+              $ref: '#/components/schemas/amount'
+            credit_debit_indicator:
+              allOf:
+                - $ref: '#/components/schemas/credit_debit_indicator'
+            status:
+              type: string
+              description: >
+                Status of an entry on the books of the account servicer. Value will be "BOOK" 
+              example: BOOK
+              enum:
+                - BOOK
+                - PNDG
+                - INFO
+            booking_date:
+              allOf:
+              - $ref: '#/components/schemas/iso_date'
+              description: >
+                Date when an entry is posted to an account on the account servicer's books	
+              example: '2022-10-13'
+            value_date:
+              allOf:
+              - $ref: '#/components/schemas/iso_date'
+              description: >
+                Date at which assets become available to the account owner in case of a credit 
+                entry, or cease to be available to the account owner in case of a debit entry.
+              example: '2022-10-13'
+            domain:
+              type: string
+              description: >
+                Specifies the business area of the underlying transaction. Value will be "PMNT"	
+              example: PMNT 
+              enum:
+                - PMNT       
+            family:
+              type: string
+              description: >
+                Specifies the family and the sub-family of the bank transaction code. Value will be "RCDT"	
+              example: RCDT
+              enum:
+                - ICDT
+                - RCDT
+            sub_family_code:
+              type: string
+              description: >
+                Specifies the sub-product family within a specific family.
+                Value will be "SDVA" (Same Day Value Credit Transfer)
+              example: SDVA
+              enum:
+                - SDVA
+            entry_details:
+              type: array
+              description: Only one entry details will be provided per notification
+              items: 
+                type: object
+                properties:
+                  transaction_details:
+                    $ref: '#/components/schemas/transaction_details_G3'
+    related_parties_G3:
+      type: object
+      description: Set of elements used to identify the parties related to the underlying transaction. 
+      properties:
+        debtor_account_identification:
+          type: string
+          minLength: 1
+          maxLength: 34
+          description: Debtor account identification
+          example: '000006789'
+        debtor_account_issuer:
+          type: string
+          minLength: 1
+          maxLength: 35
+          description: Debtor account issuer
+          example: '000999'   
+        creditor_account_identification:
+          type: string
+          minLength: 1
+          maxLength: 34
+          description: >
+            Creditor account identification. Will be virtual account if applicable, 
+            otherwise will be posting account 
+          example: '845780010'
+        debtor_name:
+          type: string
+          minLength: 1
+          maxLength: 140
+          description: Debtor (payer) account name. Defaults to "NOTPROVIDED" 
+          example: Andras Arato
+        creditor_account_issuer:
+          type: string
+          minLength: 1
+          maxLength: 35
+          description: Creditor account BIC
+          example: '012654'
+        creditor_name:
+          type: string
+          minLength: 1
+          maxLength: 140
+          description: Creditor (payer) account name. Defaults to "NOTPROVIDED"
+          example: Holden Holdings 
+    transaction_details_G3:
+      type: array
+      description: Only one transaction will be provided per notification
+      items:
+        type: object
+        properties:
+          account_servicer_reference:
+            type: string
+            minLength: 1
+            maxLength: 35
+            description: >
+              Unique reference as assigned by the account servicing institution to 
+              unambiguously identify the entry <br> <br>
+
+              It is important for customers using the Real Time Payment Notification service to
+              check for duplicate notifications. Duplicate notifications can arise when
+              there're system or network issues followed by automated or manual retries. ANZ
+              recommends duplicate checking be based on the transaction identifier
+              `account_servicer_reference` . Performing this check will ensure multiple
+              instances of the same notification are not processed more than once.
+            example: PTM2022101389715
+          end_to_end_identification:
+            type: string
+            minLength: 1
+            maxLength: 35
+            description: Reference entered in the initiating party channel. Defaults to "NOTPROVIDED"
+            example: INV0123
+          transaction_identification:
+            type: string
+            minLength: 1
+            maxLength: 35
+            description: > 
+              Unique identification as assigned by ANZ (for outward) or counter party FI for inward	
+            example: CTBAAUSNXXXN20221013000310791599310
+          proprietary:
+              type: object
+              required:
+                - proprietary_type
+                - proprietary_reference
+              description: Proprietary reference related to the underlying transaction.This field is not applicable for SG FAST
+              properties:
+                proprietary_type:
+                  type: string
+                  minLength: 1
+                  maxLength: 35
+                  description: >
+                    Identifies the type of reference reported. Used to indicate the type of payment.
+                    Value will be "ServiceLevel" 
+                  example: 'ServiceLevel' 
+                proprietary_reference:
+                  type: string
+                  minLength: 1
+                  maxLength: 35
+                  description: >
+                    Proprietary reference specification related to the underlying transaction.
+          amount:
+            $ref: '#/components/schemas/amount'
+          credit_debit_indicator:
+            allOf:
+              - $ref: '#/components/schemas/credit_debit_indicator'
+          amount_details:
+            type: object
+            properties:
+              instructed_amount:
+                $ref: '#/components/schemas/amount'
+              transaction_amount:
+                $ref: '#/components/schemas/amount'
+          related_parties:
+            $ref: '#/components/schemas/related_parties_G3' 
+          remittance_information:
+            type: object
+            properties:
+              unstructured:
+                type: array
+                description: >-
+                  Information supplied to enable the matching/reconciliation of an entry 
+                  with the items that the payment is intended to settle, such as commercial 
+                  invoices in an accounts' receivable system, in an unstructured form.
+                example: ['👨 My emittance info','INV0123']
+                items:
+                  type: string
+                  minLength: 1
+                  maxLength: 140
+                minItems: 1
+                maxItems: 2       
     uuid_vs_identifier:
       type: string
       format: uuid
@@ -544,11 +873,14 @@ components:
 tags:
   - name: Payment Notification
     description: >-
-        API publishes a notification when settled funds sent via NPP are credited to a
-        customers ANZ bank account.
+        API publishes a notification when settled funds sent are credited to a
+        customer's ANZ bank account.
   - name: bank_to_customer_debit_credit_notification
     description: <SchemaDefinition schemaRef="#/components/schemas/bank_to_customer_debit_credit_notification" />
-    x-displayName: BankToCustomerDebitCreditNotification
+    x-displayName: BankToCustomerDebitCreditNotificationNPP
+  - name: bank_to_customer_debit_credit_notification_G3
+    description: <SchemaDefinition schemaRef="#/components/schemas/bank_to_customer_debit_credit_notification_G3" />
+    x-displayName: BankToCustomerDebitCreditNotificationSGFast
 x-tagGroups:
   - name: Paths
     tags: 
@@ -556,3 +888,4 @@ x-tagGroups:
   - name: Models
     tags: 
       - bank_to_customer_debit_credit_notification
+      - bank_to_customer_debit_credit_notification_G3

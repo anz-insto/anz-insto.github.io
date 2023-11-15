@@ -6,7 +6,7 @@ permalink: /rtn-info
 toc: true
 ---
 
-<!--RTN User Acceptance Testing Scenarios-->
+<!--NPP RTN User Acceptance Testing Scenarios-->
 
 {% include events/fileactive.rtn.uat.md %}
 
@@ -17,3 +17,7 @@ toc: true
 <!--NPP Payment Return Codes-->
 
 {% include events/fileactive.payment.return-codes.md %}
+
+<!--SG FAST RTN User Acceptance Testing Scenarios-->
+
+{% include events/fileactive.rtn.g3.uat.md %}

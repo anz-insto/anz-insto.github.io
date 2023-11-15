@@ -1,8 +1,8 @@
-## RTN User Acceptance Testing Scenarios
+## NPP RTN User Acceptance Testing Scenarios
 
 **Question**
 
-What UAT scenarios does ANZ recommend a customer complete prior to activating the Real Time Notification service? 
+What UAT scenarios does ANZ recommend a customer complete prior to activating the NPP Real Time Notification service? 
 
 **Answer**
 
