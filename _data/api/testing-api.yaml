@@ -62,6 +62,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/correlationID'
         - $ref: '#/components/parameters/messageID'
+        - $ref: "#/components/parameters/priority"
       requestBody:
         content:
           application/json:
@@ -163,6 +164,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/correlationID'
         - $ref: '#/components/parameters/messageID'
+        - $ref: "#/components/parameters/priority2"
       requestBody:
         content:
           application/json:
@@ -291,6 +293,20 @@ components:
       schema:
         $ref: '#/components/schemas/UUID'
       example: '3c40b28a-b902-477f-8400-6cb97d41cb06'
+    priority:
+      name: priority
+      in: header
+      description: Priority (attended/unattended) to be included in any generated notification.
+      required: true
+      schema:
+        $ref: '#/components/schemas/NotificationPriority1Code'
+    priority2:
+      name: priority
+      in: header
+      description: Priority (attended/unattended) to be included in any generated notification. <br><br> Only **UNATTENDED** is supported for this request type.
+      required: true
+      schema:
+        $ref: '#/components/schemas/NotificationPriority2Code'    
   responses:
     201Created:
       description: Created, request was successful
@@ -311,7 +327,7 @@ components:
             $ref: '#/components/schemas/ErrorCode'
           example:
             status:
-              code: EC000 _003
+              code: EC000_003
               severity: Fatal
               text: The request failed validation {reason}
     401Unauthorised:
@@ -548,6 +564,21 @@ components:
           example: RequestedByCustomer
       required:
       - change
+    NotificationPriority1Code:
+      type: string
+      description: |-
+        Defines the notification priority.
+        <table><tr><th>Code</th><th>Description</th></tr><tr><td>ATTENDED</td><td> Attended mode of operation.</td></tr><tr><td>UNATTENDED</td><td>Unattended mode of operation.</td></tr></table>
+      enum:
+      - ATTENDED
+      - UNATTENDED
+    NotificationPriority2Code:
+      type: string
+      description: |-
+        Defines the notification priority.
+        <table><tr><th>Code</th><th>Description</th></tr><tr><td>UNATTENDED</td><td>Unattended mode of operation.</td></tr></table>
+      enum:
+      - UNATTENDED
     NotificationTrigger1Code:
       type: string
       description: |-
