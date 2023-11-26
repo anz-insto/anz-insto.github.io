@@ -24,11 +24,59 @@ paths:
         - $ref: '#/components/parameters/correlationID'
         - $ref: '#/components/parameters/messageID'
       requestBody:
-        description: Request a RTN
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/RequestRTN'
+            examples:
+              NPP:
+                value:
+                  {
+                    "account_identification" : "014814800000010",
+                    "entry_reference" : "Reference entered in the channel",
+                    "amount" : "7120.86",
+                    "puid": "PTM2022101389715",
+                    "debtor_name": "Andras Arato",
+                    "creditor_name": "Holden Holdings",
+                    "arm_creditor_account_identification": "063678965323010",
+                    "creditor_alias": {
+                      "type": "TELI",
+                      "identification": "+61403736550"
+                      },
+                    "remittance_information": {
+                      "unstructured": [
+                      "👨‍👩‍👧‍👦Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim a",
+                      "d minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit i"
+                      ]
+                      },
+                    "return_information": {
+                      "reason_code": "NARR",
+                      "additional_information": [
+                      "Beneficiary is",
+                      "unknown"
+                      ]
+                      }  
+                  }
+              SG FAST:
+                value:
+                  {
+                    "hierarchy": "SG/PAYMENT",
+                    "postingBsb": "ANZBSGSXXXX",
+                    "postingAcctNmbr": "148148000000333",
+                    "acctBsb": "ANZBSGSXXXY",
+                    "acctNmbr": "148148000000333",
+                    "entry_reference": "MY BILL PAYMENT",
+                    "amount": "121.5",
+                    "puid": "PTM0000011111111",
+                    "debtor_name": "MIKE SMITH",
+                    "creditor_name": "MY BILLER",
+                    "arm_creditor_account_identification": "148150000000111",
+                    "remittance_information": {
+                      "unstructured": [
+                        "This is Singapore FAST RTN"
+                      ]
+                    } 
+                  }
         required: true
       responses:
         '201':
@@ -799,14 +847,15 @@ components:
         - mandate_details  
     RequestRTN:
       required:
-      - account_identification
       - entry_reference
       - amount
       type: object
       properties:
         account_identification:
           type: string
-          description: Account identification assigned by an institution, includes BSB
+          description: >-
+            Account identification assigned by an institution, includes BSB. 
+            This field is not applicable for Singapore FAST
           minLength: 1
           maxLength: 34
           example: '014814800000010'
@@ -818,7 +867,7 @@ components:
           example: Reference entered in the initiating channel     
         amount:
           type: string
-          description: Notified amount in AUD
+          description: Notified amount in AUD for NPP. This will be in SGD for Singapore FAST.
           minLength: 1
           maxLength: 19
           example: 7120.86
@@ -842,7 +891,9 @@ components:
           example: Holden Holdings
         arm_creditor_account_identification:
           type: string
-          description: ARM (virtual) account identification, includes BSB
+          description: >-
+            ARM(virtual)account identification, includes BSB for NPP. 
+            Only has account number for SG FAST
           minLength: 1
           maxLength: 34
           example: '063678965323010'
@@ -851,7 +902,7 @@ components:
           - type
           - identification
           type: object
-          description: Creditor account alias
+          description: Creditor account alias (Applicable for NPP only)
           properties:
             type:
               type: string
@@ -885,9 +936,8 @@ components:
               minItems: 1
               maxItems: 2
         return_information:
-          required:
-          - reason_code
           type: object
+          description: Applicable only for NPP
           properties:
             reason_code:
               type: string
@@ -904,7 +954,37 @@ components:
                 minLength: 1
                 maxLength: 105
               minItems: 1
-              maxItems: 3         
+              maxItems: 3
+        hierarchy:
+            type: string
+            description: Always SG/PAYMENTS (Applicable for SG FAST only)
+            minLength: 1
+            maxLength: 11
+            example: 'SG/PAYMENT'     
+        postingBsb:
+              type: string
+              description: Will be the BIC where the funds were posted (Applicable for SG FAST only)
+              minLength: 1
+              maxLength: 11
+              example: 'ANZBSGSXXXX'
+        postingAcctNmbr:
+              type: string
+              description: will be the account number where the funds are posted (Applicable for SG FAST only)
+              minLength: 1
+              maxLength: 34
+              example: '148148000000333'
+        acctBsb:
+                type: string
+                description: Will be populated with the real/natural BIC or the virtual BIC (Applicable for SG FAST only)
+                minLength: 1
+                maxLength: 11
+                example: 'ANZBSGSXXXY'
+        acctNmbr:
+              type: string
+              description: Will be populated with the real/natural account number or the ARM/virtual account number (Applicable for SG FAST only)
+              minLength: 1
+              maxLength: 34
+              example: '148148000000333'
     UUID:
       type: string
       pattern: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
