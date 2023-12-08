@@ -820,12 +820,10 @@ components:
         instruction_identification:
           type: string
           description: |- 
-            Unique identification as assigned by an instructing party for an instructed party to unambiguously identify the instruction. 
-
-            Echoed from MPIR
+            Unique identification as assigned by ANZ for an instructed party to unambiguously identify the instruction. 
           minLength: 1
           maxLength: 35              
-          example: TC121/1471873823
+          example: ANZBAU3LXXXI20230621900000000011200
         uetr:
           allOf:
           - $ref: '#/components/schemas/UUID'
@@ -863,6 +861,15 @@ components:
           description: >-
             Key elements used to identify the original transaction that is being referred to.
           properties: 
+            original_instruction_identification:
+              type: string
+              description: |- 
+                Unique identification as assigned by an instructing party for an instructed party to unambiguously identify the instruction. 
+    
+                Echoed from MPIR
+              minLength: 1
+              maxLength: 35              
+              example: TC121/1471873823    
             instructed_amount:
               $ref: '#/components/schemas/ActiveCurrencyAndAmount'
             mandate_identification:
