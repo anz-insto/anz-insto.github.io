@@ -8,6 +8,7 @@ toc: true
 
 ## Contents
 
+- [1.1.12 - PayTo Payee APIs now live](#1.1.12)
 - [1.1.11 - Real Time Notification updates for SG FAST](#1.1.11)
 - [1.1.10 - Updated Testing API specification](#1.1.10)
 - [1.1.9 - Singapore & Hong Kong Cross Border Fund Transfer API specifications](#1.1.9)
@@ -23,6 +24,29 @@ toc: true
 - [1.0.0 - Site creation](#1.0.0)
 
 ---
+<a name="1.1.12"></a>
+
+### [1.1.12 - 2023-12-14]
+
+#### Added
+- PayTo Payee APIs to live section
+- Testing and Development Resources section
+
+#### Changed
+- Nothing changed.
+
+#### Deprecated
+- Nothing deprecated.
+
+#### Removed
+- Coming Soon Section.
+
+#### Fixed
+- Nothing fixed.
+
+#### Security
+- No security updates.
+
 <a name="1.1.11"></a>
 
 ### [1.1.11 - 2023-10-25]
