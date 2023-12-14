@@ -27,22 +27,14 @@
       description: >
         Fileactive FX API provides consumers the ability to request FX (foreign exchange) quotes and do deals
       url: /fileactive/api/fx-api
-- title: Self-Service
+- title: PayTo Payee
+  icon: icon_12-global_international-digital-filled-oceanblue.svg
   links:
-    - title: Testing API
-      description: > 
-        Fileactive Self-Service Testing API. Rate limit is one request per second. 
-      url: /fileactive/api/testing-api
-    - title: Stub Specification
+    - title: PayTo API
       description: >
-        Fileactive Stub Specifications
-      url: /stub-specs
-- title: Miscellaneous
-  icon: icon_130-information-digital-filled-oceanblue.svg
-  links:
-    - title: Event Codes
-      description: Fileactive API event and error codes
-      url: /event-codes
-    - title: Additional RTN Information
-      description: RTN FAQs and NPP Payment Return Codes
-      url: /rtn-info
+        Fileactive PayTo API
+      url: /fileactive/api/payto-api
+    - title: PayTo API Webhook
+      description: >
+        Fileactive PayTo API Webhook
+      url: /fileactive/api/payto-api-webhook
