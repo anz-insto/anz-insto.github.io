@@ -932,7 +932,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SecuredPaymentSubmissionResource'
+                $ref: '#/components/schemas/SecuredPaymentSubmissionResourceACHVN'
           required: true
         responses:
           '201':
@@ -2244,6 +2244,32 @@ components:
                     country: SG
                   creditor_name: SG ACH Payee
                   creditor_account_identification: "111222333"
+                  remittance_information_unstructured:
+                    - REM
+        - creation_date_time: 2023-12-19T00:00:00.00
+          number_of_transactions: "1"
+          control_sum: "500.01"
+          initiating_party_name: ANZ Sample
+          initiating_party_bic: ANZBAU3MXXX
+          initiating_party_identification: "ANZ"
+          payment_information:
+            - payment_information_identification: VN-ACH-PMTINFID-1
+              batch_booking: false
+              requested_execution_date: 2023-12-19
+              debtor_name: VN ACH Payer
+              debtor_account_identification: "12345678901"
+              credit_transfer_transaction_information:
+                - instruction_identification: VN-ACH-INSTRID-1
+                  end_to_end_identification: VN-ACH-E2EID-1
+                  instructed_amount:
+                    amount: "500.01"
+                    currency: VND
+                  creditor_agent_name: UOB
+                  creditor_agent_bicfi: UOVBVNVNXXX
+                  creditor_agent_postal_address:
+                    country: VN
+                  creditor_name: VN ACH Payee
+                  creditor_account_identification: "IDEN0221"
                   remittance_information_unstructured:
                     - REM
       additionalProperties: false
@@ -3869,6 +3895,21 @@ components:
             encryption: A256CBC-HS512
           example:
             secured_payload: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdW1tYXJ5IjoiU0cgQ0JGVCBwYXltZW50IGluaXRpYXRpb24gZXhhbXBsZSIsInZhbHVlIjp7ImNyZWF0aW9uX2RhdGVfdGltZSI6IjIwMjAtMTItMTdUMDA6MDA6MDAiLCJudW1iZXJfb2ZfdHJhbnNhY3Rpb25zIjoxLCJpbml0aWF0aW5nX3BhcnR5X25hbWUiOiJBTlogU2FtcGxlIiwiaW5pdGlhdGluZ19wYXJ0eV9iaWMiOiJBQU5aQkhLM01YWCIsImluaXRpYXRpbmdfcGFydHlfaWRlbnRpZmljYXRpb24iOiJ4eHgiLCJwYXltZW50X2luZm9ybWF0aW9uIjpbeyJwYXltZW50X2luZm9ybWF0aW9uX2lkZW50aWZpY2F0aW9uIjoiSEstQ0JGVC1QTVRJTkZJRC0yMiIsInJlcXVlc3RlZF9leGVjdXRpb25fZGF0ZSI6IjIwMjAtMTItMTdUMDA6MDA6MDAiLCJjYXRlZ29yeV9wdXJwb3NlX3Byb3ByaWV0YXJ5IjoiQ1NUUkRSIiwiZGVidG9yX25hbWUiOiJISyBDQkZUIFBheWVyIiwiZGVidG9yX2FjY291bnRfaWRlbnRpZmljYXRpb24iOiIxMjM0NTY3ODkwOTEyMzQiLCJjcmVkaXRfdHJhbnNmZXJfdHJhbnNhY3Rpb25faW5mb3JtYXRpb24iOlt7Imluc3RydWN0aW9uX2lkZW50aWZpY2F0aW9uIjoiSEstQ0JGVC1JTlNUUklELTExIiwiZW5kX3RvX2VuZF9pZGVudGlmaWNhdGlvbiI6IkhLLUNCRlQtRTJFSUQtMTEiLCJlcXVpdmFsZW50X2Ftb3VudCI6eyJhbW91bnQiOnsiYW1vdW50IjoiMjAwLjAwIiwiY3VycmVuY3kiOiJVU0QifSwiY3VycmVuY3lfb2ZfdHJhbnNmZXIiOiJIS0QifSwiY2hhcmdlX2JlYXJlciI6IkNSRUQiLCJjcmVkaXRvcl9vcmdhbmlzYXRpb25faWRlbnRpZmljYXRpb24iOnsiaWRlbnRpZmljYXRpb24iOiJCRU5FMTIzNDUiLCJzY2hlbWVfbmFtZSI6IkJFTkVGSUNBUlkgQ09ERSJ9LCJjcmVkaXRvcl9jb250YWN0X2RldGFpbHMiOnsiZW1haWxfYWRkcmVzcyI6ImhrLmNiZnRAZXhhbXBsZS5jb20ifSwiaW50ZXJtZWRpYXJ5X2FnZW50X2JpY2ZpIjoiUlJSUkJISzNNWFgiLCJleGNoYW5nZV9yYXRlX2luZm9ybWF0aW9uIjp7ImNvbnRyYWN0X2lkZW50aWZpY2F0aW9uIjoiQ29udHJhY3RJZGVuMDEiLCJleGNoYW5nZV9yYXRlIjoiMS4wMiJ9LCJjcmVkaXRvcl9hZ2VudF9iaWNmaSI6IlRET01DQVRUVE9SIiwiY3JlZGl0b3JfYWdlbnRfbmFtZSI6IkNFUkRJVE9SIEFHRU5UIFRTVCIsImNyZWRpdG9yX2FnZW50X3Bvc3RhbF9hZGRyZXNzIjp7InBvc3Rjb2RlIjoiTTVLIDFBMiIsInRvd25fbmFtZSI6IlRvcm9udG8iLCJjb3VudHJ5X3N1YmRpdmlzaW9uIjoiT250YXJpbyIsImFkZHJlc3NfbGluZSI6IjIyMiBCYXkgU3QiLCJjb3VudHJ5IjoiQ0EifSwiY3JlZGl0b3JfYWdlbnRfY2xlYXJpbmdfc3lzdGVtX2NvZGUiOiJERUJMWiIsImNyZWRpdG9yX2FnZW50X2NsZWFyaW5nX3N5c3RlbV9wcm9wcmlldGFyeSI6IkNBQ1BBIiwiY3JlZGl0b3JfYWdlbnRfbWVtYmVyX2lkZW50aWZpY2F0aW9uIjoiQ0RUIE1FTUIgSURFTlQiLCJjcmVkaXRvcl9uYW1lIjoiSEsgQ0JGVCBQYXllZSIsImNyZWRpdG9yX3Bvc3RhbF9hZGRyZXNzIjp7InBvc3Rjb2RlIjoiODk4OVoiLCJjb3VudHJ5X3N1YmRpdmlzb24iOiJYWFgiLCJjb3VudHJ5IjoiRlIiLCJhZGRyZXNzX2xpbmUiOiIzMzMgcml2ZXJpYSBzdCBQYXJpcyA5OTg3NDY3IiwidG93bl9uYW1lIjoieHl6In0sImNyZWRpdG9yX2FjY291bnRfaWRlbnRpZmljYXRpb24iOjEyMzQ1Njc4OTAxLCJpbnN0cnVjdGlvbl9mb3JfY3JlZGl0b3JfYWdlbnRfaW5mbyI6eyJpbnN0cnVjdGlvbl9pbmZvIjoic2FtcGxlIn0sInJlbWl0dGFuY2VfaW5mb3JtYXRpb25fdW5zdHJ1Y3R1cmVkIjoiUkVNMSBSRU0yIn1dfV19LCJ4LXdpZGRlcnNoaW5zLW9sZFJlZiI6IiMvY29tcG9uZW50cy9leGFtcGxlcy9DdXN0b21lckNyZWRpdFRyYW5zZmVySW5pdGlhdGlvblYwOV9BU0lBX0NCRlRfRXgwMSJ9.C15jBqstxdKC7bglOsXBdSwx9KWTQlHx1At4R5ULjwY'            
+    SecuredPaymentSubmissionResourceACHVN:
+      required:
+        - secured_payload
+      type: object
+      properties:
+        secured_payload:
+          type: string
+          description: Encrypted and secured payment payload
+          x-jws-signature:
+            algorithm: RS256
+          x-jwe-encryption:
+            algorithm: RSA-OAEP
+            encryption: A256CBC-HS512
+          example:
+            secured_payload: 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGlvbl9kYXRlX3RpbWUiOiIyMDIzLTEyLTE5VDAwOjAwOjAwLjAwIiwibnVtYmVyX29mX3RyYW5zYWN0aW9ucyI6IjEiLCJjb250cm9sX3N1bSI6IjUwMC4wMSIsImluaXRpYXRpbmdfcGFydHlfbmFtZSI6IkFOWiBQYXJ0eU5hbWUiLCJpbml0aWF0aW5nX3BhcnR5X2JpYyI6IkFOWkJBVTNNWFhYIiwiaW5pdGlhdGluZ19wYXJ0eV9pZGVudGlmaWNhdGlvbiI6IkFOWiBQYXJ0eUlkZW50aWZpY2F0aW9uIiwicGF5bWVudF9pbmZvcm1hdGlvbiI6W3sicGF5bWVudF9pbmZvcm1hdGlvbl9pZGVudGlmaWNhdGlvbiI6IlZOLUFDSC1QTVRJTkZJRC0xIiwiY2F0ZWdvcnlfcHVycG9zZSI6IlNBTEEiLCJyZXF1ZXN0ZWRfZXhlY3V0aW9uX2RhdGUiOiIyMDIzLTEyLTE5IiwiZGVidG9yX25hbWUiOiJWTiBBQ0ggUGF5ZXIiLCJkZWJ0b3JfYWNjb3VudF9pZGVudGlmaWNhdGlvbiI6IjEyMzQ1Njc4OTAxIiwiY3JlZGl0X3RyYW5zZmVyX3RyYW5zYWN0aW9uX2luZm9ybWF0aW9uIjpbeyJpbnN0cnVjdGlvbl9pZGVudGlmaWNhdGlvbiI6IlZOLUFDSC1JTlNUUklELTEiLCJlbmRfdG9fZW5kX2lkZW50aWZpY2F0aW9uIjoiVk4tQUNILUUyRUlELTEiLCJpbnN0cnVjdGVkX2Ftb3VudCI6eyJhbW91bnQiOiI1MDAuMDEiLCJjdXJyZW5jeSI6IlZORCJ9LCJjcmVkaXRvcl9hZ2VudF9uYW1lIjoiVU9CIiwiY3JlZGl0b3JfYWdlbnRfYmljZmkiOiJVT1ZCVk5WTlhYWCIsImNyZWRpdG9yX2FnZW50X21lbWJlcl9pZGVudGlmaWNhdGlvbiI6IklERU4wMjIxIiwiY3JlZGl0b3JfbmFtZSI6IlZOIEFDSCBQYXllZSIsImNyZWRpdG9yX2FjY291bnRfaWRlbnRpZmljYXRpb24iOiJJREVOQUNDVDAwMSIsImNyZWRpdG9yX2FnZW50X3Bvc3RhbF9hZGRyZXNzIjp7ImNvdW50cnkiOiJWTiJ9LCJyZW1pdHRhbmNlX2luZm9ybWF0aW9uX3Vuc3RydWN0dXJlZCI6WyJSRU0iXX1dfV19.w9vcn0n9Cmv1aLKPy0P7McQgY32F4uxG10JLChu2UBhVwvHoTfSL_K4iLBLQ01H8SON937XPgTRw8B6-Ay-hag'            
     TransactionInformationAndStatus:
       description: >-
         Information related to the status of individual transactions within a
