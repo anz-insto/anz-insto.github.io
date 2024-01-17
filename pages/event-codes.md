@@ -14,6 +14,11 @@ toc: true
 
 {% include events/fileactive.npp.event-codes.md %}
 
+## PayTo
+{% include events/fileactive.payto.mandate.event-codes.md %}
+
+{% include events/fileactive.payto.mpir.event-codes.md %}
+
 ## Receivables
 
 {% include events/fileactive.statement.event-codes.md %}

@@ -30,9 +30,7 @@ paths:
       description: |-
         The purpose of this operation is to provide the processing outcome of the following mandate actions initiated by the **Payee**:<br>
         - Create Mandate
-        - Amend Mandate (coming soon)
-        - Change Mandate Status
-        - Mandate Creation/Amendment Recall (coming soon)<br>
+        - Change Mandate Status<br>
 
         Duplicate checking should be based on the `request_id`, i.e. the **Payee** identifiyer provided in the original mandate request.
       operationId: mandateOutcomes
@@ -80,8 +78,6 @@ paths:
         The purpose of this operation is to provide a notification where the **Payer** has taken an action on a Mandate. The following notifications are supported:
           - Bilateral Create Mandate Resolution
           - Bilateral Create Mandate Timeout
-          - Bilateral Amend Mandate Resolution (coming soon)
-          - Bilateral Amend Mandate Timeout (coming soon)          
           - Unilateral Amend Mandate 
           - Unilateral Change Mandate Status<br>
 
@@ -129,7 +125,6 @@ paths:
       description: |-
         The purpose of this operation is to provide the processing outcome of the following MPIR actions initiated by the **Payee**:<br>
         - Create MPIR
-        - Retry MPIR (coming soon)
 
         If MPIR is processed same day and successfully settles then `transaction_status_reason_code` will be **ACSC** Settlement Completed.<br>
 
@@ -436,6 +431,9 @@ components:
             Specifies a character string with a maximum length of 1000 characters.
           minLength: 1
           maxLength: 1000
+          externalDocs:
+            description: PayTo Mandate Event Codes
+            url: 'https://anz-insto.github.io/fileactive/event-codes#payto-mandate-event-codes'    
       required:
       - code
       - severity
@@ -802,6 +800,9 @@ components:
             Reason for the status, as published in an external reason code list. 
           minLength: 1
           maxLength: 4  
+          externalDocs:
+            description: PayTo MPIR Event Codes
+            url: 'https://anz-insto.github.io/fileactive/event-codes#payto-mpir-event-codes'    
         transaction_status_additional_information:
           type: array
           description: |-
