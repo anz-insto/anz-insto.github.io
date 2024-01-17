@@ -4,12 +4,9 @@ info:
   description: |-
     Fileactive PayTo API provides consumers the ability to
     * Create a Mandate
-    * Amend a Mandate (coming soon)
     * Change a Mandate Status
-    * Mandate Creation/Amendment Recall (coming soon)
-    * Retreive Mandate Details (coming soon)
+    * Get Mandate Details (coming soon)
     * Create a Mandated Payment Initiation Request (MPIR)
-    * Retry a Mandated Payment Initiation Request (MPIR) (coming soon)
     * Create a PayTo Query Resolution
   version: 1.0.0
 servers:
