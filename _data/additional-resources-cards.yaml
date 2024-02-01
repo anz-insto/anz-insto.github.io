@@ -17,3 +17,6 @@
     - title: Additional RTN Information
       description: RTN FAQs and NPP Payment Return Codes
       url: /rtn-info
+    - title: PayID Alias Processing
+      description: Detail and information on Alias Processing for NPP
+      url: /alias-processing

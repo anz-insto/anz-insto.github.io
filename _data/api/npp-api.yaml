@@ -179,7 +179,7 @@ securityDefinitions:
     authorizationUrl: https://api.fileactive.uat.anzgcis.com/v1.0/auth
     scopes:
       AU.INSTO.PAYMENT.NPP.CREATE: Create an NPP Payment
-      AU.INSTO.PAYMENT.NPP.READ: Get the status of an NPP Payment
+      AU.INSTO.PAYMENT.READ: Get the status of an NPP Payment
 definitions:
   ErrorCode:
     type: object

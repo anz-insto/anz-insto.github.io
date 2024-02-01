@@ -8,6 +8,10 @@ toc: true
 
 ## Contents
 
+
+- [1.1.17 - AU DE API removal and other minor fixes](#1.1.17)
+- [1.1.16 - Added PayTo Payee API Event Codes](#1.1.16)
+- [1.1.15 - Added Prior Day to Statement API](#1.1.15)
 - [1.1.14 - Added PayTo Payee API Event Codes](#1.1.14)
 - [1.1.13 - VN ACH payload sample update](#1.1.13)
 - [1.1.12 - PayTo Payee APIs now live](#1.1.12)
@@ -26,6 +30,75 @@ toc: true
 - [1.0.0 - Site creation](#1.0.0)
 
 ---
+
+<a name="1.1.17"></a>
+
+### [1.1.17 - 2024-02-01]
+
+#### Added
+- Alias Processing information page added
+
+#### Changed
+- Nothing changed 
+
+#### Deprecated
+- Nothing deprecated.
+
+#### Removed
+- AU DE API references have been removed
+
+#### Fixed
+- Update Dev Portal with right payment terminology for Hong Kong
+- NPP scope update for payment status
+- Fix spelling error in url
+- Fix incorrect payload value for SG RTN
+
+#### Security
+- No security updates.
+
+<a name="1.1.16"></a>
+
+### [1.1.16 - 2024-01-25]
+
+#### Added
+- [PayTo API]({{ site.baseurl }}/fileactive/api/payto-api) - Get Mandate Details
+
+#### Changed
+- Nothing changed.
+
+#### Deprecated
+- Nothing deprecated.
+
+#### Removed
+- Coming Soon Section.
+
+#### Fixed
+- Nothing fixed.
+
+#### Security
+- No security updates.
+
+<a name="1.1.15"></a>
+
+### [1.1.15 - 2024-01-31]
+
+#### Added
+- Prior Day option to Statement API
+
+#### Changed
+- Nothing changed.
+
+#### Deprecated
+- Nothing deprecated.
+
+#### Removed
+- Coming Soon Section.
+
+#### Fixed
+- Nothing fixed.
+
+#### Security
+- No security updates.
 
 <a name="1.1.14"></a>
 
@@ -48,8 +121,6 @@ toc: true
 
 #### Security
 - No security updates.
-
-=======
 
 <a name="1.1.13"></a>
 

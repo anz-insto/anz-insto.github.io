@@ -60,7 +60,7 @@ paths:
               SG FAST:
                 value:
                   {
-                    "hierarchy": "SG/PAYMENT",
+                    "hierarchy": "SG/PAYMENTS",
                     "postingBsb": "ANZBSGSXXXX",
                     "postingAcctNmbr": "148148000000333",
                     "acctBsb": "ANZBSGSXXXY",
