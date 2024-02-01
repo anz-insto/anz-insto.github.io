@@ -136,6 +136,67 @@ paths:
           $ref: '#/components/responses/504'     
         default:
           $ref: '#/components/responses/default'
+  /payto/v1.0/mandates/{mandateId}:
+    get:
+      tags:
+      - Mandate
+      summary: Get details of a mandate.
+      description: "The purpose of this operation is to retrieve the details of a specific mandate in its current state. The response may optionally include the details of any pending actions for the mandate."
+      operationId: getMandate
+      parameters:
+        - $ref: "#/components/parameters/correlationID"
+        - $ref: "#/components/parameters/messageID"
+        - name: mpsUserId
+          in: header
+          description: |-
+            MPS User Id associated with this mandate request
+          required: true
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 10
+          example: 10002005  
+        - name: mandateId
+          in: path
+          description: ID of mandate whose details are to be retrieved.
+          required: true
+          schema:
+            type: string
+            pattern: ^[a-f0-9]{12}1[a-f0-9]{3}[89ab][a-f0-9]{15}$
+          example: "9ff40f2bf6af193ebe1d70572c85f1d1"
+        - name: pendingActions
+          in: query
+          description: Flag indicating if the details of any pending actions on the mandate should also be retrieved.
+          required: false
+          schema:
+            type: boolean
+            default: false
+          example: "true"    
+      responses:
+        200:
+          $ref: '#/components/responses/200'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        408:
+          $ref: '#/components/responses/408'
+        429:
+          $ref: '#/components/responses/429V2'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503' 
+        504:
+          $ref: '#/components/responses/504'     
+        default:
+          $ref: '#/components/responses/default'
   /payto/v1.0/mpirs:
     post:
       tags:
@@ -296,6 +357,24 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/AuthTokenResponse'
+    200:
+      description: Information of submitted resource found and returned
+      headers:
+        X-Correlation-Id:
+          schema:
+            $ref: '#/components/schemas/UUID'
+        X-RequestKey:
+          schema:
+            $ref: '#/components/parameters/requestKey'
+      content:
+       application/json:
+          schema:
+            $ref: '#/components/schemas/MandateRetrievalResponse1'
+#          examples:
+#            Payment_Accepted_Settled:
+#              $ref: '#/components/examples/CustomerPaymentStatusReportV10_Ex01'
+#            Payment_Rejected_Batch:
+#              $ref: '#/components/examples/CustomerPaymentStatusReportV10_Ex02'
     202:
       description: Accepted the request for processing. Processing result will be provided via Webhook
       headers:
@@ -324,8 +403,66 @@ components:
       description: Unauthorised
     403:
       description: Forbidden
+      headers:
+        X-Correlation-Id:
+          schema:
+            $ref: '#/components/schemas/UUID'
+          description: GUID echo'd from customer request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    404:
+      description: Not Found
+      headers:
+        X-Correlation-Id:
+          schema:
+            $ref: '#/components/schemas/UUID'
+          description: GUID echo'd from customer request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            MMS:
+              value: 
+                status: 
+                  "severity": "FATL"
+                  "statusCode": "MMS.API.9011"
+                  "statusMessage": "No record found"
+    408:
+      description: Request Timeout
+      headers:
+        X-Correlation-Id:
+          schema:
+            $ref: '#/components/schemas/UUID'
+          description: GUID echo'd from customer request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'     
     429:
-      description: Action exceeds allocated limits
+      description: Too Many Requests
+    429V2:
+      description: Too Many Requests 
+      headers:
+        X-Correlation-Id:
+          schema:
+            $ref: '#/components/schemas/UUID'
+          description: GUID echo'd from customer request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'  
+          examples:
+            ANZ:
+              value: 
+            MMS:
+              value: 
+                status: 
+                  "severity": "TRAN"
+                  "statusCode": "MMS.API.9007"
+                  "statusMessage": "No record found"
     500Auth:
       description: Internal Server Error, contact support
     500:
@@ -476,6 +613,69 @@ components:
       - ADHO
       - INDA
       - FRTN
+    MandateAction1:
+      type: object
+      description: "Details of an action performed on a mandate.\n  \n**Property descriptions**:\n - **type** - Type of action performed on the mandate.\n - **status** - Status of the action performed on the mandate.\n - **creation_event** - Details of the action creation event.\n - **resolution_event** - Details of the action resolution event. This field will only be present once the action has been resolved by one of the parties to the mandate. If the action expires according to the ExpiryTime then this field will remain absent.\n - **details** - Optional details of the action.\n - **notification_priority** - Notification priority provided by the initiator of the action. For mandate status change and mandate porting actions, this field will always be set to Unattended."
+      properties:
+        action_identification:
+          type: string
+          description: "ID of the action performed.\nUniversally Unique IDentifier (UUID) version 1, as described in IETC RFC 4122 \"Universally Unique IDentifier (UUID) URN Namespace\" without the 4 hyphen separators.\r\nFor example: '00000000000010008000000000000000' instead of  '00000000-0000-1000-8000-000000000000' (without quotes)"
+          pattern: ^[a-f0-9]{12}1[a-f0-9]{3}[89ab][a-f0-9]{15}$
+          example: "85f28334c3a911edafa10242ac120002"
+        type:
+          $ref: '#/components/schemas/MandateActionType1Code'
+        status:
+          $ref: '#/components/schemas/MandateActionStatus1Code'
+        bilateral:
+          type: boolean
+          description: Boolean flag indicating if the action was created as bilateral or unilateral. 
+        expiry_time:
+          type: string
+          description: |-
+            For a bilateral mandate creation or amendment action, or for a porting action, this will contain the timestamp at which the action will expire if no resolution is provided.
+            An ISODateTime whereby all timezoned dateTime values are UTC.
+          pattern: ^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.[0-9]{1,3})?(?:Z)$
+        resolution_requested_by:
+          type: string
+          description: |-
+            Optional time used to indicate by when resolution of a bilateral action is requested from the other party to the mandate. This time is for informational purposes only and does not affect the expiry time imposed by the MMS.
+            An ISODateTime whereby all timezoned dateTime values are UTC.
+          pattern: ^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.[0-9]{1,3})?(?:Z)$
+        notification_priority:
+          allOf: 
+          -  $ref: '#/components/schemas/NotificationPriority1Code'
+          description: |-
+            Notification Priority of the pending mandate action
+            <table><tr><th>Code</th><th>Description</th></tr><tr><td>ATTENDED</td><td> Attended mode of operation.</td></tr><tr><td>UNATTENDED</td><td>Unattended mode of operation.</td></tr></table>
+      additionalProperties: false
+      required:
+        - action_identification
+        - creation_event
+        - mandate_identification
+        - notification_priority
+        - status
+        - type
+    MandateActionStatus1Code:
+      type: string
+      description: |-
+        Enumeration of the states that a mandate action can have.
+        <table><tr><th>Code</th><th>Name</th><th>Description</th></tr><tr><td>PEND</td><td>Pending</td><td><p>This status represents the following situations:</p>
+        <ul>
+        <li>A bilateral action that is waiting to be confirmed.</li>
+        </ul>
+        </td></tr></table>
+      enum:
+      - PEND
+      example: "PEND"
+    MandateActionType1Code:
+      type: string
+      description: |-
+        Enumeration of all mandate action types.
+        <table><tr><th>Code</th><th>Name</th><th>Description</th></tr><tr><td>AMND</td><td>Amend</td><td>Mandate amendment.</td></tr><tr><td>CREA</td><td>Create</td><td>Mandate creation.</td></tr></table>
+      enum:
+      - AMND
+      - CREA
+      example: "CREA"
     MandateCreationRequest:
       type: object
       description: "Request to register payment mandate in central mandate service."
@@ -596,6 +796,161 @@ components:
       - automatic_extension_indicator
       - debtor_information
       - payment_information
+    MandateDetails1:
+      type: object
+      description: "  \n**Property descriptions**:\n - **mandate_status** - Current status of the mandate.\n - **mandate_status_party_role** - Role of the party that performed the last status change on the mandate. This field will remain absent until a status change is performed on the mandate.\n - **mandate_type** - Identifies the type of mandate.\n - **establishment_scheme** - Identifies the arrangement (unilateral or bilateral) and party that established the mandate.\n - **debtor_information** - Debtor information related to the mandate. \n - **creditor_information** - Creditor information related to the mandate. \n - **payment_initiator_information** - Payment initiator information related to the mandate. \n - **payment_information** - Set of characteristics detailing mandate payment information."  
+      properties:
+        mps_user_id:
+          type: string
+          description: |-
+            MPS User Id associated with this mandate
+          minLength: 1
+          maxLength: 10
+          example: 10002005  
+        mandate_identification:
+          pattern: ^[a-f0-9]{12}1[a-f0-9]{3}[89ab][a-f0-9]{15}$
+          type: string
+          description: "Unique ID of the mandate.\nUniversally Unique IDentifier (UUID) version 1, as described in IETC RFC 4122 \"Universally Unique IDentifier (UUID) URN Namespace\" without the 4 hyphen separators.\r\nFor example: '00000000000010008000000000000000' instead of  '00000000-0000-1000-8000-000000000000' (without quotes)"
+          example: "9ff40f2bf6af193ebe1d70572c85f1d1"
+        mandate_version_number:
+          type: string
+          description: |-
+            Specifies the version number of a mandate, assigned by the MMS to each new iteration of the mandate record. A bilaterally created mandate that has not been confirmed will have value '0'. The initial value of a newly created active mandate will start at '1'. All subsequent changes to the mandate will cause the value to be incremented by 1.
+            Specifies a numeric string with a maximum length of 5 digits.
+          pattern: ^[0-9]{1,5}$
+          example: "1"
+        mandate_registration_date_time:
+          pattern: ^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.[0-9]{1,3})?(?:Z)$
+          type: string
+          description: |-
+            Date and time when the Mandate was originally registered in the MMS for a given Account Servicer, UTC expressed without offset, i.e. YYYY-MM-DDThh:mm:ss.sssZ
+            An ISODateTime whereby all timezoned dateTime values are UTC.
+          example: "2020-09-18T04:09:16.170Z"
+        mandate_status:
+          allOf: 
+          - $ref: '#/components/schemas/MandateStatus1Code'
+          example: "ACTV"
+        mandate_status_party_role:
+          $ref: '#/components/schemas/MandatePartyRole2Code'
+        mandate_status_reason_code:
+          type: string
+          description: "Code defining the reason for the last status change to the mandate.\nSpecifies the status reason, as published in an external status reason code list.\r\nExternal code sets can be downloaded from www.iso20022.org."
+          minLength: 1
+          maxLength: 4
+          example: "MD16"
+        mandate_status_reason_description:
+          type: string
+          description: |-
+            Description of the last mandate status change reason.
+            Specifies a character string with a maximum length of 256 characters.
+          minLength: 1
+          maxLength: 256
+          example: "Requested By Customer"
+        initiation_request_identification:
+          type: string
+          description: |-
+            Identification for the mandate request, as assigned by the initiating party.
+            Specifies a character string with a maximum length of 35 ASCII printable characters.
+          pattern: ^[ -~]{1,35}$
+          example: "abc-123"
+        mandate_type:
+          $ref: '#/components/schemas/MandateType1Code'
+        establishment_scheme:
+          $ref: '#/components/schemas/MandateEstablishmentScheme1Code'
+        mandate_purpose_code:
+          type: string
+          description: |-
+            Specifies the high level purpose of the mandate based on a set of pre-defined categories.
+            Specifies an alphanumeric string with a length of 4 characters.
+            <table><tr><th>Code</th><th>Description</th></tr><tr><td>DEPD</td><td>Dependant Support Payments</td></tr><tr><td>GAMP</td><td>Gambling Payments</td></tr><tr><td>GOVT</td><td>Government Payments</td></tr><tr><td>LOAN</td><td>Loan Payments</td></tr><tr><td>MORT</td><td>Mortgage Payments</td></tr><tr><td>OTHR</td><td>Other Service Payments</td></tr><tr><td>PENS</td><td>Pension Payments</td></tr><tr><td>PERS</td><td>Personal Payment</td></tr><tr><td>RETL</td><td>Retail Payments</td></tr><tr><td>SALA</td><td>Salary Payments</td></tr><tr><td>TAXS</td><td>Tax Payments</td></tr><tr><td>UTIL</td><td>Utility Payments</td></tr></table>   
+          pattern: ^[a-zA-Z0-9]{4}$
+          enum: 
+          - DEPD
+          - GAMP
+          - GOVT
+          - LOAN
+          - MORT
+          - OTHR
+          - PENS
+          - PERS
+          - RETL
+          - SALA
+          - TAXS
+          - UTIL
+          example: "RETL"
+        mandate_purpose_description:
+          type: string
+          description: |-
+            Specifies a full description of mandate purpose code.
+            <table><tr><th>Code</th><th>Description</th></tr><tr><td>DEPD</td><td>Dependant Support Payments</td></tr><tr><td>GAMP</td><td>Gambling Payments</td></tr><tr><td>GOVT</td><td>Government Payments</td></tr><tr><td>LOAN</td><td>Loan Payments</td></tr><tr><td>MORT</td><td>Mortgage Payments</td></tr><tr><td>OTHR</td><td>Other Service Payments</td></tr><tr><td>PENS</td><td>Pension Payments</td></tr><tr><td>PERS</td><td>Personal Payment</td></tr><tr><td>RETL</td><td>Retail Payments</td></tr><tr><td>SALA</td><td>Salary Payments</td></tr><tr><td>TAXS</td><td>Tax Payments</td></tr><tr><td>UTIL</td><td>Utility Payments</td></tr></table>   
+          pattern: ^[a-zA-Z0-9]{4}$  
+          example: "Retail"
+        description:
+          pattern: ^[ -~]{1,140}$
+          type: string
+          description: |-
+            Reason for the mandate setup as narrative text.
+            Specifies a character string with a maximum length of 140 ASCII printable characters.
+          example: "Car purchase"
+        validity_start_date:
+          type: string
+          description: |-
+            Start date of the validity of the mandate. The mandate is valid as of 00:00:00.000 Australia Sydney time on this date.
+            A particular point in the progression of time in a calendar year expressed in the YYYY-MM-DD format. This representation is defined in "XML Schema Part 2: Datatypes Second Edition - W3C Recommendation 28 October 2004" which is aligned with ISO 8601.
+          pattern: ^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)$
+          example: "2023-06-10"
+        validity_end_date:
+          type: string
+          description: |-
+            End date of the validity of the mandate. If specified, the mandate is valid until 23:59:59.999 Australia Sydney time on this date.
+            A particular point in the progression of time in a calendar year expressed in the YYYY-MM-DD format. This representation is defined in "XML Schema Part 2: Datatypes Second Edition - W3C Recommendation 28 October 2004" which is aligned with ISO 8601.
+          pattern: ^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)$
+          example: "2024-05-01"
+        transfer_arrangement:
+          type: string
+          description: |-
+            Indication of future transfer date, conditions of sale and requirement to hold funds.
+            Specifies a character string with a maximum length of 140 characters.
+          minLength: 1
+          maxLength: 140
+          example: "Transfer arrangement details"
+        automatic_extension_indicator:
+          type: boolean
+          description: Automatic renewal of a mandate arrangement at the end of the defined period (period start through period end).
+        debtor_information:
+          $ref: '#/components/schemas/MandatePartyInformation1Debtor'
+        creditor_information:
+          $ref: '#/components/schemas/MandatePartyInformation1Creditor'
+        payment_initiator_information:
+          $ref: '#/components/schemas/MandatePartyInformation2'
+        payment_information:
+          $ref: '#/components/schemas/MandatePaymentInformation1'
+        additional_information:
+          type: string
+          description: |-
+            Additional information, in free text form, to complement the mandate information.
+            Specifies a character string with a maximum length of 140 characters.
+          minLength: 1
+          maxLength: 140
+          example: "Addtional mandate information"
+        pending_action_indicator:
+          type: boolean
+          description: "Indicates if there're any pending bilateral actions on the mandate. Only Create & Amend bilateral actions will be indicated."
+          example: "false"     
+      required:
+        - debtor_information
+        - establishment_scheme
+        - initiation_request_identification
+        - mandate_identification
+        - mandate_registration_date_time
+        - mandate_status
+        - mandate_type
+        - mandate_version_number
+        - mps_user_id
+        - payment_information
+        - payment_initiator_information
+        - validity_start_date
+      additionalProperties: false
     MandateEstablishmentScheme1Code:
       type: string
       description: |-
@@ -739,6 +1094,14 @@ components:
       required: 
         - party_name
         - party_legal_name
+    MandatePartyRole2Code:
+      type: string
+      description: |-
+        Enumeration of the party roles that can initiate an action on a mandate.
+        <table><tr><th>Code</th><th>Name</th><th>Description</th></tr><tr><td>DEBT</td><td>Debtor</td><td>Debtor party role.</td></tr><tr><td>PMTI</td><td>PaymentInitiator</td><td>Payment Initiator party role.</td></tr></table>
+      enum:
+      - PMTI
+      - DEBT    
     MandatePaymentInformation1:
       type: object
       description: "Set of characteristics detailing mandate payment information.\n  \n**Property descriptions**:\n - **payment_frequency** - Regularity with which instructions are to be created and processed.\n - **payment_amount_type** - Identifies the mandate payment arrangement.\n - **first_payment_amount** - Amount different from the payment amount, as it includes the costs associated with the first debited amount.\n - **last_payment_amount** - Last payment amount different  to the payment amount.\n - **amount** - Fixed amount to be debited from the debtor's account.\n - **maximum_amount** - Maximum amount that may be paid from the debtor's account, per instruction.\n  \nThe following rules apply to this structure:\n- PaymentAmountTypeRule: If `payment_amount_type` code is equal to value 'FIXE' then `amount` must be present."
@@ -805,6 +1168,20 @@ components:
       - USGB
       - VARI   
       example: "VARI" 
+    MandateRetrievalResponse1:
+      type: object
+      description: "Response to a successful mandate retrieval request.\n  \n**Property descriptions**:\n - **mandate** - Details of the mandate."
+      properties:        
+        mandate:
+          $ref: '#/components/schemas/MandateDetails1'
+        pending_actions:
+          type: array
+          description: Optional list of bilateral actions associated with the mandate that are still pending resolution.
+          items:
+            $ref: '#/components/schemas/MandateAction1'
+      required:
+        - mandate
+      additionalProperties: false
     MandateStatusChange1Code:
       type: string
       description: |-
@@ -854,6 +1231,16 @@ components:
       - mps_user_id
       - request_id
       - change
+    MandateStatus1Code:
+      type: string
+      description: |-
+        Enumeration of the states that a mandate can have.
+        <table><tr><th>Code</th><th>Name</th><th>Description</th></tr><tr><td>ACTV</td><td>Active</td><td>The mandate has a status of active.</td></tr><tr><td>CNCD</td><td>Cancelled</td><td>The mandate has a status of cancelled.</td></tr><tr><td>CRTD</td><td>Created</td><td>The mandate has a status of created.</td></tr><tr><td>SUSD</td><td>Suspended</td><td>The mandate has a status of suspended.</td></tr></table>
+      enum:
+      - ACTV
+      - CNCD
+      - CRTD
+      - SUSD  
     MandateType1Code:
       type: string
       description: |-
@@ -974,6 +1361,13 @@ components:
       - ultimate_party_name
       - account_identification_type_code
       - account_identification
+    UserId:
+      type: string
+      description: |-
+        MPS User Id associated with this create mandate request
+      minLength: 1
+      maxLength: 10
+      example: 10002005  
     NotificationPriority1Code:
       type: string
       description: |-

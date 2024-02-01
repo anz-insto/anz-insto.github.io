@@ -8,7 +8,7 @@ info:
 servers:
   - url: https://api.fileactive.uat.anzgcis.com
     description: UAT Test environment
-  - url: https://api.fileactive.anzgzis.com
+  - url: https://api.fileactive.anzgcis.com
     description: Production Environment
 security:
   - bearerAuth: []
@@ -53,76 +53,76 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
-  /payment/au/v1.0/de:
-    post:
-      summary: AU DE Submit
-      description: |-
-        Australian Direct Entry API using pain.001.001.09 derived json message format. Payment Initiation request using AU DE from single debtor to single or multiple creditors.   
-        Refer to **CustomerCreditTransferInitiationV09_AU_DE** for unencrypted payload object.
-      tags:
-        - Australia Payments
-      operationId: submitAuDe
-      parameters:
-        - $ref: '#/components/parameters/correlationID'
-        - $ref: '#/components/parameters/messageID'
-      requestBody:
-        description: Resource to instruct movement of funds from the debtor account to creditor
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SecuredPaymentSubmissionResource'
-        required: true
-      responses:
-        '201':
-          $ref: '#/components/responses/201Created'
-        '400':
-          $ref: '#/components/responses/400BadRequest'
-        '401':
-          $ref: '#/components/responses/401Unauthorised'
-        '429':
-          $ref: '#/components/responses/429TooManyRequests'
-        '500':
-          $ref: '#/components/responses/500InternalError'
-        '502':
-          $ref: '#/components/responses/502BadGateway'
-        '503':
-          $ref: '#/components/responses/503Unavailable'
-        '504':
-          $ref: '#/components/responses/504Timeout'
-        default:
-          $ref: '#/components/responses/default'
-  /payment/au/v1.0/de/{x-Message-Id}:
-    get:
-      summary: AU DE Status
-      description: |
-        Retrieve and return the status of a submited message. 
-      tags:
-        - Australia Payments
-      operationId: getAuDeStatus
-      parameters:
-        - $ref: '#/components/parameters/id'
-        - $ref: '#/components/parameters/correlationID'
-      responses:
-        '200':
-          $ref: '#/components/responses/200OK'
-        '400':
-          $ref: '#/components/responses/400BadRequest'
-        '401':
-          $ref: '#/components/responses/401Unauthorised'
-        '403':
-          $ref: '#/components/responses/403Forbidden'
-        '429':
-          $ref: '#/components/responses/429TooManyRequests'
-        '500':
-          $ref: '#/components/responses/500InternalError'
-        '502':
-          $ref: '#/components/responses/502BadGateway'
-        '503':
-          $ref: '#/components/responses/503Unavailable'
-        '504':
-          $ref: '#/components/responses/504Timeout'
-        default:
-          $ref: '#/components/responses/default'
+#  /payment/au/v1.0/de:
+#    post:
+#      summary: AU DE Submit
+#      description: |-
+#        Australian Direct Entry API using pain.001.001.09 derived json message format. Payment Initiation request using AU DE from single debtor to single or multiple creditors.   
+#        Refer to **CustomerCreditTransferInitiationV09_AU_DE** for unencrypted payload object.
+#      tags:
+#        - Australia Payments
+#      operationId: submitAuDe
+#      parameters:
+#        - $ref: '#/components/parameters/correlationID'
+#        - $ref: '#/components/parameters/messageID'
+#      requestBody:
+#        description: Resource to instruct movement of funds from the debtor account to creditor
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/SecuredPaymentSubmissionResource'
+#        required: true
+#      responses:
+#        '201':
+#          $ref: '#/components/responses/201Created'
+#        '400':
+#          $ref: '#/components/responses/400BadRequest'
+#        '401':
+#          $ref: '#/components/responses/401Unauthorised'
+#        '429':
+#          $ref: '#/components/responses/429TooManyRequests'
+#        '500':
+#          $ref: '#/components/responses/500InternalError'
+#        '502':
+#          $ref: '#/components/responses/502BadGateway'
+#        '503':
+#          $ref: '#/components/responses/503Unavailable'
+#        '504':
+#          $ref: '#/components/responses/504Timeout'
+#        default:
+#          $ref: '#/components/responses/default'
+#  /payment/au/v1.0/de/{x-Message-Id}:
+#    get:
+#      summary: AU DE Status
+#      description: |
+#        Retrieve and return the status of a submited message. 
+#      tags:
+#        - Australia Payments
+#      operationId: getAuDeStatus
+#      parameters:
+#        - $ref: '#/components/parameters/id'
+#        - $ref: '#/components/parameters/correlationID'
+#      responses:
+#        '200':
+#          $ref: '#/components/responses/200OK'
+#        '400':
+#          $ref: '#/components/responses/400BadRequest'
+#        '401':
+#          $ref: '#/components/responses/401Unauthorised'
+#        '403':
+#          $ref: '#/components/responses/403Forbidden'
+#        '429':
+#          $ref: '#/components/responses/429TooManyRequests'
+#        '500':
+#          $ref: '#/components/responses/500InternalError'
+#        '502':
+#          $ref: '#/components/responses/502BadGateway'
+#        '503':
+#          $ref: '#/components/responses/503Unavailable'
+#        '504':
+#          $ref: '#/components/responses/504Timeout'
+#        default:
+#          $ref: '#/components/responses/default'
   /payment/au/v1.0/cbft:
     post:
       summary: AU CBFT Submit
@@ -339,9 +339,9 @@ paths:
           $ref: '#/components/responses/default'
   /payment/hk/v1.0/fast:
     post:
-      summary: HK FAST Submit
+      summary: HK FPS Submit
       description: |-
-        Hong Kong FAST API using pain.001.001.09 derived json message format. Payment Initiation request using Hong Kong FPS (Faster Payment System) from single debtor to single or multiple creditors.   
+        Hong Kong FPS API using pain.001.001.09 derived json message format. Payment Initiation request using Hong Kong FPS (Faster Payment System) from single debtor to single or multiple creditors.   
         Refer to **CustomerCreditTransferInitiationV09_ASIA_FAST** for unencrypted payload object.
       tags:
         - Hong Kong Payments
@@ -379,7 +379,7 @@ paths:
           $ref: '#/components/responses/default'
   /payment/hk/v1.0/fast/{x-Message-Id}:  
     get:
-      summary: HK FAST Status
+      summary: HK FPS Status
       description: |
         Retrieve and return the status of a submited message. 
       tags:
@@ -1009,7 +1009,7 @@ components:
             IN.INSTO.PAYMENT.ACH.CREATE: Create India ACH Payment Resource   
             IN.INSTO.PAYMENT.READ: Retrieve information for specific payment resource   
             HK.INSTO.PAYMENT.ACH.CREATE: Create Hong Kong ACH Payment Resource   
-            HK.INSTO.PAYMENT.FAST.CREATE: Create Hong Kong FAST Payment Resource   
+            HK.INSTO.PAYMENT.FAST.CREATE: Create Hong Kong FPS Payment Resource   
             HK.INSTO.PAYMENT.RTGS.CREATE: Create Hong Kong RTGS Payment Resource
             HK.INSTO.PAYMENT.CBFT.CREATE: Create Hong Kong CBFT Payment Resource  
             HK.INSTO.PAYMENT.READ: Retrieve information for specific payment resource   
@@ -1148,29 +1148,29 @@ components:
         creation_date_time: '2021-04-27T04:59:04.914Z'
         initiating_party_name: Mint Financial Services
         payment_details: null
-    CustomerCreditTransferInitiationV09_AU_DE_Ex01:
-      summary: AU DE payment initiation example
-      value:
-        creation_date_time: '2020-12-17T00:00:00'
-        number_of_transactions: '1'
-        control_sum: '1.23'
-        initiating_party_name: ANZ Sample
-        payment_information:
-          - payment_information_identification: BATCH REF TEST
-            requested_execution_date: '2020-12-17'
-            debtor_name: AU DE Payer
-            debtor_organisation_identification: '123456'
-            debtor_account_identification: '999888777'
-            debtor_agent_member_identification: '012001'
-            credit_transfer_transaction_information:
-              - instruction_identification: SENDER REF
-                end_to_end_identification: TRANSACTION REF
-                instructed_amount:
-                  currency: AUD
-                  amount: '1.23'
-                creditor_agent_member_identification: '012999'
-                creditor_name: AU DE Payee
-                creditor_account_identification: '012999111222333'
+#    CustomerCreditTransferInitiationV09_AU_DE_Ex01:
+#      summary: AU DE payment initiation example
+#      value:
+#        creation_date_time: '2020-12-17T00:00:00'
+#        number_of_transactions: '1'
+#        control_sum: '1.23'
+#        initiating_party_name: ANZ Sample
+#        payment_information:
+#          - payment_information_identification: BATCH REF TEST
+#            requested_execution_date: '2020-12-17'
+#            debtor_name: AU DE Payer
+#            debtor_organisation_identification: '123456'
+#            debtor_account_identification: '999888777'
+#            debtor_agent_member_identification: '012001'
+#            credit_transfer_transaction_information:
+#              - instruction_identification: SENDER REF
+#                end_to_end_identification: TRANSACTION REF
+#                instructed_amount:
+#                  currency: AUD
+#                  amount: '1.23'
+#                creditor_agent_member_identification: '012999'
+#                creditor_name: AU DE Payee
+#                creditor_account_identification: '012999111222333'
     CustomerCreditTransferInitiationV09_AU_CBFT_Ex01:
       summary: AU CBFT payment initiation example
       value: 
@@ -1635,142 +1635,142 @@ components:
         - initiating_party_name
         - payment_information
       additionalProperties: false
-    CustomerCreditTransferInitiationV09_AU_DE:
-      description: >-
-        Payment initiation AU DE. Request to instruct movement of funds from the debtor account to creditor. 
-      type: object
-      properties:
-        creation_date_time:
-          description: Date and time at which the request was created.
-          example: '2020-12-17T00:00:00'
-          $ref: '#/components/schemas/ISODateTime'
-        number_of_transactions:
-          description: The number of transactions contained in the request
-          example: '1'
-          $ref: '#/components/schemas/Max15NumericText'
-        control_sum:
-          description: The sum of the transaction amounts in the request
-          example: '1.23'
-          $ref: '#/components/schemas/DecimalNumber'
-        initiating_party_name:
-          description: Party that initiates the payment.
-          example: ANZ Sample
-          $ref: '#/components/schemas/Max140Text'
-        payment_information:
-          description: >-
-            Information related to the individual payments with a single API
-            submission.
-          type: array
-          minItems: 1
-          items:
-            description: >-
-              Set of characteristics that applies to the debit side of the payment
-              transactions included in the credit transfer initiation.
-            type: object
-            properties:
-              payment_information_identification:
-                description: >-
-                  Unique identification, as assigned by a sending party, to
-                  unambiguously identify the payment batch within the message.
-                example: 'BATCH REF'
-                $ref: '#/components/schemas/Max35Text'
-              batch_booking:
-                description: >-
-                  Identifies whether a single entry per individual transaction or a
-                  batch entry for the sum of the amounts of all transactions within the
-                  group of a message is requested. Usage: Batch booking is used to
-                  request and not order a possible batch booking.
-                $ref: '#/components/schemas/BatchBookingIndicator'
-              category_purpose:
-                description: >-
-                  Specifies the high level purpose of the instruction based on a set of
-                  pre-defined categories
-                example: 'SALA'
-                $ref: '#/components/schemas/ExternalCategoryPurpose1Code'
-              requested_execution_date:
-                description: >-
-                  Date at which the initiating party requests the clearing agent to
-                  process the payment.
-                example: '2020-12-17'
-                $ref: '#/components/schemas/ISODate'
-              debtor_name:
-                description: Name of Remitter. Produced on the recipient's Account Statement.
-                example: 'AU DE Payer'
-                type: string
-                minLength: 1
-                maxLength: 16
-              debtor_organisation_identification:
-                description: Direct Entry User ID.
-                example: '123456'
-                type: string
-                pattern: '^[0-9]{6}$'
-              debtor_account_identification:
-                description: BSB and Account number of debtor. Must include any leading zeros.
-                example: '012001999888777'
-                type: string
-                pattern: '^[0-9]{12,15}$'
-              credit_transfer_transaction_information:
-                description: Information related to the individual transaction within a payment.
-                type: array
-                minItems: 1
-                items:
-                  description: >-
-                    Set of elements used to provide information on the individual
-                    transaction(s) included in the message.
-                  type: object
-                  properties:
-                    instruction_identification:
-                      description: >-
-                        Unique identification as assigned by an instructing party for an
-                        instructed party to unambiguously identify the instruction.
-                      example: 'SENDER REF'
-                      $ref: '#/components/schemas/Max35Text'
-                    end_to_end_identification:
-                      description: Lodgement Reference. Produced on the recipient’s Account Statement.
-                      example: 'TRANSACTION REF'
-                      type: string
-                      minLength: 1
-                      maxLength: 18
-                    instructed_amount:
-                      description: >-
-                        Amount of money to be moved between the debtor and creditor, before
-                        deduction of charges, expressed in the currency as ordered by the
-                        initiating party.
-                      example: '1.23'
-                      $ref: '#/components/schemas/ActiveOrHistoricCurrencyAndAmount'
-                    creditor_name:
-                      description: Title of account to be CREDITED
-                      example: AU DE Payee
-                      type: string
-                      minLength: 1
-                      maxLength: 32
-                    creditor_account_identification:
-                      description: BSB and Account number of creditor. Must include any leading zeros.
-                      example: '012999111222333'
-                      type: string
-                      pattern: '^[0-9]{12,15}$'
-                  required:
-                    - end_to_end_identification
-                    - instructed_amount
-                    - creditor_agent_member_identification
-                    - creditor_name
-                    - creditor_account_identification
-                  additionalProperties: false
-            required:
-              - payment_information_identification
-              - requested_execution_date
-              - debtor_name
-              - debtor_account_identification
-              - credit_transfer_transaction_information
-            additionalProperties: false
-      required:
-        - creation_date_time
-        - number_of_transactions
-        - initiating_party_name
-        - payment_information
-      example:
-        $ref: '#/components/examples/CustomerCreditTransferInitiationV09_AU_DE_Ex01'
-      additionalProperties: false
+#    CustomerCreditTransferInitiationV09_AU_DE:
+#      description: >-
+#        Payment initiation AU DE. Request to instruct movement of funds from the debtor account to creditor. 
+#      type: object
+#      properties:
+#        creation_date_time:
+#          description: Date and time at which the request was created.
+#          example: '2020-12-17T00:00:00'
+#          $ref: '#/components/schemas/ISODateTime'
+#        number_of_transactions:
+#          description: The number of transactions contained in the request
+#          example: '1'
+#          $ref: '#/components/schemas/Max15NumericText'
+#        control_sum:
+#          description: The sum of the transaction amounts in the request
+#          example: '1.23'
+#          $ref: '#/components/schemas/DecimalNumber'
+#        initiating_party_name:
+#          description: Party that initiates the payment.
+#          example: ANZ Sample
+#          $ref: '#/components/schemas/Max140Text'
+#        payment_information:
+#          description: >-
+#            Information related to the individual payments with a single API
+#            submission.
+#          type: array
+#          minItems: 1
+#          items:
+#            description: >-
+#              Set of characteristics that applies to the debit side of the payment
+#              transactions included in the credit transfer initiation.
+#            type: object
+#            properties:
+#              payment_information_identification:
+#                description: >-
+#                  Unique identification, as assigned by a sending party, to
+#                  unambiguously identify the payment batch within the message.
+#                example: 'BATCH REF'
+#                $ref: '#/components/schemas/Max35Text'
+#              batch_booking:
+#                description: >-
+#                  Identifies whether a single entry per individual transaction or a
+#                  batch entry for the sum of the amounts of all transactions within the
+#                  group of a message is requested. Usage: Batch booking is used to
+#                  request and not order a possible batch booking.
+#                $ref: '#/components/schemas/BatchBookingIndicator'
+#              category_purpose:
+#                description: >-
+#                  Specifies the high level purpose of the instruction based on a set of
+#                  pre-defined categories
+#                example: 'SALA'
+#                $ref: '#/components/schemas/ExternalCategoryPurpose1Code'
+#              requested_execution_date:
+#                description: >-
+#                  Date at which the initiating party requests the clearing agent to
+#                  process the payment.
+#                example: '2020-12-17'
+#                $ref: '#/components/schemas/ISODate'
+#              debtor_name:
+#                description: Name of Remitter. Produced on the recipient's Account Statement.
+#                example: 'AU DE Payer'
+#                type: string
+#                minLength: 1
+#                maxLength: 16
+#              debtor_organisation_identification:
+#                description: Direct Entry User ID.
+#                example: '123456'
+#                type: string
+#                pattern: '^[0-9]{6}$'
+#              debtor_account_identification:
+#                description: BSB and Account number of debtor. Must include any leading zeros.
+#                example: '012001999888777'
+#                type: string
+#                pattern: '^[0-9]{12,15}$'
+#              credit_transfer_transaction_information:
+#                description: Information related to the individual transaction within a payment.
+#                type: array
+#                minItems: 1
+#                items:
+#                  description: >-
+#                    Set of elements used to provide information on the individual
+#                    transaction(s) included in the message.
+#                  type: object
+#                  properties:
+#                    instruction_identification:
+#                      description: >-
+#                        Unique identification as assigned by an instructing party for an
+#                        instructed party to unambiguously identify the instruction.
+#                      example: 'SENDER REF'
+#                      $ref: '#/components/schemas/Max35Text'
+#                    end_to_end_identification:
+#                      description: Lodgement Reference. Produced on the recipient’s Account Statement.
+#                      example: 'TRANSACTION REF'
+#                      type: string
+#                      minLength: 1
+#                      maxLength: 18
+#                    instructed_amount:
+#                      description: >-
+#                        Amount of money to be moved between the debtor and creditor, before
+#                        deduction of charges, expressed in the currency as ordered by the
+#                        initiating party.
+#                      example: '1.23'
+#                      $ref: '#/components/schemas/ActiveOrHistoricCurrencyAndAmount'
+#                    creditor_name:
+#                      description: Title of account to be CREDITED
+#                      example: AU DE Payee
+#                      type: string
+#                      minLength: 1
+#                      maxLength: 32
+#                    creditor_account_identification:
+#                      description: BSB and Account number of creditor. Must include any leading zeros.
+#                      example: '012999111222333'
+#                      type: string
+#                      pattern: '^[0-9]{12,15}$'
+#                  required:
+#                    - end_to_end_identification
+#                    - instructed_amount
+#                    - creditor_agent_member_identification
+#                    - creditor_name
+#                    - creditor_account_identification
+#                  additionalProperties: false
+#            required:
+#              - payment_information_identification
+#              - requested_execution_date
+#              - debtor_name
+#              - debtor_account_identification
+#              - credit_transfer_transaction_information
+#            additionalProperties: false
+#      required:
+#        - creation_date_time
+#        - number_of_transactions
+#        - initiating_party_name
+#        - payment_information
+#      example:
+#        $ref: '#/components/examples/CustomerCreditTransferInitiationV09_AU_DE_Ex01'
+#      additionalProperties: false
     CustomerCreditTransferInitiationV09_AU_CBFT:
       description: >-
         Payment initiation AU CBFT. Request to instruct movement of funds from the debtor account to creditor. 
@@ -2516,20 +2516,20 @@ components:
           control_sum: "1.23"
           initiating_party_name: ANZ Sample
           payment_information:
-            - payment_information_identification: HK-FAST-PMTINFID-1
+            - payment_information_identification: HK-FPS-PMTINFID-1
               batch_booking: false
               requested_execution_date: 2021-12-07
-              debtor_name: HK FAST Payer
+              debtor_name: HK FPS Payer
               debtor_account_identification: "12345678901"
               credit_transfer_transaction_information:
-                - instruction_identification: HK-FAST-INSTRID-1
-                  end_to_end_identification: HK-FAST-E2EID-1
+                - instruction_identification: HK-FPS-INSTRID-1
+                  end_to_end_identification: HK-FPS-E2EID-1
                   instructed_amount:
                     amount: "1.23"
                     currency: HKD
                   creditor_agent_name: The Hongkong and Shanghai Banking Corp L
                   creditor_agent_bicfi: HSBCHKHHHKH
-                  creditor_name: HK FAST Payee
+                  creditor_name: HK FPS Payee
                   creditor_account_identification: "111222333"
                   remittance_information_unstructured:
                     - REM
@@ -2538,20 +2538,20 @@ components:
           control_sum: "200"
           initiating_party_name: ANZ Sample
           payment_information:
-            - payment_information_identification: HK-FAST-PMTINFID-2
+            - payment_information_identification: HK-FPS-PMTINFID-2
               requested_execution_date: 2021-12-07
-              debtor_name: HK FAST Payer
+              debtor_name: HK FPS Payer
               debtor_account_identification: "12345678901"
               credit_transfer_transaction_information:
-                - instruction_identification: HK-FAST-INSTRID-2
-                  end_to_end_identification: HK-FAST-E2EID-2
+                - instruction_identification: HK-FPS-INSTRID-2
+                  end_to_end_identification: HK-FPS-E2EID-2
                   instructed_amount:
                     amount: "200"
                     currency: CNY
                   creditor_agent_name: The Hongkong and Shanghai Banking Corp L
                   creditor_agent_bicfi: HSBCHKHHHKH
                   creditor_agent_member_identification: "004002"
-                  creditor_name: HK FAST Payee
+                  creditor_name: HK FPS Payee
                   creditor_account_identification: "111222333"
                   purpose:
                     proprietary: CXBSNS
@@ -3818,7 +3818,7 @@ components:
         IN.INSTO.PAYMENT.ACH.CREATE - Create India ACH Payment Resource   
         IN.INSTO.PAYMENT.READ - Retrieve information for specific payment resource   
         HK.INSTO.PAYMENT.ACH.CREATE - Create Hong Kong ACH Payment Resource   
-        HK.INSTO.PAYMENT.FAST.CREATE - Create Hong Kong FAST Payment Resource   
+        HK.INSTO.PAYMENT.FAST.CREATE - Create Hong Kong FPS Payment Resource   
         HK.INSTO.PAYMENT.RTGS.CREATE - Create Hong Kong RTGS Payment Resource  
         HK.INSTO.PAYMENT.CBFT.CREATE - Create Hong Kong CBFT Payment Resource
         HK.INSTO.PAYMENT.READ - Retrieve information for specific payment resource   
@@ -3981,9 +3981,9 @@ tags:
   - name: CustomerCreditTransferInitiationV09_ASIA_CBFT
     description: <SchemaDefinition schemaRef="#/components/schemas/CustomerCreditTransferInitiationV09_ASIA_CBFT" />
     x-displayName: CustomerCreditTransferInitiationV09_ASIA_CBFT
-  - name: CustomerCreditTransferInitiationV09_AU_DE
-    description: <SchemaDefinition schemaRef="#/components/schemas/CustomerCreditTransferInitiationV09_AU_DE" />
-    x-displayName: CustomerCreditTransferInitiationV09_AU_DE
+#  - name: CustomerCreditTransferInitiationV09_AU_DE
+#    description: <SchemaDefinition schemaRef="#/components/schemas/CustomerCreditTransferInitiationV09_AU_DE" />
+#    x-displayName: CustomerCreditTransferInitiationV09_AU_DE
   - name: CustomerCreditTransferInitiationV09_AU_CBFT
     description: <SchemaDefinition schemaRef="#/components/schemas/CustomerCreditTransferInitiationV09_AU_CBFT" />
     x-displayName: CustomerCreditTransferInitiationV09_AU_CBFT
@@ -4007,5 +4007,5 @@ x-tagGroups:
       - CustomerCreditTransferInitiationV09_ASIA_RTGS
       - CustomerCreditTransferInitiationV09_ASIA_PAYNOW
       - CustomerCreditTransferInitiationV09_ASIA_CBFT
-      - CustomerCreditTransferInitiationV09_AU_DE
+#      - CustomerCreditTransferInitiationV09_AU_DE
       - CustomerCreditTransferInitiationV09_AU_CBFT

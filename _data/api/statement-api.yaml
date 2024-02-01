@@ -56,17 +56,35 @@ paths:
           $ref: '#/components/responses/default'
   /accounts/v2.0/statement:
     post:
-      summary: Intraday Statement Request
-      description: Get the statement of an account
+      summary: Statement Request
+      description: Get the statement of an account - For IntraDay or Prior Day
       tags:
         - Statements
       operationId: submitStatementRequest
       requestBody:
-        description: Statement Request
+        description: Statement Request of an account on Intraday/Priorday basis.
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/StatementRequest'
+            examples:
+              Intraday:
+                value:
+                  {
+                    "accountId" : "012123999999999",
+                    "sortOrder" : "forward",
+                    "cursor" : "MjAyMjA3MDQ6Ng==",
+                    "maxEntries": 1,
+                    "includeNarrative": true  
+                  }
+              Priorday:
+                value:
+                  {
+                    "accountId" : "012123999999999",
+                    "extract" : "priorday",
+                    "startDate": "2022-12-04",
+                    "endDate": "2022-12-07"
+                  }
         required: true
       responses:
         200:
@@ -81,6 +99,36 @@ paths:
           $ref: '#/components/responses/404'
         413:
           $ref: '#/components/responses/413'
+        429:
+          $ref: '#/components/responses/429'
+        500:
+          $ref: '#/components/responses/500'
+        503:
+          $ref: '#/components/responses/503'
+        504:
+          $ref: '#/components/responses/504'
+  /accounts/v2.0/statement/requestKey:
+    get:
+      summary: Get Statement Request for prior day.
+      description: Get the statement of an account - For prior day or a date range (upto 7 days)
+      tags:
+        - Statements
+      operationId: getStatement
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          $ref: '#/components/responses/200Created'
+        204:
+          $ref: '#/components/responses/204'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
         429:
           $ref: '#/components/responses/429'
         500:
@@ -117,6 +165,13 @@ components:
       schema:
         $ref: '#/components/schemas/UUID'
       example: 325ea624-ac19-47e2-94ef-a1ab4e487275
+    id:
+      name: REQUESTKEY
+      in: path
+      description: Internal End to End key need to be passed for getting Prior day statement
+      schema:
+        $ref: '#/components/schemas/UUID'
+      example: 325ea624-ac19-47e2-94ef-a1ab4e487275
   responses:
     200:
       description: Statement Response
@@ -130,6 +185,23 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/StatementResponse'
+          examples:
+              Intraday:
+                value:
+                  {
+                    "accountId" : "012123999999999",
+                    "sortOrder" : "forward",
+                    "payload": "[camt.052.001.06 XML]",
+                    "requestKey": "71d6fb19-7515-40dc-b045-e17550b67600",
+                    "cursor" : "MjAyMjA3MDQ6Ng==",
+                    "moreTransactionsAvailable": true  
+                  }
+              Priorday:
+                value:
+                  {
+                    "accountId" : "012123999999999",
+                    "requestKey" : "71d6fb19-7515-40dc-b045-e17550b67600"
+                  }
     200OKAuth:
       description: Bearer token (Opaque Token) returned after a token request
       headers:
@@ -140,6 +212,35 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/authTokenResponse'
+    204:
+      description: Success, but CAMT.053 is not ready
+      headers:
+        X-RequestKey:
+          description: Request Key provided to customer for support and reporting
+            purposes.
+          schema:
+            $ref: '#/components/schemas/UUID'
+    200Created:
+      description: Prior Day Statement(CAMT.053) Requested for an account is returned successfully.
+      headers:
+        x-RequestKey:
+          schema:
+            $ref: '#/components/parameters/requestKey'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetStatementResponse'
+          examples:
+              PriorDay:
+                value:
+                  {
+                    "accountId" : "012123999999999",
+                    "extract" : "priorday",
+                    "sortOrder" : "forward",
+                    "payload": "[camt.053.001.06 XML]",
+                    "requestKey": "71d6fb19-7515-40dc-b045-e17550b67600",
+                    "moreTransactionsAvailable": false  
+                  }
     400:
       description: Bad Request
       headers:
@@ -166,12 +267,18 @@ components:
       headers:
         X-RequestKey:
           description: Request Key provided to customer for support and reporting
-            purposes.
+            purposes. This is not applicable for Corporate API.
           schema:
             $ref: '#/components/schemas/UUID'
       content: {}
     404:
       description: Not Found
+      headers:
+        X-RequestKey:
+          description: Request Key provided to customer for support and reporting
+            purposes. This is not applicable for Corporate API.
+          schema:
+            $ref: '#/components/schemas/UUID'
       content: {}
     413:
       description: Payload Too Large
@@ -203,6 +310,16 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            PriorDay:
+              value:
+                {
+                  "error": {
+                    "statusCode" : "EC000_01",
+                    "title" : "Internal Server Error, please contact support."        
+                  },
+                  "requestKey": "71d6fb19-7515-40dc-b045-e17550b67600"  
+                }
     502:
         description: Bad Gateway, contact support
         headers:
@@ -278,11 +395,19 @@ components:
         access_token: eaaa13ee-b596-a8cc-b9d4-f778f8bb9377
     Camt05200106Xml:
       type: string
-      description: Message payload. Provided as camt.052.001.06 xml.
+      description: Message payload. Provided as camt.052.001.06 xml. 
+        An empty camt.052.001.06 XML will be returned incase of PriorDay.
       example: '[camt.052.001.06 XML]'
       externalDocs:
         description: CAMT.052.001.06 xml message implementation guide with examples
-        url: 'https://anz-insto.github.io/fileactive/fileactive/specs/accounts-statement.html'
+        url: '../../fileactive/specs/accounts-statement.html'
+    Camt05300106Xml:
+      type: string
+      description: Message payload. Provided as camt.053.001.06 xml.
+      example: '[camt.053.001.06 XML]'
+      externalDocs:
+        description: CAMT.053.001.06 xml message implementation guide with examples
+        url: '../../fileactive/specs/accounts-get-statement.html'
     ClientAssertion:
       required:
         - sub
@@ -345,6 +470,12 @@ components:
           description: |
             Uniquely identify the account. For AU and NZ domestic accounts this will include BSB + account number.
           example: "012123999999999"
+        extract:
+          title: Extract
+          type: string
+          description: Extract is a request to API for generating statement details for a Prior Day.
+            If no extract is passed, default will be IntraDay.
+          example: "priorday"
         sortOrder:
           title: Sort order
           type: string
@@ -359,18 +490,27 @@ components:
           pattern: ^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$
           type: string
           description: Statement entry cursor used for call back if requesting additional pages.
+            Cursor is not applicable for Prior Day, as all statements will be sent in single CAMT.053
           example: "MjAyMjA3MDQ6Ng=="
         maxEntries:
           title: Maximum Entries.
           maximum: 1000
           minimum: 1
-          type: number
-          description: Maximum number of entries to return (1-1000), default to 1000.
+          type: string
+          description: Maximum number of entries to return (1-1000), default to 1000. This is not applicable for Prior Day.
         includeNarrative:
           title: Include Narative.
-          type: boolean
+          type: string
           description: 'Include extended narrative relevant (e.g. NPP 280 characters),
             (default: true).'
+        startDate:
+          title: Start Date of the prior day request.
+          type: string
+          description: 'Start Date (UTC format) can be passed for Prior Day upto 7 days backdated.'
+        endDate:
+          title: End Date of the prior day request.
+          type: string
+          description: 'End Date (UTC format) can be anything within 7 days from Start Date.'
     StatementResponse:
       required:
       - accountId
@@ -383,11 +523,12 @@ components:
         accountId:
           type: string
           description: Uniquely identify the account.
+          example: "012123999999999"
         sortOrder:
           type: string
           description: Sort transactions &quot;forward&quot; (default) from least
             recent to most recent or &quot;backward&quot; from most recent to least
-            recent.
+            recent. Sort Order will always be forward incase of priorday.
           enum:
           - forward
           - backward
@@ -404,8 +545,43 @@ components:
           example: "MjAyMjA3MDQ6Ng=="
         moreTransactionsAvailable:
           type: boolean
-          description: More transactions available, use cursor in subsequent calls
+          description: More transactions available, use cursor in subsequent calls.
+            It will be false by default for Prior Day.
           example: true
+    GetStatementResponse:
+      required:
+      - accountId
+      - extract
+      - sortOrder
+      - payload
+      - requestKey
+      - moreTransactionsAvailable
+      type: object
+      properties:
+        accountId:
+          type: string
+          description: Uniquely identify the account.
+          example: "012123999999999"
+        extract:
+          title: Extract
+          type: string
+          description: Extract is a request to API for generating statement details for a Prior Day.
+          example: "priorday"
+        sortOrder:
+          type: string
+          description: SortOrder will be forward by default for priorday.
+          example: "forward"
+        payload:
+          $ref: '#/components/schemas/Camt05300106Xml'
+        requestKey:
+          type: string
+          description: Unique identifier used to correlate the message with ANZ
+          example: 71d6fb19-7515-40dc-b045-e17550b67600
+          pattern: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+        moreTransactionsAvailable:
+          type: boolean
+          description: More transactions available will be false by default for Prior Day.
+          example: false
     UUID:
       type: string
       example: 71d6fb19-7515-40dc-b045-e17550b67600
@@ -423,6 +599,9 @@ tags:
   - name: StatementResponse
     description: <SchemaDefinition schemaRef="#/components/schemas/StatementResponse" />
     x-displayName: StatementResponse
+  - name: GetStatementResponse
+    description: <SchemaDefinition schemaRef="#/components/schemas/GetStatementResponse" />
+    x-displayName: GetStatementResponse
 x-tagGroups:
   - name: Paths
     tags: 
@@ -432,4 +611,4 @@ x-tagGroups:
     tags: 
       - StatementRequest
       - StatementResponse
-
+      - GetStatementResponse
