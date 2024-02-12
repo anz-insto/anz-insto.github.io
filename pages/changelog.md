@@ -8,9 +8,8 @@ toc: true
 
 ## Contents
 
-
 - [1.1.17 - AU DE API removal and other minor fixes](#1.1.17)
-- [1.1.16 - Added PayTo Payee API Event Codes](#1.1.16)
+- [1.1.16 - Added PayTo Payee Get Mandate Details API](#1.1.16)
 - [1.1.15 - Added Prior Day to Statement API](#1.1.15)
 - [1.1.14 - Added PayTo Payee API Event Codes](#1.1.14)
 - [1.1.13 - VN ACH payload sample update](#1.1.13)

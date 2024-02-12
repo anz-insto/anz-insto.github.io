@@ -15,6 +15,8 @@ toc: true
 {% include events/fileactive.npp.event-codes.md %}
 
 ## PayTo
+{% include events/fileactive.payto.api.event-codes.md %}
+
 {% include events/fileactive.payto.mandate.event-codes.md %}
 
 {% include events/fileactive.payto.mpir.event-codes.md %}
