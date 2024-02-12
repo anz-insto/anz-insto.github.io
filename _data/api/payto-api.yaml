@@ -171,7 +171,7 @@ paths:
           schema:
             type: boolean
             default: false
-          example: "true"    
+          example: "true"
       responses:
         200:
           $ref: '#/components/responses/200'
@@ -687,7 +687,7 @@ components:
             MPS User Id associated with this create mandate request
           minLength: 1
           maxLength: 10
-          example: 10002005  
+          example: "10002005"
         request_id:
           allOf: 
           - $ref: '#/components/schemas/UUID'            
@@ -806,7 +806,7 @@ components:
             MPS User Id associated with this mandate
           minLength: 1
           maxLength: 10
-          example: 10002005  
+          example: "10002005"
         mandate_identification:
           pattern: ^[a-f0-9]{12}1[a-f0-9]{3}[89ab][a-f0-9]{15}$
           type: string
@@ -1403,7 +1403,7 @@ components:
             MPS User Id associated with this query resolution request
           minLength: 1
           maxLength: 10
-          example: 10002005  
+          example: "10002005"
         request_id:
           allOf: 
           - $ref: '#/components/schemas/UUID'            
