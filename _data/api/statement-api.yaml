@@ -506,11 +506,11 @@ components:
         startDate:
           title: Start Date of the prior day request.
           type: string
-          description: 'Start Date (UTC format) can be passed for Prior Day upto 7 days backdated.'
+          description: 'Start Date (AEST format) can be passed for Prior Day upto 7 days backdated.'
         endDate:
           title: End Date of the prior day request.
           type: string
-          description: 'End Date (UTC format) can be anything within 7 days from Start Date.'
+          description: 'End Date (AEST format) can be anything within 7 days from Start Date.'
     StatementResponse:
       required:
       - accountId
