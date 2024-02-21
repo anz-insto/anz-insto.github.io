@@ -8,6 +8,7 @@ toc: true
 
 ## Contents
 
+- [1.1.18 - Addressed feedback for cardinality updates and date formats](#1.1.18)
 - [1.1.17 - AU DE API removal and other minor fixes](#1.1.17)
 - [1.1.16 - Added PayTo Payee Get Mandate Details API](#1.1.16)
 - [1.1.15 - Added Prior Day to Statement API](#1.1.15)
@@ -29,6 +30,31 @@ toc: true
 - [1.0.0 - Site creation](#1.0.0)
 
 ---
+
+<a name="1.1.18"></a>
+
+### [1.1.18 - 2024-02-19]
+
+#### Added
+- Nothing Added
+
+#### Changed
+- Updated Cardinality to few fields, date formats from UTC to AEST
+
+#### Deprecated
+- Nothing deprecated.
+
+#### Removed
+- AU DE API references have been removed
+
+#### Fixed
+- Update Dev Portal with right payment terminology for Hong Kong
+- NPP scope update for payment status
+- Fix spelling error in url
+- Fix incorrect payload value for SG RTN
+
+#### Security
+- No security updates.
 
 <a name="1.1.17"></a>
 
