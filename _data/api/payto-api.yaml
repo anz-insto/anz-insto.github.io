@@ -5,9 +5,11 @@ info:
     Fileactive PayTo API provides consumers the ability to
     * Create a Mandate
     * Change a Mandate Status
-    * Get Mandate Details (coming soon)
+    * Get Mandate Details
     * Create a Mandated Payment Initiation Request (MPIR)
     * Create a PayTo Query Resolution
+    
+    <a href="http://anz-insto.github.io/fileactive/event-codes#payto-api-event-codes">API Event Codes</a> 
   version: 1.0.0
 servers:
   - url: https://api.fileactive.uat.anzgcis.com
