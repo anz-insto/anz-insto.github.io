@@ -7,14 +7,19 @@
       answer: |-
         By default the following rate limits are applied:   
 
-        | Type               | TPH (Transactions Per Hour) | TPM (Transactions Per Minute) | TPS (Transactions Per Second) |
-        |:-------------------|:---------------------------:|:-----------------------------:|:-----------------------------:|
-        | Authorisation      | 10                          | n/a                           | 2                             |
-        | NPP Single Payment | n/a                         | 30                            | 2                             |
-        | Payments           | n/a                         | 30                            | 2                             |
-        | Payment Enquiry    | n/a                         | 90                            | 2                             |
-        | Statement / BTR    | 25                          | n/a                           | n/a                           |
-        | FX RFQ             | 500                         | n/a                           | 10                            |
+        | Type                          | TPH (Transactions Per Hour) | TPM (Transactions Per Minute) | TPS (Transactions Per Second) |
+        |:-----------------------------:|:---------------------------:|:-----------------------------:|:-----------------------------:|
+        | Authorisation                 | 10                          | n/a                           | 2                             |
+        | NPP Single Payment            | n/a                         | 30                            | 2                             |
+        | Payments                      | n/a                         | 30                            | 2                             |
+        | Payment Enquiry               | n/a                         | 90                            | 2                             |
+        | Statement / BTR               | 25                          | n/a                           | n/a                           |
+        | FX RFQ                        | 500                         | n/a                           | 10                            |
+        | PayTo Create Mandate          | n/a                         | n/a                           | 10                            |
+        | PayTo Change Mandate Status   | n/a                         | n/a                           | 10                            |
+        | PayTo Get Mandate Details     | n/a                         | n/a                           | 5                             |
+        | PayTo Create MPIR             | n/a                         | n/a                           | 5                             |
+        | PayTo Query Resolution        | n/a                         | n/a                           | 5                             |
 
         Non-default limits will be considered on request. Please discuss with your ANZ account or relationship manager to request a non-default limit. Temporary limits may also be requested for specific ad hoc use cases.  
     - title: Which rate limiting algorithms do you use?

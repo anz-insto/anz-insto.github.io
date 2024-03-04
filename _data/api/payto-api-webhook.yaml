@@ -758,6 +758,9 @@ components:
             Specifies an alphanumeric string with a length of 4 characters.
           pattern: ^[a-zA-Z0-9]{4}$
           example: "MD16"
+          externalDocs:
+            description: PayTo Mandate Status Change Codes
+            url: 'https://anz-insto.github.io/fileactive/event-codes#payto-mandate-status-change-codes' 
         reason_description:
           type: string
           description: |-
