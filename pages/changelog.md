@@ -8,6 +8,7 @@ toc: true
 
 ## Contents
 
+- [1.1.19 - Moved NPP Payment API docs to Payments API section](#1.1.18)
 - [1.1.18 - Addressed feedback for cardinality updates and date formats](#1.1.18)
 - [1.1.17 - AU DE API removal and other minor fixes](#1.1.17)
 - [1.1.16 - Added PayTo Payee Get Mandate Details API](#1.1.16)
@@ -30,6 +31,28 @@ toc: true
 - [1.0.0 - Site creation](#1.0.0)
 
 ---
+<a name="1.1.19"></a>
+
+### [1.1.19 - 2024-02-28]
+
+#### Added
+- Nothing Added
+
+#### Changed
+- Moved NPP Payment API docs to Payments API section
+
+#### Deprecated
+- Nothing deprecated.
+
+#### Removed
+- Nothing Removed
+
+#### Fixed
+- Nothing Fixed
+
+#### Security
+- No security updates.
+
 
 <a name="1.1.18"></a>
 

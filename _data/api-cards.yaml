@@ -5,10 +5,6 @@
       description: >
         Fileactive Payment API
       url: /fileactive/api/payment-api
-    - title: NPP Payment API
-      description: >
-        Fileactive NPP Payment API
-      url: /fileactive/api/npp-api
 - title: Receivables
   icon: icon_108-statements_documents-digital-filled-oceanblue.svg
   links:
