@@ -1,8 +1,14 @@
 openapi: 3.0.1
 info:
   title: Fileactive Testing API
-  description: Fileactive Self-Service Testing API. Rate limit is one request per second.
-  version: v1.0
+  description: |-
+    Fileactive Self-Service Testing API. 
+    
+    Rate limit is one request per second.
+            
+    #### Release 1.0.1 changes:
+    - List of mandate attributes amended by Payer can be included in **RequestMandateNotification** schema, refer to **details** object.  Applies when **trigger = MAMN**.
+  version: 1.0.1
 servers:
   - url: https://api.fileactive.uat.anzgcis.com/testingfileactive/v1.0
     description: 'UAT (non-production) environment'
@@ -126,7 +132,17 @@ paths:
                     "mandate_status" : "ACTV",
                     "action_identification" : "85f28334c3a911edafa10242ac120002",
                     "action_type" : "AMND",
-                    "action_status" : "CMPL"  
+                    "action_status" : "CMPL",  
+                    "details" : {
+                        "amendment" : {
+                          "debtor_information" : {
+                            "account_identification_type_code" : "ALIA",
+                            "account_identification" : "-",
+                            "account_alias_type_code" : "EMAL",
+                            "accountAliasIdentification" : "npp@mail.com"   
+                          }
+                        }
+                    }  
                   }
               Mandate Create Confirmed:
                   value:
@@ -471,6 +487,23 @@ components:
       - AMND  
       - CREA
       - STCH
+    MandateAmendmentRequest:
+      type: object
+      description: "Request to amend the mandate, by Payer."
+      additionalProperties: false
+      properties:
+        amendment:
+          $ref: '#/components/schemas/MandateAmendmentRequest1'
+      required:
+      - debtorInformation
+    MandateAmendmentRequest1:
+      type: object
+      additionalProperties: false
+      properties:
+        debtorInformation:
+          $ref: '#/components/schemas/MandatePartyInformation2Debtor'
+      required:
+      - debtorInformation
     MandatePartyInformation1Creditor:
       type: object
       description: "Information concerning the creditor party identified in the mandate."
@@ -524,6 +557,65 @@ components:
       required:
       - party_name
       - account_identification_type_code
+    MandatePartyInformation2Debtor:
+      type: object
+      description: "Information concerning the debtor party identified in the mandate, as updated by the Payer. Only updated attributes will be provided.\n\nThe following rules apply to this structure:\n- AccountIdentificationRule1: If `account_identification_type_code` is equal to value 'ALIA' then `account_alias_type_code`  and `account_alias_identification` must be present, and `account_identification` must be absent.\n- AccountIdentificationRule2: If `account_identification_type_code` is equal to value 'BBAN' then `account_identification` must be present and start with BSB (bank-state-branch), and `account_alias_type_code` and `account_alias_identification` must be absent.\n\n Where an attribute was previously set and has been cleared as part of the Mandate Amendment it will be set to `-`.\n\n- Once the `party_type` has been set it is not possible to clear it through a mandate amendment.\n\n- Where `account_alias_identification` is cleared then `account_alias_type_code` will be automatically cleared."
+      additionalProperties: false
+      properties:
+        party_type:
+          $ref: '#/components/schemas/PartyType17Code'
+        party_name:
+          type: string
+          description: |-
+            Name by which the party is known and which is usually used to identify that party.
+            Specifies a character string with a maximum length of 140 ASCII printable characters.
+          pattern: ^[ -~]{1,140}$
+          example: "Barney Rubble"
+        ultimate_party_name:
+          type: string
+          description: |-
+            Name by which the ultimate party is known and which is usually used to identify that party.
+            Specifies a character string with a maximum length of 140 ASCII printable characters.
+          pattern: ^[ -~]{1,140}$
+          example: "Barney Rubble"
+        account_identification_type_code:
+          type: string
+          description: "Type of account identification, in a coded form.\nSpecifies an alphanumeric string with a length of 4 characters.<table><tr><th>Code</th><th>Description</th></tr><tr><td>ALIA</td><td>Alias (PayID)</td></tr><tr><td>BBAN</td><td>Australian Bank-State-Branch Code (BSB)</td></tr></table>"
+          pattern: ^[a-zA-Z0-9]{4}$
+          enum:
+          - ALIA
+          - BBAN
+          example: "ALIA"
+        account_identification:
+          type: string
+          description: "Unique and unambiguous identification of the account between the account owner and the account servicer. For example:\r\n   - Basic Bank Account Number - account number with BSB (Bank-State-Branch) prefix. \n\nSpecifies a character string with a maximum length of 34 ASCII printable characters."
+          pattern: ^[ -~]{1,34}$
+          example: '013010230008937'
+        account_alias_type_code:
+          type: string
+          description: "Name of the Alias Type, in a coded form.\nSpecifies an alphanumeric string with a length of 4 characters.<table><tr><th>Code</th><th>Description</th></tr><tr><td>AUBN</td><td>Australian Business Number</td></tr><tr><td>EMAL</td><td>Email address</td></tr><tr><td>ORGN</td><td>Organisation Identifier</td></tr><tr><td>TELI</td><td>Telephone Number</td></tr></table>"
+          pattern: ^[a-zA-Z0-9]{4}$
+          enum: 
+          - AUBN
+          - EMAL
+          - ORGN
+          - TELI
+          example: "TELI"
+        account_alias_identification:
+          type: string
+          description: |-
+            Identification used to indicate the account identification under another specified name.
+            Specifies a character string with a maximum length of 2048 characters. <br><table><tr><th>Alias Identifier Type</th><th>Description</th><th>Example</th></tr><tr><td>AUBN</td><td>Consists of a nine to eleven digit number where the first two digits are a checksum. An ABN is assigned by the Australian Taxation Office to identify an individual Australian Business. An ACN, ARBN or ARSN is allocated by ASIC.</td><td>601428737</td></tr><tr><td>EMAL</td><td>Consists of a character string with a maximum length of 256 characters in lower case. This must include the “@” symbol with leading and trailing characters and no white spaces.</td><td>npp@mail.com</td></tr><tr><td>ORGN</td><td>The Identifier must include the company/organisation name and the description of the business/trade/ product/campaign and/or geographic location (suburb/town/state). Maximum of 256 characters in lower case, to be drawn from Printable ASCII (decimal 32-126) and without leading or trailing whitespace</td><td>aardvark plumbing mosman nsw <br><br>tru blu loyalty program <br><br>snackspotvending sydney nsw </td></tr><tr><td>TELI</td><td>Must consist of a “+” followed by the country code (from 1 to 3 characters) then a “-“ andfinally, any combination of numbers (up to 30 characters). <br>Participants should use the country code from the list of ITU-T Recommendation E.164 Assigned Country Codes.</td><td>+61-397656547 (landline)<br> or +61-423765879 (mobile)<br> or +61-1800123456 (local free call)<br> or +61-131234 (professional)</td></tr></table>
+          minLength: 1
+          maxLength: 2048
+          example: "+61-423765879"
+        party_reference:
+          type: string
+          description: |-
+            Specifies underlying party reference associated with the mandate, for example Customer Reference, Customer Number, Membership Number, Subscription Number, or Name.
+            Specifies a character string with a maximum length of 35 ASCII printable characters. 
+          pattern: ^[ -~]{1,35}$
+          example: "RUBBLE-01"
     MandatePaymentInformation1:
       type: object
       description: "Set of characteristics detailing mandate payment information.\n  \n**Property descriptions**:\n - **payment_frequency** - Regularity with which instructions are to be created and processed.\n - **payment_amount_type** - Identifies the mandate payment arrangement.\n - **first_payment_amount** - Amount different from the payment amount, as it includes the costs associated with the first debited amount.\n - **last_payment_amount** - Last payment amount different  to the payment amount.\n - **amount** - Fixed amount to be debited from the debtor's account.\n - **maximum_amount** - Maximum amount that may be paid from the debtor's account, per instruction."
@@ -588,9 +680,15 @@ components:
       - CNCL
       - RELS
       - SUSP  
-    MandateStatusChangeDetails1:
+    MandateStatusChangeDetails:
       type: object
       description: "Request to change the status of a mandate."
+      additionalProperties: false
+      properties:
+        status_change:
+          $ref: '#/components/schemas/MandateStatusChangeDetails1'
+    MandateStatusChangeDetails1:
+      type: object
       additionalProperties: false
       properties:
         change:
@@ -638,6 +736,14 @@ components:
       - MCRD
       - MCRX
       - MSCH   
+    PartyType17Code:
+      type: string
+      description: |-
+        Specifies the type of party involved in the transaction.
+        <table><tr><th>Code</th><th>Name</th><th>Description</th></tr><tr><td>ORGN</td><td>Organisation</td><td>Party is an organisation.</td></tr><tr><td>PERS</td><td>Person</td><td>Party is an private individual.</td></tr></table>
+      enum:
+      - ORGN
+      - PERS
     QueryMandateDetails:
       type: object
       description: |-
@@ -744,11 +850,11 @@ components:
           $ref: '#/components/schemas/MandateActionStatus1Code'
         details:
           type: object
-          description: "Details of an action performed on a mandate by the **Payer** i.e. unilateral changes or MMS in case of mandate timeout. Depending on the type of action, only one of the following objects will be present: StatusChange.\n  \n**Property descriptions**:\n - **status_change** - Mandate status change details provided in the request."
+          description: "Details of an action performed on a mandate by the **Payer** i.e. unilateral changes or MMS in case of mandate timeout. Depending on the type of action, only one of the following objects will be present: Amendment or StatusChange.\n  \n**Property descriptions**:\n - **amendment** - Mandate amendment details provided in the request.\n - **status_change** - Mandate status change details provided in the request."
           additionalProperties: false
-          properties:
-            status_change:
-              $ref: '#/components/schemas/MandateStatusChangeDetails1'  
+          oneOf:
+            - $ref: '#/components/schemas/MandateAmendmentRequest'
+            - $ref: '#/components/schemas/MandateStatusChangeDetails'
       required:
       - mps_user_id 
       - trigger

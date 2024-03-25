@@ -91,7 +91,7 @@ _Use case: Fileactive customer requests intraday statement_
 <a name="sample 1"></a>
 ### Sample
 
-{% highlight xml linenos %}
+```
 <?xml version="1.0" encoding="UTF-8"?>
 <Document xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:iso:std:iso:20022:tech:xsd:camt.052.001.06">
   <BkToCstmrAcctRpt>
@@ -213,13 +213,13 @@ _Use case: Fileactive customer requests intraday statement_
     </Rpt>
   </BkToCstmrAcctRpt>
 </Document>
-{% endhighlight %}
+```
 
 ---
 <a name="sample 2"></a>
 ### Sample
 
-{% highlight xml linenos %}
+```
 <?xml version="1.0" encoding="UTF-8"?>
 <Document xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:iso:std:iso:20022:tech:xsd:camt.052.001.06">
   <BkToCstmrAcctRpt>
@@ -340,6 +340,6 @@ _Use case: Fileactive customer requests intraday statement_
     </Rpt>
   </BkToCstmrAcctRpt>
 </Document>
-{% endhighlight %}
+```
 
 ---
