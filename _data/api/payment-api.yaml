@@ -3781,8 +3781,9 @@ components:
     Scopes:
       description: |
         AU.INSTO.PAYMENT.NPP.CREATE - Create Australia NPP Payment Resource   
+        AU.INSTO.PAYMENT.NPP.READ - Retrieve information for AU NPP payment resource   
         AU.INSTO.PAYMENT.CBFT.CREATE - Create Australia CBFT Payment Resource   
-        AU.INSTO.PAYMENT.READ - Retrieve information for specific payment resource   
+        AU.INSTO.PAYMENT.READ - Retrieve information for specific payment resource (except AU NPP)   
         IN.INSTO.PAYMENT.ACH.CREATE - Create India ACH Payment Resource   
         IN.INSTO.PAYMENT.READ - Retrieve information for specific payment resource   
         HK.INSTO.PAYMENT.ACH.CREATE - Create Hong Kong ACH Payment Resource   
@@ -3801,6 +3802,7 @@ components:
       type: string
       enum:
         - AU.INSTO.PAYMENT.NPP.CREATE
+        - AU.INSTO.PAYMENT.NPP.READ
         - AU.INSTO.PAYMENT.CBFT.CREATE
         - AU.INSTO.PAYMENT.READ
         - IN.INSTO.PAYMENT.ACH.CREATE
@@ -4341,8 +4343,6 @@ x-tagGroups:
     tags: 
       - CustomerCreditTransferInitiationV09
       - CustomerPaymentStatusReportV10
-      - NPPPaymentSubmissionResource
-      - NPPPaymentStatusResource
   - name: Country Schemas
     tags:
       - CustomerCreditTransferInitiationV09_ASIA_ACH
@@ -4351,3 +4351,5 @@ x-tagGroups:
       - CustomerCreditTransferInitiationV09_ASIA_PAYNOW
       - CustomerCreditTransferInitiationV09_ASIA_CBFT
       - CustomerCreditTransferInitiationV09_AU_CBFT
+      - NPPPaymentSubmissionResource
+      - NPPPaymentStatusResource
