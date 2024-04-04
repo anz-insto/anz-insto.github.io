@@ -20,7 +20,7 @@ paths:
     post:
       security:
           - apiKeyAuth: []
-            OAuth2: []
+            oAuth2: []
       summary: Obtain authorisation token
       description: >
         ANZ use OAuth 2.0 to authenticate inbound token requests, a bearer token is returned as a response which is then used to authorise against ANZ resources
@@ -91,6 +91,9 @@ paths:
         default:
           description: Internal Server Error, Bad Request/Syntactically incorrect etc.,
           $ref: '#/components/responses/default'
+      security:
+        - bearerAuth: [GBL.INSTO.FX.RFQ]
+          apiKeyAuth: []
   /fx/v1.0/quotes/{quoteIdentifier}:
     get:
       summary: Poll for the response corresponding to a submitted RFQ
@@ -126,6 +129,9 @@ paths:
         default:
           description: Internal Server Error, Bad Request/Syntactically incorrect request etc.,
           $ref: '#/components/responses/default'
+      security:
+        - bearerAuth: [GBL.INSTO.FX.RFQ]
+          apiKeyAuth: []
   /fx/v1.0/deals/{quoteIdentifier}:
     post:
       summary: Submit an asynchronous request for new deal
@@ -158,6 +164,9 @@ paths:
         default:
           description: Internal Server Error, Bad Request/Syntactically incorrect etc.,
           $ref: '#/components/responses/default'
+      security:
+        - bearerAuth: [GBL.INSTO.FX.RFQ]
+          apiKeyAuth: []
     get:
       summary: Poll for the response corresponding to a submitted deal request
       description: >
@@ -194,6 +203,9 @@ paths:
         default:
           description: Internal Server Error, Bad Request/Syntactically incorrect request etc.,
           $ref: '#/components/responses/default'
+      security:
+        - bearerAuth: [GBL.INSTO.FX.RFQ]
+          apiKeyAuth: []
   /fx/v1.0/quotes:
     put:
       summary: Decline or cancel an issued quote
@@ -235,6 +247,9 @@ paths:
         default:
           description: Internal Server Error, Bad Request/Syntactically incorrect request etc.,
           $ref: '#/components/responses/default'
+      security:
+        - bearerAuth: [GBL.INSTO.FX.RFQ]
+          apiKeyAuth: []
 components:
   securitySchemes:
     bearerAuth:            
@@ -247,12 +262,11 @@ components:
       in: header
       name: apikey
       description: API key to authorize requests.
-    OAuth2:
+    oAuth2:
       type: oauth2
       flows:
-        authorizationCode:  
-          authorizationUrl: https://api.fileactive.anzgcis.com/auth
-          tokenUrl: https://api.fileactive.uat.anzgcis.com/v1.0/auth
+        clientCredentials:  
+          tokenUrl: https://api.fileactive.anzgcis.com/v1.0/auth
           scopes:
             GBL.INSTO.FX.RFQ: Request FX Quote and create FX Deal
   parameters:
@@ -329,7 +343,7 @@ components:
             description: Location of the resource, used for enquiry
             schema:
               type: string
-              example: 'https://api.fileactive.uat.anzgcis.com/fx/v1.0/quotes/64eb2fb9-57f8-4d80-bff5-86d666f92944'
+              example: 'https://api.fileactive.anzgcis.com/fx/v1.0/quotes/64eb2fb9-57f8-4d80-bff5-86d666f92944'
       content:
         application/json:
           schema:
@@ -348,7 +362,7 @@ components:
             description: Location of the resource, used for enquiry
             schema:
               type: string
-              example: 'https://api.fileactive.uat.anzgcis.com/fx/v1.0/deals/64eb2fb9-57f8-4d80-bff5-86d666f92944'
+              example: 'https://api.fileactive.anzgcis.com/fx/v1.0/deals/64eb2fb9-57f8-4d80-bff5-86d666f92944'
       content:
         application/json:
           schema:
@@ -367,7 +381,7 @@ components:
             description: Location of the resource, used for enquiry
             schema:
               type: string
-              example: 'https://api.fileactive.uat.anzgcis.com/fx/v1.0/deals/64eb2fb9-57f8-4d80-bff5-86d666f92944'
+              example: 'https://api.fileactive.anzgcis.com/fx/v1.0/deals/64eb2fb9-57f8-4d80-bff5-86d666f92944'
       content:
         application/json:
           schema:
@@ -386,7 +400,7 @@ components:
             description: Location of the resource, used for enquiry
             schema:
               type: string
-              example: 'https://api.fileactive.uat.anzgcis.com/fx/v1.0/quotes/64eb2fb9-57f8-4d80-bff5-86d666f92944'
+              example: 'https://api.fileactive.anzgcis.com/fx/v1.0/quotes/64eb2fb9-57f8-4d80-bff5-86d666f92944'
       content:
         application/json:
           schema:
@@ -406,7 +420,7 @@ components:
             description: Location of the resource, used for enquiry
             schema:
               type: string
-              example: 'https://api.fileactive.uat.anzgcis.com/payments/64eb2fb9-57f8-4d80-bff5-86d666f92944'
+              example: 'https://api.fileactive.anzgcis.com/payments/64eb2fb9-57f8-4d80-bff5-86d666f92944'
       content:
         application/json:
           schema:
@@ -431,7 +445,7 @@ components:
             description: Location of the resource, used for enquiry
             schema:
               type: string
-              example: 'https://api.fileactive.uat.anzgcis.com/payments/64eb2fb9-57f8-4d80-bff5-86d666f92944'
+              example: 'https://api.fileactive.anzgcis.com/payments/64eb2fb9-57f8-4d80-bff5-86d666f92944'
       content:
         application/json:
           schema:
@@ -501,7 +515,7 @@ components:
           type: string
           example: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'
         scope:
-          $ref: '#/components/schemas/Scopes'
+          $ref: '#/components/securitySchemes/oAuth2/flows/clientCredentials/scopes'
         client_assertion:
           $ref: '#/components/schemas/ClientAssertion'
     authTokenResponse:
@@ -542,7 +556,7 @@ components:
           aud:
             type: string
             description: Specify the intended audience of the token request
-            example: 'https://api.fileactive.uat.anzgcis.com/auth'
+            example: 'https://api.fileactive.anzgcis.com/auth'
     ClientQuoteRequest:
       type: object
       required:
@@ -860,12 +874,6 @@ components:
       description: A unique id provided by this service to identify a quote.
       type: string
       example: "MKT-d75a03b5-2d7c-4db0-b30f-bcccc67a4fed"
-    Scopes:
-      description: >
-        GBL.INSTO.FX.RFQ -  Request FX Quote and create FX Deal
-      type: string
-      enum:
-      - GBL.INSTO.FX.RFQ
     UUID:
         type: string
         example: '71d6fb19-7515-40dc-b045-e17550b67600'

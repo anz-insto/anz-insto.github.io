@@ -19,7 +19,7 @@ paths:
     post:
       security:
         - apiKeyAuth: []
-          OAuth2: []
+          oAuth2: []
       summary: Auth Token Request
       description: >
         ANZ use OAuth 2.0 to authenticate inbound token requests, a bearer token
@@ -86,6 +86,9 @@ paths:
                     "endDate": "2022-12-07"
                   }
         required: true
+      security:
+        - apiKeyAuth: []
+          bearerAuth: [GBL.INSTO.ACCOUNTS.STATEMENT.READ]
       responses:
         200:
           $ref: '#/components/responses/200'
@@ -137,6 +140,9 @@ paths:
           $ref: '#/components/responses/503'
         504:
           $ref: '#/components/responses/504'
+      security:
+        - apiKeyAuth: []
+          bearerAuth: [GBL.INSTO.ACCOUNTS.STATEMENT.READ]
 components:
   securitySchemes:
     bearerAuth:
@@ -149,12 +155,11 @@ components:
       in: header
       name: apikey
       description: API key to authorize requests.
-    OAuth2:
+    oAuth2:
       type: oauth2
       flows:
-        authorizationCode:
-          authorizationUrl: https://api.fileactive.anzgcis.com/auth
-          tokenUrl: https://api.fileactive.uat.anzgcis.com/v1.0/auth
+        clientCredentials:
+          tokenUrl: https://api.fileactive.anzgcis.com/v1.0/auth
           scopes:
             GBL.INSTO.ACCOUNTS.STATEMENT.READ: Request Account Statement     
   parameters:
@@ -172,6 +177,7 @@ components:
       schema:
         $ref: '#/components/schemas/UUID'
       example: 325ea624-ac19-47e2-94ef-a1ab4e487275
+      required: true
   responses:
     200:
       description: Statement Response
@@ -370,7 +376,7 @@ components:
           type: string
           example: urn:ietf:params:oauth:client-assertion-type:jwt-bearer
         scope:
-          $ref: '#/components/schemas/Scopes'
+          $ref: '#/components/securitySchemes/oAuth2/flows/clientCredentials/scopes'
         client_assertion:
           $ref: '#/components/schemas/ClientAssertion'
     authTokenResponse:
@@ -428,7 +434,7 @@ components:
         aud:
           type: string
           description: Specify the intended audience of the token request
-          example: https://api.fileactive.uat.anzgcis.com/auth
+          example: https://api.fileactive.anzgcis.com/auth
     ErrorResponse:
       type: object
       properties:
@@ -450,12 +456,6 @@ components:
           description: Unique identifier <UUID> used to correlate the message with
             ANZ
           example: 7380C995-2C70-4F25-8BBC-47DD1E60D5EA
-    Scopes:
-      description: |
-        GBL.INSTO.ACCOUNTS.STATEMENT.READ - Request Account Statement   
-      type: string
-      enum:
-        - GBL.INSTO.ACCOUNTS.STATEMENT.READ
     StatementRequest:
       required:
       - accountId
