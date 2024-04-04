@@ -18,7 +18,7 @@ paths:
     post:
       security:
         - apiKeyAuth: []
-        - OAuth2: []
+          oAuth2: []
       summary: Auth Token Request
       description: >
         ANZ use OAuth 2.0 to authenticate inbound token requests, a bearer token
@@ -104,8 +104,8 @@ paths:
           $ref: '#/components/responses/defaultNPP'
       security:
         - apiKey: []
-          OAuth2: []
-  "/npp/v1.0/payment/{transaction_identification}/status":
+          bearerAuth: [AU.INSTO.PAYMENT.NPP.CREATE]
+  /npp/v1.0/payment/{transaction_identification}/status:
     get:
       tags:
         - Australia Payments
@@ -143,7 +143,7 @@ paths:
           $ref: '#/components/responses/defaultNPP'
       security:
         - apiKey: []
-          OAuth2: []
+          bearerAuth: [AU.INSTO.PAYMENT.NPP.READ]
   /payment/au/v1.0/cbft:
     post:
       summary: AU CBFT Submit
@@ -182,6 +182,9 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+      security:
+        - apiKey: []
+          bearerAuth: [AU.INSTO.PAYMENT.CBFT.CREATE]
   /payment/au/v1.0/cbft/{x-Message-Id}:
     get:
       summary: AU CBFT Status
@@ -214,6 +217,9 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+      security:
+        - apiKey: []
+          bearerAuth: [AU.INSTO.PAYMENT.READ]
   /payment/in/v1.0/ach:
     post:
       summary: IN ACH Submit
@@ -254,6 +260,9 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+      security:
+        - apiKey: []
+          bearerAuth: [IN.INSTO.PAYMENT.ACH.CREATE]
   /payment/in/v1.0/ach/{x-Message-Id}:
     get:
       summary: IN ACH Status
@@ -286,6 +295,9 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+      security:
+        - apiKey: []
+          bearerAuth: [IN.INSTO.PAYMENT.READ]
   /payment/hk/v1.0/ach:
     post:
       summary: HK ACH Submit
@@ -326,6 +338,9 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+      security:
+        - apiKey: []
+          bearerAuth: [HK.INSTO.PAYMENT.ACH.CREATE]
   /payment/hk/v1.0/ach/{x-Message-Id}:
     get:
       summary: HK ACH Status
@@ -358,6 +373,9 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+      security:
+        - apiKey: []
+          bearerAuth: [HK.INSTO.PAYMENT.READ]
   /payment/hk/v1.0/fast:
     post:
       summary: HK FPS Submit
@@ -398,6 +416,9 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+      security:
+        - apiKey: []
+          bearerAuth: [HK.INSTO.PAYMENT.FAST.CREATE]
   /payment/hk/v1.0/fast/{x-Message-Id}:  
     get:
       summary: HK FPS Status
@@ -430,6 +451,9 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default' 
+      security:
+        - apiKey: []
+          bearerAuth: [HK.INSTO.PAYMENT.READ]
   /payment/hk/v1.0/rtgs:
     post:
       summary: HK RTGS Submit
@@ -470,6 +494,9 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+      security:
+        - apiKey: []
+          bearerAuth: [HK.INSTO.PAYMENT.RTGS.CREATE]
   /payment/hk/v1.0/rtgs/{x-Message-Id}:  
     get:
       summary: HK RTGS Status
@@ -502,6 +529,9 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+      security:
+        - apiKey: []
+          bearerAuth: [HK.INSTO.PAYMENT.READ]
   /payment/hk/v1.0/cbft:
     post:
       summary: HK CBFT Submit
@@ -542,6 +572,9 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+      security:
+        - apiKey: []
+          bearerAuth: [HK.INSTO.PAYMENT.CBFT.CREATE]
   /payment/hk/v1.0/cbft/{x-Message-Id}:  
     get:
       summary: HK CBFT Status
@@ -574,6 +607,9 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+      security:
+        - apiKey: []
+          bearerAuth: [HK.INSTO.PAYMENT.READ]
   /payment/sg/v1.0/ach:
       post:
         summary: SG ACH Submit
@@ -614,6 +650,9 @@ paths:
             $ref: '#/components/responses/504Timeout'
           default:
             $ref: '#/components/responses/default'
+        security:
+          - apiKey: []
+            bearerAuth: [SG.INSTO.PAYMENT.ACH.CREATE]
   /payment/sg/v1.0/ach/{x-Message-Id}:
     get:
       summary: SG ACH Status
@@ -646,6 +685,9 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+      security:
+        - apiKey: []
+          bearerAuth: [SG.INSTO.PAYMENT.READ]
   /payment/sg/v1.0/fast:
     post:
       summary: SG FAST Submit
@@ -686,6 +728,9 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+      security:
+        - apiKey: []
+          bearerAuth: [SG.INSTO.PAYMENT.FAST.CREATE]
   /payment/sg/v1.0/fast/{x-Message-Id}:  
     get:
       summary: SG FAST Status
@@ -718,6 +763,9 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+      security:
+        - apiKey: []
+          bearerAuth: [SG.INSTO.PAYMENT.READ]
   /payment/sg/v1.0/rtgs:
     post:
       summary: SG RTGS Submit
@@ -758,6 +806,9 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+      security:
+        - apiKey: []
+          bearerAuth: [SG.INSTO.PAYMENT.RTGS.CREATE]
   /payment/sg/v1.0/rtgs/{x-Message-Id}:  
     get:
       summary: SG RTGS Status
@@ -790,6 +841,9 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+      security:
+        - apiKey: []
+          bearerAuth: [SG.INSTO.PAYMENT.READ]
   /payment/sg/v1.0/paynow:
     post:
       summary: SG PAYNOW Submit
@@ -830,6 +884,9 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+      security:
+        - apiKey: []
+          bearerAuth: [SG.INSTO.PAYMENT.PAYNOW.CREATE]
   /payment/sg/v1.0/paynow/{x-Message-Id}:  
     get:
       summary: SG PAYNOW Status
@@ -862,6 +919,9 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+      security:
+        - apiKey: []
+          bearerAuth: [SG.INSTO.PAYMENT.READ]
   /payment/sg/v1.0/cbft:
     post:
       summary: SG CBFT Submit
@@ -902,6 +962,9 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+      security:
+        - apiKey: []
+          bearerAuth: [SG.INSTO.PAYMENT.CBFT.CREATE]
   /payment/sg/v1.0/cbft/{x-Message-Id}:  
     get:
       summary: SG CBFT Status
@@ -934,6 +997,9 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+      security:
+        - apiKey: []
+          bearerAuth: [SG.INSTO.PAYMENT.READ]
   /payment/vn/v1.0/ach:
       post:
         summary: VN ACH Submit
@@ -974,6 +1040,9 @@ paths:
             $ref: '#/components/responses/504Timeout'
           default:
             $ref: '#/components/responses/default'
+        security:
+          - apiKey: []
+            bearerAuth: [VN.INSTO.PAYMENT.ACH.CREATE]
   /payment/vn/v1.0/ach/{x-Message-Id}:
     get:
       summary: VN ACH Status
@@ -1006,6 +1075,9 @@ paths:
           $ref: '#/components/responses/504Timeout'
         default:
           $ref: '#/components/responses/default'
+      security:
+        - apiKey: []
+          bearerAuth: [VN.INSTO.PAYMENT.READ]
 components:
   securitySchemes:
     bearerAuth:
@@ -1018,15 +1090,16 @@ components:
       in: header
       name: apikey
       description: API key to authorize requests.
-    OAuth2:
+    oAuth2:
       type: oauth2
       flows:
-        authorizationCode:
-          authorizationUrl: https://api.fileactive.anzgcis.com/auth
-          tokenUrl: https://api.fileactive.uat.anzgcis.com/v1.0/auth
+        clientCredentials:
+          tokenUrl: https://api.fileactive.anzgcis.com/v1.0/auth
           scopes:
             AU.INSTO.PAYMENT.NPP.CREATE: Create Australia NPP Payment Resource   
-            AU.INSTO.PAYMENT.READ: Retrieve information for specific payment resource   
+            AU.INSTO.PAYMENT.NPP.READ: Retrieve information for specific payment resource   
+            AU.INSTO.PAYMENT.CBFT.CREATE: Create Australia CBFT Payment Resource   
+            AU.INSTO.PAYMENT.READ: Retrieve information for specific payment resource (except AU NPP)  
             IN.INSTO.PAYMENT.ACH.CREATE: Create India ACH Payment Resource   
             IN.INSTO.PAYMENT.READ: Retrieve information for specific payment resource   
             HK.INSTO.PAYMENT.ACH.CREATE: Create Hong Kong ACH Payment Resource   
@@ -1162,7 +1235,7 @@ components:
           schema:
             type: string
             example: >-
-              https://api.fileactive.uat.anzgcis.com/payments/64eb2fb9-57f8-4d80-bff5-86d666f92944
+              https://api.fileactive.anzgcis.com/payments/64eb2fb9-57f8-4d80-bff5-86d666f92944
       content:
         application/json:
           schema:
@@ -1496,7 +1569,7 @@ components:
           type: string
           example: urn:ietf:params:oauth:client-assertion-type:jwt-bearer
         scope:
-          $ref: '#/components/schemas/Scopes'
+          $ref: '#/components/securitySchemes/oAuth2/flows/clientCredentials/scopes'
         client_assertion:
           $ref: '#/components/schemas/ClientAssertion'
     authTokenResponse:
@@ -1539,7 +1612,7 @@ components:
         aud:
           type: string
           description: Specify the intended audience of the token request
-          example: https://api.fileactive.uat.anzgcis.com/auth
+          example: https://api.fileactive.anzgcis.com/auth
     BatchBookingIndicator:
       type: boolean
     BICFIDec2014Identifier:
@@ -3778,48 +3851,6 @@ components:
         - HOLD
         - PHOB
         - TELB
-    Scopes:
-      description: |
-        AU.INSTO.PAYMENT.NPP.CREATE - Create Australia NPP Payment Resource   
-        AU.INSTO.PAYMENT.NPP.READ - Retrieve information for AU NPP payment resource   
-        AU.INSTO.PAYMENT.CBFT.CREATE - Create Australia CBFT Payment Resource   
-        AU.INSTO.PAYMENT.READ - Retrieve information for specific payment resource (except AU NPP)   
-        IN.INSTO.PAYMENT.ACH.CREATE - Create India ACH Payment Resource   
-        IN.INSTO.PAYMENT.READ - Retrieve information for specific payment resource   
-        HK.INSTO.PAYMENT.ACH.CREATE - Create Hong Kong ACH Payment Resource   
-        HK.INSTO.PAYMENT.FAST.CREATE - Create Hong Kong FPS Payment Resource   
-        HK.INSTO.PAYMENT.RTGS.CREATE - Create Hong Kong RTGS Payment Resource  
-        HK.INSTO.PAYMENT.CBFT.CREATE - Create Hong Kong CBFT Payment Resource
-        HK.INSTO.PAYMENT.READ - Retrieve information for specific payment resource   
-        SG.INSTO.PAYMENT.ACH.CREATE - Create Singapore ACH Payment Resource   
-        SG.INSTO.PAYMENT.FAST.CREATE - Create Singapore FAST Payment Resource   
-        SG.INSTO.PAYMENT.RTGS.CREATE - Create Singapore RTGS Payment Resource    
-        SG.INSTO.PAYMENT.PAYNOW.CREATE - Create Singapore PAYNOW Payment Resource 
-        SG.INSTO.PAYMENT.CBFT.CREATE - Create Singapore CBFT Payment Resource 
-        SG.INSTO.PAYMENT.READ - Retrieve information for specific payment resource   
-        VN.INSTO.PAYMENT.ACH.CREATE - Create Vietnam ACH Payment Resource     
-        VN.INSTO.PAYMENT.READ - Retrieve information for specific payment resource   
-      type: string
-      enum:
-        - AU.INSTO.PAYMENT.NPP.CREATE
-        - AU.INSTO.PAYMENT.NPP.READ
-        - AU.INSTO.PAYMENT.CBFT.CREATE
-        - AU.INSTO.PAYMENT.READ
-        - IN.INSTO.PAYMENT.ACH.CREATE
-        - IN.INSTO.PAYMENT.READ
-        - HK.INSTO.PAYMENT.ACH.CREATE
-        - HK.INSTO.PAYMENT.FAST.CREATE
-        - HK.INSTO.PAYMENT.RTGS.CREATE
-        - HK.INSTO.PAYMENT.CBFT.CREATE
-        - HK.INSTO.PAYMENT.READ
-        - SG.INSTO.PAYMENT.ACH.CREATE
-        - SG.INSTO.PAYMENT.FAST.CREATE
-        - SG.INSTO.PAYMENT.RTGS.CREATE
-        - SG.INSTO.PAYMENT.PAYNOW.CREATE
-        - SG.INSTO.PAYMENT.CBFT.CREATE
-        - SG.INSTO.PAYMENT.READ
-        - VN.INSTO.PAYMENT.ACH.CREATE
-        - VN.INSTO.PAYMENT.READ
     SecuredPaymentSubmissionResource:
       required:
         - secured_payload
@@ -4343,6 +4374,8 @@ x-tagGroups:
     tags: 
       - CustomerCreditTransferInitiationV09
       - CustomerPaymentStatusReportV10
+      - NPPPaymentSubmissionResource
+      - NPPPaymentStatusResource
   - name: Country Schemas
     tags:
       - CustomerCreditTransferInitiationV09_ASIA_ACH
@@ -4351,5 +4384,3 @@ x-tagGroups:
       - CustomerCreditTransferInitiationV09_ASIA_PAYNOW
       - CustomerCreditTransferInitiationV09_ASIA_CBFT
       - CustomerCreditTransferInitiationV09_AU_CBFT
-      - NPPPaymentSubmissionResource
-      - NPPPaymentStatusResource
