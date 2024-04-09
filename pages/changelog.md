@@ -8,6 +8,7 @@ toc: true
 
 ## Contents
 
+- [2024-04-09 - Minor update to PayTo API](#2024-04-09)
 - [2024-04-04 - Standardise security requirements](#2024-04-04)
 - [2024-03-21 - Minor update to PayTo API Webhook](#2024-03-21)
 - [2024-02-28 - Moved NPP Payment API docs to Payments API section](#2024-02-28)
@@ -33,6 +34,26 @@ toc: true
 - [2022-08-19 - Site creation](#2022-08-19)
 
 ---
+<a name="2024-04-09"></a>
+
+### [2024-04-09]
+
+#### Changes
+
+- Updated PayTo API v1.0.1 
+  - Updated the conditional rules which apply to the creation of mandates specifically new DDRs and migrated DDRs
+  - Added Create Mandate example payloads
+  - Added link to PayID information page
+  - Updated descriptions from "Payee" to "Biller"
+  - Added required scope for each API operation
+  - Document applicable scopes against each API operation
+- Updated PayTo Mandate Event Codes
+  - Addtional codes for Create Mandate - Migrated DDR
+- Updated PayTo API Webhook v1.0.2  
+  - Updated descriptions from "Payee" to "Biller"
+- Updated Fileactive Testing API v1.0.2  
+  - Updated descriptions from "Payee" to "Biller"
+
 <a name="2024-04-04"></a>
 
 ### [2024-04-04]
