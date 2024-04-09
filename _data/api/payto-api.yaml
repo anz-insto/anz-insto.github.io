@@ -1,4 +1,4 @@
-openapi: '3.0.1'
+openapi: 3.0.1
 info:
   title: Fileactive PayTo API
   description: |-
@@ -8,9 +8,18 @@ info:
     * Get Mandate Details
     * Create a Mandated Payment Initiation Request (MPIR)
     * Create a PayTo Query Resolution
+
+    Payloads are to be encrypted and signed prior to transmitting.
     
-    <a href="http://anz-insto.github.io/fileactive/event-codes#payto-api-event-codes">API Event Codes</a> 
-  version: 1.0.0
+    <a href="https://anz-insto.github.io/fileactive/event-codes#payto-api-event-codes">PayTo API Event Codes</a> 
+            
+    #### Release 1.0.1 changes:
+    - Updated the conditional rules which apply to the creation of mandates specifically new DDRs and migrated DDRs.  
+    - Added Create Mandate example payloads.
+    - Added link to PayID information page.
+    - Updated descriptions from "Payee" to "Biller". 
+    - Added required scope for each API operation.
+  version: 1.0.1
 servers:
   - url: https://api.fileactive.uat.anzgcis.com
     description: 'UAT (non-production) environment'
@@ -62,8 +71,11 @@ paths:
       tags:
       - Mandate
       summary: Create a new mandate.
-      description: "The purpose of this operation is to create a new mandate in the MMS. A mandate is always created by the Payment Initiator. If the Establishment Scheme for the mandate is 'AUPM' then the mandate will be created bilaterally, otherwise it will be created unilaterally. A unilaterally created mandate will have initial status 'Active' and version '1' whereas a bilaterally created mandate will have initial status 'Created' and version '0'. A bilaterally created mandate can only become 'Active' when the Debtor confirms the creation of the mandate, at which moment its' version will also increase to '1'. \n\nA bilateral mandate creation will automatically expire after a fixed time period if the creation action is not completed, declined or recalled. Expiry of a mandate creation will result in the mandate status being set to 'Cancelled'. \n\nThe initial API response indicates if ANZ has accepted or rejected the request, not the processing outcome of the request. The processing outcome of the request will be delivered via the **PayTo Webhook API**.\n\nThe following rules apply to this API:\n- EstablishmentSchemeRule1: If `establishment_scheme` is equal to 'MGCR' then `creditor_information` **must** be present.\n- EstablishmentSchemeRule2: If `establishment_scheme` is equal to 'MGCR' then `debtor_information.account_alias_identification` **must** be absent.\n- EstablishmentSchemeRule3: If `establishment_scheme` is equal to 'MGCR' then `additional_information` **must** be populated with the BECS User Id of the Initiating Party.\n-  EstablishmentSchemeRule4: If `establishment_scheme` is not equal to 'AUPM' then `resolution_requested_by` **must** be absent."
+      description: "The purpose of this operation is to create a new mandate in the MMS. A mandate is always created by the Payment Initiator. If the Establishment Scheme for the mandate is 'AUPM' then the mandate will be created bilaterally, otherwise it will be created unilaterally. A unilaterally created mandate will have initial status 'Active' and version '1' whereas a bilaterally created mandate will have initial status 'Created' and version '0'. A bilaterally created mandate can only become 'Active' when the Debtor confirms the creation of the mandate, at which moment its' version will also increase to '1'. \n\nA bilateral mandate creation will automatically expire after a fixed time period if the creation action is not completed, declined or recalled. Expiry of a mandate creation will result in the mandate status being set to 'Cancelled'. \n\nThe initial API response indicates if ANZ has accepted or rejected the request, not the processing outcome of the request. The processing outcome of the request will be delivered via the **PayTo Webhook API**.\n\nThe following rules apply to this API:\n- EstablishmentSchemeRule1: If `establishment_scheme` is equal to 'MGCR' then `creditor_information` **must** be present.\n- EstablishmentSchemeRule2: If `establishment_scheme` is equal to 'MGCR' then `additional_information` **must** be populated with the BECS User Id of the Initiating Party.\n-  EstablishmentSchemeRule3: If `establishment_scheme` is  equal to 'MGCR' then `resolution_requested_by` **must** be absent.\n\n-  ValidityEndDateRule1: If `validity_end_date` is present then `automatic_extension_indicator` **must** be 'false'.\n-  ValidityEndDateRule2: If `validity_end_date` is **not** present then `automatic_extension_indicator` **must** be 'true'."
       operationId: createMandate
+      security:
+        - apiKeyAuth: []
+          bearerAuth: [AU.INSTO.PAYTO.MANDATE.WRITE]
       parameters:
         - $ref: "#/components/parameters/correlationID"
         - $ref: "#/components/parameters/messageID"
@@ -73,7 +85,119 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SecuredSubmissionResource'
-        description: Secured resource to create a mandate in the MMS. Refer to Model/Schema **MandateCreationRequest** for unencrypted payload object
+            examples: 
+              Mandate Creation - New DDR: 
+                value: 
+                  {
+                    "secured_payload": {
+                        "mps_user_id": "10002005",
+                        "request_id": "71d6fb19-7515-40dc-b045-e17550b67600",
+                        "resolution_requested_by": "2023-06-10T05:13:03.255Z",
+                        "initiation_request_identification": "abc-123",
+                        "mandate_type": "DDTP",
+                        "establishment_scheme": "AUPM",
+                        "mandate_purpose_code": "RETL",
+                        "description": "Car purchase",
+                        "validity_start_date": "2023-06-10",
+                        "transfer_arrangement": "Transfer arrangement details",
+                        "automatic_extension_indicator": true,
+                        "debtor_information": {
+                            "party_type": "PERS",
+                            "party_name": "Barney Rubble",
+                            "ultimate_party_name": "Barney Rubble",
+                            "account_identification_type_code": "ALIA",
+                            "account_alias_type_code": "TELI",
+                            "account_alias_identification": "+61-423765879",
+                            "party_reference": "RUBBLE-01"
+                        },
+                        "creditor_information": {
+                            "party_type": "ORGN",
+                            "party_name": "ACME",
+                            "ultimate_party_name": "Looney Tunes",
+                            "account_identification_type_code": "BBAN",
+                            "account_identification": "013010230008937",
+                            "party_reference": "LOONEYTUNES-01"
+                        },
+                        "payment_information": {
+                            "payment_frequency": "MNTH",
+                            "payment_execute_not_before_time": "23:31:14.450Z",
+                            "point_in_time": "7",
+                            "payment_amount_type": "VARI",
+                            "first_payment_amount": {
+                                "currency": "AUD",
+                                "amount": "103.10"
+                            },
+                            "last_payment_amount": {
+                                "currency": "AUD",
+                                "amount": "103.10"
+                            },
+                            "amount": {
+                                "currency": "AUD",
+                                "amount": "103.10"
+                            },
+                            "maximum_amount": {
+                                "currency": "AUD",
+                                "amount": "103.10"
+                            },
+                            "first_payment_date": "2023-07-10"
+                        },
+                        "additional_information": "Addtional mandate information"
+                    }
+                }
+              Mandate Creation - Migrated DDR: 
+                value: 
+                  {
+                      "secured_payload": {
+                          "mps_user_id": "10002005",
+                          "request_id": "71d6fb19-7515-40dc-b045-e17550b67600",
+                          "initiation_request_identification": "abc-123",
+                          "mandate_type": "DDTP",
+                          "establishment_scheme": "MGCR",
+                          "mandate_purpose_code": "RETL",
+                          "description": "Car purchase",
+                          "validity_start_date": "2023-06-10",
+                          "validity_end_date": "2024-05-01",
+                          "transfer_arrangement": "Transfer arrangement details",
+                          "automatic_extension_indicator": false,
+                          "debtor_information": {
+                              "party_type": "PERS",
+                              "party_name": "Barney Rubble",
+                              "ultimate_party_name": "Barney Rubble",
+                              "account_identification_type_code": "BBAN",
+                              "account_identification": "013010230008937",
+                              "party_reference": "RUBBLE-01"
+                          },
+                          "creditor_information": {
+                              "party_type": "ORGN",
+                              "party_name": "ACME",
+                              "ultimate_party_name": "Looney Tunes",
+                              "account_identification_type_code": "BBAN",
+                              "account_identification": "013010230008937",
+                              "party_reference": "LOONEYTUNES-01"
+                          },
+                          "payment_information": {
+                              "payment_frequency": "MNTH",
+                              "count_per_period": "42",
+                              "payment_amount_type": "VARI",
+                              "last_payment_amount": {
+                                  "currency": "AUD",
+                                  "amount": "10.00"
+                              },
+                              "amount": {
+                                  "currency": "AUD",
+                                  "amount": "10.00"
+                              },
+                              "maximum_amount": {
+                                  "currency": "AUD",
+                                  "amount": "10.00"
+                              },
+                              "last_payment_date": "2024-04-01"
+                          },
+                          "additional_information": "//BECSID/deUser1"
+                      }
+                  }
+        description: |-
+          Secured resource to create a mandate in the MMS.<br> Refer to Model/Schema **MandateCreationRequest** for unencrypted payload object.<br> Examples are reflective of unencrypted payload.
         required: true
       responses:
         202:
@@ -101,6 +225,9 @@ paths:
       summary: Change the status of a mandate.
       description: "The purpose of this operation is to change the status of a mandate. A status change is always performed as a unilateral operation. The status can only be changed when the mandate is currently active or suspended. Releasing a suspended mandate can only be performed by the party that suspended the mandate. A status change can be applied when there is a pending amendment and also when porting is in progress. \n\nUpon successful status change the mandate version number will be incremented. \n\nAny notification triggered by this operation will have priority UNATTENDED. \n\nThe initial API response indicates if ANZ has accepted or rejected the request, not the processing outcome of the request. The processing outcome of the request will be delivered via the **PayTo Webhook API**.\n\nThe following rules apply to this API:\n- ChangeAndReasonCodeRule1: When `change` is equal to value 'CNCL' or 'SUSP' then `reason_code` must be present."
       operationId: changeMandateStatus
+      security:
+        - apiKeyAuth: []
+          bearerAuth: [AU.INSTO.PAYTO.MANDATE.WRITE]
       parameters:
         - $ref: "#/components/parameters/correlationID"
         - $ref: "#/components/parameters/messageID"
@@ -145,6 +272,9 @@ paths:
       summary: Get details of a mandate.
       description: "The purpose of this operation is to retrieve the details of a specific mandate in its current state. The response may optionally include the details of any pending actions for the mandate."
       operationId: getMandate
+      security:
+        - apiKeyAuth: []
+          bearerAuth: [AU.INSTO.PAYTO.MANDATE.READ]
       parameters:
         - $ref: "#/components/parameters/correlationID"
         - $ref: "#/components/parameters/messageID"
@@ -206,6 +336,9 @@ paths:
       summary: Create a new MPIR.
       description: "The purpose of this operation is to create a new mandated payment initiation request (MPIR). The underlying mandate **must** be in an 'Active' state. \n\nThe initial API response indicates if ANZ has accepted or rejected the request, not the MPIR processing outcome of the request. The MPIR processing outcome will be delivered via the **PayTo Webhook API**. \n\nThe following rules apply to this API:\n- MPSUserSchemeRule1: `mps_user_id` **must** be the owner of the provided `mandate_identification` \n- InstructedAmountSchemeRule1: `instructed_amount` **must** not exceed the maximum amount specified in the associated mandate `mandate_identification` \n- CreditorDetailsSchemeRule1: `creditor_information` **must** be present where not provided on the mandate.\n- CreditorDetailsSchemeRule2: `creditor_information` **should** not be present where provided on the mandate.\n- CreditorDetailsSchemeRule3: If `creditor_information` is provided and is also available on the mandate then details **must** be exactly the same."
       operationId: createMPIR
+      security:
+        - apiKeyAuth: []
+          bearerAuth: [AU.INSTO.PAYTO.MPIR.WRITE]
       parameters:
         - $ref: "#/components/parameters/correlationID"
         - $ref: "#/components/parameters/messageID"
@@ -241,8 +374,11 @@ paths:
       tags:
       - Query
       summary: PayTo query resolution.
-      description: "The purpose of this operation is to provide a resolution to a PayTo query raised by the **Payee's** Financial Institution. Queries are delivered via the **PayTo Query Webhook API**.  \n\nThe following rules apply to this API: \n- CaseDecisionSchemeRule1: `case_decision` = **ACPT** then `reject_reason_code` and `return_transaction_identification` **should not** be provided. \n- CaseDecisionSchemeRule2: `case_decision` = **FINO** then `reject_reason_code` and `return_transaction_identification` **should not** be provided.  \n- CaseDecisionSchemeRule3: `case_decision` = **PEND** then `reject_reason_code`, `return_transaction_identification` **should not** be provided. \n- CaseDecisionSchemeRule4: `case_decision` = **RJCT** then `reject_reason_code` **must** be provided.   \n- RejectReasonSchemeRule1: `reject_reason_code` = **ARDT** then `return_transaction_identification` **must** be provided.  \n- RejectReasonSchemeRule2: `reject_reason_code` = **CUST** then `return_transaction_identification` **must not** be provided."
+      description: "The purpose of this operation is to provide a resolution to a PayTo query raised by the **Payer's** Financial Institution. Queries are delivered via the **PayTo Query Webhook API**.  \n\nThe following rules apply to this API: \n- CaseDecisionSchemeRule1: `case_decision` = **ACPT** then `reject_reason_code` and `return_transaction_identification` **should not** be provided. \n- CaseDecisionSchemeRule2: `case_decision` = **FINO** then `reject_reason_code` and `return_transaction_identification` **should not** be provided.  \n- CaseDecisionSchemeRule3: `case_decision` = **PEND** then `reject_reason_code`, `return_transaction_identification` **should not** be provided. \n- CaseDecisionSchemeRule4: `case_decision` = **RJCT** then `reject_reason_code` **must** be provided.   \n- RejectReasonSchemeRule1: `reject_reason_code` = **ARDT** then `return_transaction_identification` **must** be provided.  \n- RejectReasonSchemeRule2: `reject_reason_code` = **CUST** then `return_transaction_identification` **must not** be provided."
       operationId: queryResolution
+      security:
+        - apiKeyAuth: []
+          bearerAuth: [AU.INSTO.PAYTO.MANDATE.READ]
       parameters:
         - $ref: "#/components/parameters/correlationID"
         - $ref: "#/components/parameters/messageID"
@@ -288,12 +424,11 @@ components:
     OAuth2:
       type: oauth2
       flows:
-        authorizationCode:  
-          authorizationUrl: https://api.fileactive.anzgcis.com/auth
+        clientCredentials:
           tokenUrl: https://api.fileactive.anzgcis.com/v1.0/auth
           scopes:
             AU.INSTO.PAYTO.MANDATE.WRITE: Create & Maintain Mandate<br>
-            AU.INSTO.PAYTO.MANDATE.READ: Retrieve Mandate Details<br>
+            AU.INSTO.PAYTO.MANDATE.READ: Retrieve Mandate Details & Reply to a Query<br>
             AU.INSTO.PAYTO.MPIR.WRITE: Create Mandated Payment Initiation Request
   parameters:
     correlationID:  
@@ -372,11 +507,6 @@ components:
        application/json:
           schema:
             $ref: '#/components/schemas/MandateRetrievalResponse1'
-#          examples:
-#            Payment_Accepted_Settled:
-#              $ref: '#/components/examples/CustomerPaymentStatusReportV10_Ex01'
-#            Payment_Rejected_Batch:
-#              $ref: '#/components/examples/CustomerPaymentStatusReportV10_Ex02'
     202:
       description: Accepted the request for processing. Processing result will be provided via Webhook
       headers:
@@ -528,7 +658,7 @@ components:
           type: string
           example: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'
         scope:
-          $ref: '#/components/schemas/Scopes'
+          $ref: '#/components/securitySchemes/OAuth2/flows/clientCredentials/scopes'
         client_assertion:
           $ref: '#/components/schemas/ClientAssertion'
     AuthTokenResponse:
@@ -963,7 +1093,7 @@ components:
       - MGCR
     MandatePartyInformation1Creditor:
       type: object
-      description: "Information concerning the creditor party identified in the mandate."
+      description: "Information concerning the creditor party identified in the mandate.\n\nThe following rules apply to this structure:\n- CreditorPartyTypeRule1: If `establishment_scheme` is equal to 'MGCR' then `party_type` **must** be present."
       additionalProperties: false
       properties:
         party_type:
@@ -1010,7 +1140,7 @@ components:
       - account_identification
     MandatePartyInformation1Debtor:
       type: object
-      description: "Information concerning the debtor party identified in the mandate. \n\nThe following rules apply to this structure:\n- AccountIdentificationRule1: If `account_identification_type_code` is equal to value 'ALIA' then `account_alias_type_code`  and `account_alias_identification` must be present, and `account_identification` must be absent.\n- AccountIdentificationRule2: If `account_identification_type_code` is equal to value 'BBAN' then `account_identification` must be present and start with BSB (bank-state-branch), and `account_alias_type_code` and `account_alias_identification` must be absent.\n- AccountIdentificationRule3: If `establishment_scheme` is equal to value 'MGCR' then `account_identification_type_code` is equal to value 'BBAN'."
+      description: "Information concerning the debtor party identified in the mandate. \n\nThe following rules apply to this structure:\n- AccountIdentificationRule1: If `account_identification_type_code` is equal to value 'ALIA' then `account_alias_type_code`  and `account_alias_identification` must be present, and `account_identification` must be absent.\n- AccountIdentificationRule2: If `account_identification_type_code` is equal to value 'BBAN' then `account_identification` must be present and start with BSB (bank-state-branch), and `account_alias_type_code` and `account_alias_identification` must be absent.\n\n- AccountIdentificationRule3: If `establishment_scheme` is equal to value 'MGCR' then `account_identification_type_code` must be equal to value 'BBAN'."
       additionalProperties: false
       properties:
         party_type:
@@ -1046,7 +1176,8 @@ components:
           example: '013010230008937'
         account_alias_type_code:
           type: string
-          description: "Name of the Alias Type, in a coded form.\nSpecifies an alphanumeric string with a length of 4 characters.<table><tr><th>Code</th><th>Description</th></tr><tr><td>AUBN</td><td>Australian Business Number</td></tr><tr><td>EMAL</td><td>Email address</td></tr><tr><td>ORGN</td><td>Organisation Identifier</td></tr><tr><td>TELI</td><td>Telephone Number</td></tr></table>"
+          description: |- 
+            Name of the Alias Type, in a coded form.\nSpecifies an alphanumeric string with a length of 4 characters.<table><tr><th>Code</th><th>Description</th></tr><tr><td>AUBN</td><td>Australian Business Number</td></tr><tr><td>EMAL</td><td>Email address</td></tr><tr><td>ORGN</td><td>Organisation Identifier</td></tr><tr><td>TELI</td><td>Telephone Number</td></tr></table><br> <a href="https://anz-insto.github.io/fileactive/alias-processing">PayID Alias Processing Information</a>
           pattern: ^[a-zA-Z0-9]{4}$
           enum: 
           - AUBN
@@ -1058,7 +1189,7 @@ components:
           type: string
           description: |-
             Identification used to indicate the account identification under another specified name.
-            Specifies a character string with a maximum length of 2048 characters. <br><table><tr><th>Alias Identifier Type</th><th>Description</th><th>Example</th></tr><tr><td>AUBN</td><td>Consists of a nine to eleven digit number where the first two digits are a checksum. An ABN is assigned by the Australian Taxation Office to identify an individual Australian Business. An ACN, ARBN or ARSN is allocated by ASIC.</td><td>601428737</td></tr><tr><td>EMAL</td><td>Consists of a character string with a maximum length of 256 characters in lower case. This must include the “@” symbol with leading and trailing characters and no white spaces.</td><td>npp@mail.com</td></tr><tr><td>ORGN</td><td>The Identifier must include the company/organisation name and the description of the business/trade/ product/campaign and/or geographic location (suburb/town/state). Maximum of 256 characters in lower case, to be drawn from Printable ASCII (decimal 32-126) and without leading or trailing whitespace</td><td>aardvark plumbing mosman nsw <br><br>tru blu loyalty program <br><br>snackspotvending sydney nsw </td></tr><tr><td>TELI</td><td>Must consist of a “+” followed by the country code (from 1 to 3 characters) then a “-“ andfinally, any combination of numbers (up to 30 characters). <br>Participants should use the country code from the list of ITU-T Recommendation E.164 Assigned Country Codes.</td><td>+61-397656547 (landline)<br> or +61-423765879 (mobile)<br> or +61-1800123456 (local free call)<br> or +61-131234 (professional)</td></tr></table>
+            Specifies a character string with a maximum length of 2048 characters. <br><table><tr><th>Alias Identifier Type</th><th>Description</th><th>Example</th></tr><tr><td>AUBN</td><td>Consists of a nine to eleven digit number where the first two digits are a checksum. An ABN is assigned by the Australian Taxation Office to identify an individual Australian Business. An ACN, ARBN or ARSN is allocated by ASIC.</td><td>601428737</td></tr><tr><td>EMAL</td><td>Consists of a character string with a maximum length of 256 characters in lower case. This must include the “@” symbol with leading and trailing characters and no white spaces.</td><td>npp@mail.com</td></tr><tr><td>ORGN</td><td>The Identifier must include the company/organisation name and the description of the business/trade/ product/campaign and/or geographic location (suburb/town/state). Maximum of 256 characters in lower case, to be drawn from Printable ASCII (decimal 32-126) and without leading or trailing whitespace</td><td>aardvark plumbing mosman nsw <br><br>tru blu loyalty program <br><br>snackspotvending sydney nsw </td></tr><tr><td>TELI</td><td>Must consist of a “+” followed by the country code (from 1 to 3 characters) then a “-“ andfinally, any combination of numbers (up to 30 characters). <br>Participants should use the country code from the list of ITU-T Recommendation E.164 Assigned Country Codes.</td><td>+61-397656547 (landline)<br> or +61-423765879 (mobile)<br> or +61-1800123456 (local free call)<br> or +61-131234 (professional)</td></tr></table><br> <a href="https://anz-insto.github.io/fileactive/alias-processing">PayID Alias Processing Information</a>
           minLength: 1
           maxLength: 2048
           example: "+61-423765879"
@@ -1106,7 +1237,7 @@ components:
       - DEBT    
     MandatePaymentInformation1:
       type: object
-      description: "Set of characteristics detailing mandate payment information.\n  \n**Property descriptions**:\n - **payment_frequency** - Regularity with which instructions are to be created and processed.\n - **payment_amount_type** - Identifies the mandate payment arrangement.\n - **first_payment_amount** - Amount different from the payment amount, as it includes the costs associated with the first debited amount.\n - **last_payment_amount** - Last payment amount different  to the payment amount.\n - **amount** - Fixed amount to be debited from the debtor's account.\n - **maximum_amount** - Maximum amount that may be paid from the debtor's account, per instruction.\n  \nThe following rules apply to this structure:\n- PaymentAmountTypeRule: If `payment_amount_type` code is equal to value 'FIXE' then `amount` must be present."
+      description: "Set of characteristics detailing mandate payment information.\n  \n**Property descriptions**:\n - **payment_frequency** - Regularity with which instructions are to be created and processed.\n - **payment_amount_type** - Identifies the mandate payment arrangement.\n - **first_payment_amount** - Amount different from the payment amount, as it includes the costs associated with the first debited amount.\n - **last_payment_amount** - Last payment amount different  to the payment amount.\n - **amount** - Fixed amount to be debited from the debtor's account.\n - **maximum_amount** - Maximum amount that may be paid from the debtor's account, per instruction.\n  \nThe following rules apply to this structure:\n- PaymentAmountTypeRule1: If `payment_amount_type` code is equal to value 'FIXE' then `amount` must be present.\n- PaymentAmountTypeRule2: If `payment_amount_type` code is equal to value 'BALN' then `amount` must be present AND (`first_payment amount` OR `last_payment amount`) must be present.\n- PaymentAmountTypeRule3: If `payment_amount_type` code is equal to value 'USGB' then `maximum_amount` must be present.\n- PaymentAmountTypeRule4: If `payment_amount_type` code is equal to value 'VARI' then `maximum_amount` must be present.\n- FirstPaymentDateRule1: `first_payment_date` **cannot** be before `validity_start_date`.\n- FirstPaymentDateRule2: `first_payment_date` **cannot** be after `validity_end_date`.\n- FirstPaymentDateRule3: If `establishment_scheme` is equal to 'MGCR' then `first_payment_date` **cannot** be present.\n- LastPaymentDateRule1: `last_payment_date` **cannot** be before `validity_start_date`.\n- LastPaymentDateRule2: `last_payment_date` **cannot** be after `validity_end_date`.\n- FrequencyInTermsRule1: Both `count_per_period` AND `point_in_time` **cannot** be present.\n- PaymentAmountRule1: `amount` **cannot** exceed `maximum_amount`.\n- PaymentAmountRule2: `first_payment_amount` **cannot** exceed `maximum_amount`.\n- PaymentAmountRule3: `last_payment_amount` **cannot** exceed `maximum_amount`.\n\n- PaymentAmountRule4: If `establishment_scheme` is equal to 'MGCR' then `first_payment_amount` **cannot** be present."
       additionalProperties: false
       properties:
         payment_frequency:
@@ -1446,7 +1577,7 @@ components:
         return_transaction_identification:
           type: string
           description: >-
-            Unique reference, as assigned by the Payee, to unambiguously identify the return transaction. <br><br>
+            Unique reference, as assigned by the Biller, to unambiguously identify the return transaction. <br><br>
             To be provided when reject_reason_code = ARDT.
           minLength: 1
           maxLength: 35
@@ -1454,7 +1585,7 @@ components:
         narrative:
           type: string
           description: |-
-            Narrative as sent by Payee. <br><br>
+            Narrative as sent by the Biller. <br><br>
              When case_decision = ACPT then provide "Accepted", otherwise provide relevant details <br>
              <br> Specifies a character string with a maximum length of 1500 ASCII printable characters.
           minLength: 1
@@ -1468,16 +1599,6 @@ components:
         - case_decision
         - mandate_identification
         - narrative
-    Scopes:
-      type: string
-      description: >-
-        AU.INSTO.PAYTO.MANDATE.WRITE - Create & Maintain Mandate<br>
-        AU.INSTO.PAYTO.MANDATE.READ - Retrieve Mandate Details & Reply to a Query<br>
-        AU.INSTO.PAYTO.MPIR.WRITE - Create Mandated Payment Initiation Request
-      enum:
-      - AU.INSTO.PAYTO.MANDATE.WRITE
-      - AU.INSTO.PAYTO.MANDATE.READ
-      - AU.INSTO.PAYTO.MPIR.WRITE
     SecuredSubmissionResource:
       type: object
       properties:

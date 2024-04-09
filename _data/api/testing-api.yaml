@@ -5,10 +5,13 @@ info:
     Fileactive Self-Service Testing API. 
     
     Rate limit is one request per second.
-            
+                
+    #### Release 1.0.2 changes:
+    - Updated descriptions from "Payee" to "Biller". 
+        
     #### Release 1.0.1 changes:
     - List of mandate attributes amended by Payer can be included in **RequestMandateNotification** schema, refer to **details** object.  Applies when **trigger = MAMN**.
-  version: 1.0.1
+  version: 1.0.2
 servers:
   - url: https://api.fileactive.uat.anzgcis.com/testingfileactive/v1.0
     description: 'UAT (non-production) environment'
@@ -108,7 +111,7 @@ paths:
   /payto/notifications:
     post:
       tags:
-        - PayTo Payee
+        - PayTo Biller
       summary: Request A Mandate Notification.
       description: |-
         Request includes attributes which will be included in the Mandate Notification. 
@@ -220,7 +223,7 @@ paths:
   /payto/queries:
     post:
       tags:
-        - PayTo Payee
+        - PayTo Biller
       summary: Request A PayTo Query.
       description: |-
         Request includes attributes which will be included in the Mandate Query or Mandate Query Payment. 
@@ -820,7 +823,7 @@ components:
     RequestMandateNotification:
       type: object
       description: |-
-        Request a Mandate Notification to simulate a **non-Payee** action on a mandate.      
+        Request a Mandate Notification to simulate a **non-Biller** action on a mandate.      
       additionalProperties: false
       properties:
         mps_user_id:
@@ -866,7 +869,7 @@ components:
     RequestQueryNotification:
       type: object
       description: |-
-        Request a PayTo Query Notification to simulate a **Payee** query on a mandate or mandated payment.      
+        Request a PayTo Query Notification to simulate a **Payer** query on a mandate or mandated payment.      
       additionalProperties: false
       properties:
         case_id:
@@ -924,7 +927,7 @@ components:
             instruction_identification:
               type: string
               description: >-
-                Unique reference, as assigned by ANZ, to unambiguously identify the instruction. Note this is not the Payee's Instruction Identification
+                Unique reference, as assigned by ANZ, to unambiguously identify the instruction. Note this is not the Biller's Instruction Identification
               minLength: 1
               maxLength: 35
               example: ANZBAU3LXXXI20230621900000000011200
@@ -993,7 +996,7 @@ components:
           type: string
           minLength: 1
           maxLength: 140  
-          description: Creditor (payee) account name 
+          description: Creditor (biller) account name 
           example: Holden Holdings
         arm_creditor_account_identification:
           type: string
@@ -1122,8 +1125,8 @@ tags:
   - name: RequestRTN
     description: <SchemaDefinition schemaRef="#/components/schemas/RequestRTN" />
     x-displayName: RequestRTN
-  - name: PayTo Payee
-    description: Operations related to PayTo Payee. 
+  - name: PayTo Biller
+    description: Operations related to PayTo Biller. 
   - name: RequestMandateNotification
     description: <SchemaDefinition schemaRef="#/components/schemas/RequestMandateNotification" />
   - name: RequestQueryNotification
@@ -1132,7 +1135,7 @@ x-tagGroups:
   - name: Paths
     tags: 
       - Receivables
-      - PayTo Payee
+      - PayTo Biller
   - name: Models
     tags: 
       - RequestRTN
