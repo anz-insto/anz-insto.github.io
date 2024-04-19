@@ -8,6 +8,7 @@ toc: true
 
 ## Contents
 
+- [2024-04-18 - Added PayTo Amend Mandate API](#2024-04-18)
 - [2024-04-09 - Minor update to PayTo API](#2024-04-09)
 - [2024-04-04 - Standardise security requirements](#2024-04-04)
 - [2024-03-21 - Minor update to PayTo API Webhook](#2024-03-21)
@@ -34,6 +35,15 @@ toc: true
 - [2022-08-19 - Site creation](#2022-08-19)
 
 ---
+<a name="2024-04-18"></a>
+
+### [2024-04-18]
+
+#### Changes
+
+- Updated PayTo API v1.0.2
+  - Added Amend Mandate operation
+
 <a name="2024-04-09"></a>
 
 ### [2024-04-09]
