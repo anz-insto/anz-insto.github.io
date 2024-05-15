@@ -8,6 +8,7 @@ toc: true
 
 ## Contents
 
+- [2024-05-13 - Updates to PayTo APIs](#2024-05-13)
 - [2024-04-18 - Added PayTo Amend Mandate API](#2024-04-18)
 - [2024-04-09 - Minor update to PayTo API](#2024-04-09)
 - [2024-04-04 - Standardise security requirements](#2024-04-04)
@@ -35,6 +36,24 @@ toc: true
 - [2022-08-19 - Site creation](#2022-08-19)
 
 ---
+<a name="2024-05-13"></a>
+
+### [2024-05-13]
+
+#### Changes
+
+- Updated PayTo API v1.0.3
+  - Updated Amend Mandate examples
+  - Updated REGEX for uetr must be UUID v4
+  - Updated REGEX for request_id must be 36 characters
+- Updated PayTo API Webhook v1.0.3
+  - Updated MandateNotification schema to include new trigger codes MAMC, MAMD & MAMX
+  - Updated MandateNotification schema to include the amend mandate bilateral request, refer to details object. Applies when trigger code = MAMC, MAMD & MAMX
+  - Updated MandateNotification schema to include the reason why a bilateral request was declined by the Payer, refer to resolution_event object. Applies when trigger code = MAMD & MCRD
+  - Updated MandateNotification schema, mandate_status is now optional
+  - Updated REGEX for uetr must be UUID v4
+  - Updated REGEX for request_id must be 36 characters
+
 <a name="2024-04-18"></a>
 
 ### [2024-04-18]

@@ -13,7 +13,12 @@ info:
     Payloads are to be encrypted and signed prior to transmitting.
     
     <a href="https://anz-insto.github.io/fileactive/event-codes#payto-api-event-codes">PayTo API Event Codes</a> 
-                
+                    
+    #### Release 1.0.3 changes:
+    - Updated Amend Mandate examples  
+    - Updated REGEX for **uetr** must be UUID v4
+    - Updated REGEX for **request_id** must be 36 characters
+            
     #### Release 1.0.2 changes:
     - Added Amend Mandate operation.  
         
@@ -23,7 +28,7 @@ info:
     - Added link to PayID information page.
     - Updated descriptions from "Payee" to "Biller". 
     - Added required scope for each API operation.
-  version: 1.0.2
+  version: 1.0.3
 servers:
   - url: https://api.fileactive.uat.anzgcis.com
     description: 'UAT (non-production) environment'
@@ -95,7 +100,7 @@ paths:
                   {
                     "secured_payload": {
                         "mps_user_id": "10002005",
-                        "request_id": "71d6fb19-7515-40dc-b045-e17550b67600",
+                        "request_id": "055c7f30-99f8-4ff9-a561-6b2b4346ed38",
                         "resolution_requested_by": "2023-06-10T05:13:03.255Z",
                         "initiation_request_identification": "abc-123",
                         "mandate_type": "DDTP",
@@ -153,7 +158,7 @@ paths:
                   {
                       "secured_payload": {
                           "mps_user_id": "10002005",
-                          "request_id": "71d6fb19-7515-40dc-b045-e17550b67600",
+                          "request_id": "055c7f30-99f8-4ff9-a561-6b2b4346ed38",
                           "initiation_request_identification": "abc-123",
                           "mandate_type": "DDTP",
                           "establishment_scheme": "MGCR",
@@ -322,46 +327,50 @@ paths:
                   {
                     "secured_payload": {
                         "mps_user_id": "10002005",
-                        "request_id": "71d6fb19-7515-40dc-b045-e17550b67600",
-                        "bilateral": true,
-                        "bilateral_amendment": {
-                            "resolution_requested_by": "2023-06-10T05:13:03.255Z",
-                            "validity_end_date": "2023-06-10",
-                            "transfer_arrangement": "-",
-                            "automatic_extension_indicator": false,
-                            "payment_information": {
-                                "payment_frequency": "MNTH",
-                                "payment_execute_not_before_time": "00:00:00-00:00",
-                                "first_payment_amount": {
-                                    "currency": "ZZZ"
-                                },
-                                "maximum_amount": {
-                                    "currency": "AUD",
-                                    "amount": "1000.00"
-                                },
-                                "last_payment_date": "1000-01-01"
-                            },
+                        "request_id": "055c7f30-99f8-4ff9-a561-6b2b4346ed38",
+                        "bilateral": "true",
+                        "details": {
+                            "bilateral_amendment": {
+                                "resolution_requested_by": "2023-06-10T05:13:03.255Z",
+                                "validity_end_date": "2023-06-10",
+                                "transfer_arrangement": "-",
+                                "automatic_extension_indicator": false,
+                                "payment_information": {
+                                    "payment_frequency": "MNTH",
+                                    "payment_execute_not_before_time": "00:00:00-00:00",
+                                    "first_payment_amount": {
+                                        "currency": "ZZZ"
+                                    },
+                                    "maximum_amount": {
+                                        "currency": "AUD",
+                                        "amount": "1000.00"
+                                    },
+                                    "last_payment_date": "1000-01-01"
+                                }
+                            }
+                        },
                         "additional_information": "Updated addtional mandate information"
-                        }
                     }   
-                }
+                  }
               Mandate Amendment - Unilateral: 
                 value: 
                   {
                     "secured_payload": {
                         "mps_user_id": "10002005",
-                        "request_id": "71d6fb19-7515-40dc-b045-e17550b67600",
-                        "bilateral": false,
-                        "unilateral_amendment": {
-                            "description": "Car purchase pluse accessories",
-                            "creditor_information": {
-                                "party_name": "ACME 2",
-                                "account_identification": "013010230008938",
-                                "party_reference": "-"
+                        "request_id": "055c7f30-99f8-4ff9-a561-6b2b4346ed38",
+                        "bilateral": "false",
+                        "details": {
+                            "unilateral_amendment": {
+                                "description": "Car purchase plus accessories",
+                                "creditor_information": {
+                                    "party_name": "ACME 2",
+                                    "account_identification": "013010230008938",
+                                    "party_reference": "-"
+                                }
                             }
                         }
                     }
-                  }
+                  }          
         description: Secured resource to amend a mandate in the MMS. Refer to Model/Schema **MandateAmendmentRequest** for unencrypted payload object. <br> Examples are reflective of unencrypted payload.
         required: true
       responses:
@@ -958,8 +967,9 @@ components:
           maxLength: 10
           example: "10002005"
         request_id:
-          allOf: 
-          - $ref: '#/components/schemas/UUID'            
+          type: string
+          example: '055c7f30-99f8-4ff9-a561-6b2b4346ed38'
+          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
           description: |-
             Request UUID that identifies the mandate amendment operation to be performed. This must be a Universally Unique IDentifier (UUID). This UUID must be unique amongst all request_ids passed to this end-point by the same MPS User. If a request is encountered with a request ID that has previously been used then a duplicate check will be performed by comparing the digest of the current request with the digest of the previous request. If the digests match then the details of the previous mandate amendment will be returned. If the digests do not match then an HTTP 409 will be returned.
         bilateral:
@@ -1060,8 +1070,9 @@ components:
           maxLength: 10
           example: "10002005"
         request_id:
-          allOf: 
-          - $ref: '#/components/schemas/UUID'            
+          type: string
+          example: '055c7f30-99f8-4ff9-a561-6b2b4346ed38'
+          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
           description: |-
             Request UUID that identifies the mandate creation operation to be performed. This must be a Universally Unique IDentifier (UUID). This UUID must be unique amongst all request_ids passed to this end-point by the same MPS User. If a request is encountered with a request ID that has previously been used then a duplicate check will be performed by comparing the digest of the current request with the digest of the previous request. If the digests match then the details of the previous mandate creation will be returned. If the digests do not match then an HTTP 409 will be returned.
         resolution_requested_by:
@@ -1663,10 +1674,11 @@ components:
           maxLength: 10
           example: "10002005"    
         request_id:
-          allOf: 
-          - $ref: '#/components/schemas/UUID'            
+          type: string
+          example: '055c7f30-99f8-4ff9-a561-6b2b4346ed38'
+          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
           description: |-
-            Request UUID that identifies the mandate creation operation to be performed. This must be a Universally Unique IDentifier (UUID). This UUID must be unique amongst all request_ids passed to this end-point by the same MPS User. If a request is encountered with a request ID that has previously been used then a duplicate check will be performed by comparing the digest of the current request with the digest of the previous request. If the digests match then the details of the previous mandate creation will be returned. If the digests do not match then an HTTP 409 will be returned.
+            Request UUID that identifies the mandate status change operation to be performed. This must be a Universally Unique IDentifier (UUID). This UUID must be unique amongst all request_ids passed to this end-point by the same MPS User. 
         change:
           $ref: '#/components/schemas/MandateStatusChange1Code'
         reason_code:
@@ -1750,10 +1762,9 @@ components:
               example: "BILL00237679"         
             uetr:
               allOf:
-              - $ref: '#/components/schemas/UUID'
+              - $ref: '#/components/schemas/UUIDv4'
               description: > 
-                Universally unique identifier to provide an end-to-end reference of a payment transaction.
-              example: a690be37-9caf-44e4-bae1-475b50a8cb18
+                Universally unique identifier to provide an end-to-end reference of a payment transaction.<br><br> Universally Unique IDentifier (UUID) version 4, as described in IETC RFC 4122 "Universally Unique IDentifier (UUID) URN Namespace".
             mandate_identification:
               type: string
               description: "Unique ID, as assigned by the MMS, to unambiguously identify the mandate. This ID must be used to identify the mandate for all further operations on the mandate.\nUniversally Unique IDentifier (UUID) version 1, as described in IETC RFC 4122 \"Universally Unique IDentifier (UUID) URN Namespace\" without the 4 hyphen separators.\r\nFor example: '00000000000010008000000000000000' instead of  '00000000-0000-1000-8000-000000000000' (without quotes)"
@@ -1864,10 +1875,11 @@ components:
           maxLength: 10
           example: "10002005"
         request_id:
-          allOf: 
-          - $ref: '#/components/schemas/UUID'            
+          type: string
+          example: '055c7f30-99f8-4ff9-a561-6b2b4346ed38'
+          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
           description: |-
-            Request UUID that identifies the query resolution operation to be performed. This must be a Universally Unique IDentifier (UUID). This UUID must be unique amongst all request_ids passed to this end-point by the same MPS User. If a request is encountered with a request ID that has previously been used then a duplicate check will be performed by comparing the digest of the current request with the digest of the previous request. If the digests match then the details of the previous mandate creation will be returned. If the digests do not match then an HTTP 409 will be returned.
+            Request UUID that identifies the query resolution operation to be performed. This must be a Universally Unique IDentifier (UUID). This UUID must be unique amongst all request_ids passed to this end-point by the same MPS User. 
         case_id:
           type: string
           description: |-
@@ -1944,6 +1956,10 @@ components:
       type: string
       example: '71d6fb19-7515-40dc-b045-e17550b67600'
       pattern: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+    UUIDv4:
+      type: string
+      example: '06c9a782-ea52-4475-aaa3-653c5a303954'
+      pattern: '^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$'
 tags:
   - name: Authorisation
     description: Operations related to authentication & authorisation.
