@@ -13,7 +13,11 @@ info:
     Payloads are to be encrypted and signed prior to transmitting.
     
     <a href="https://anz-insto.github.io/fileactive/event-codes#payto-api-event-codes">PayTo API Event Codes</a> 
-                    
+                        
+    #### Release 1.0.4 changes:
+    - Updated Amend Mandate examples  
+    - Removed **payment_initiator_information** from Create Mandate request
+                
     #### Release 1.0.3 changes:
     - Updated Amend Mandate examples  
     - Updated REGEX for **uetr** must be UUID v4
@@ -28,7 +32,7 @@ info:
     - Added link to PayID information page.
     - Updated descriptions from "Payee" to "Biller". 
     - Added required scope for each API operation.
-  version: 1.0.3
+  version: 1.0.4
 servers:
   - url: https://api.fileactive.uat.anzgcis.com
     description: 'UAT (non-production) environment'
@@ -326,31 +330,31 @@ paths:
                 value: 
                   {
                     "secured_payload": {
-                        "mps_user_id": "10002005",
-                        "request_id": "055c7f30-99f8-4ff9-a561-6b2b4346ed38",
-                        "bilateral": "true",
-                        "details": {
-                            "bilateral_amendment": {
-                                "resolution_requested_by": "2023-06-10T05:13:03.255Z",
-                                "validity_end_date": "2023-06-10",
-                                "transfer_arrangement": "-",
-                                "automatic_extension_indicator": false,
-                                "payment_information": {
-                                    "payment_frequency": "MNTH",
-                                    "payment_execute_not_before_time": "00:00:00-00:00",
-                                    "first_payment_amount": {
-                                        "currency": "ZZZ"
-                                    },
-                                    "maximum_amount": {
-                                        "currency": "AUD",
-                                        "amount": "1000.00"
-                                    },
-                                    "last_payment_date": "1000-01-01"
-                                }
-                            }
-                        },
-                        "additional_information": "Updated addtional mandate information"
-                    }   
+                      "mps_user_id": "10002005",
+                      "request_id": "055c7f30-99f8-4ff9-a561-6b2b4346ed38",
+                      "bilateral": "true",
+                      "details": {
+                        "bilateral_amendment": {
+                          "resolution_requested_by": "2023-06-10T05:13:03.255Z",
+                          "validity_end_date": "2023-06-10",
+                          "transfer_arrangement": "-",
+                          "automatic_extension_indicator": false,
+                          "payment_information": {
+                            "payment_frequency": "MNTH",
+                            "payment_execute_not_before_time": "00:00:00-00:00",
+                            "first_payment_amount": {
+                              "currency": "ZZZ"
+                            },
+                            "maximum_amount": {
+                              "currency": "AUD",
+                              "amount": "1000.00"
+                            },
+                            "last_payment_date": "1000-01-01"
+                          },
+                          "additional_information": "Updated addtional mandate information"
+                        }
+                      }
+                    }
                   }
               Mandate Amendment - Unilateral: 
                 value: 
@@ -1150,8 +1154,6 @@ components:
           $ref: '#/components/schemas/MandatePartyInformation1Debtor'
         creditor_information:
           $ref: '#/components/schemas/MandatePartyInformation1Creditor'
-        payment_initiator_information:
-          $ref: '#/components/schemas/MandatePartyInformation2'
         payment_information:
           $ref: '#/components/schemas/MandatePaymentInformation1'
         additional_information:
