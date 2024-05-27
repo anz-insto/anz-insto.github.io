@@ -8,6 +8,7 @@ toc: true
 
 ## Contents
 
+- [2024-05-24 - Updates to PayTo APIs](#2024-05-24)
 - [2024-05-13 - Updates to PayTo APIs](#2024-05-13)
 - [2024-04-18 - Added PayTo Amend Mandate API](#2024-04-18)
 - [2024-04-09 - Minor update to PayTo API](#2024-04-09)
@@ -37,6 +38,20 @@ toc: true
 
 ---
 <a name="2024-05-13"></a>
+
+### [2024-05-24]
+
+#### Changes
+
+- Updated PayTo API v1.0.4
+    - Updated Amend Mandate examples  
+    - Removed **payment_initiator_information** from Create Mandate request
+- Updated Testing API v1.0.3
+    - Updated **RequestMandateNotification** schema to include new **trigger** codes **MAMC, MAMD** & **MAMX**
+    - Updated **RequestMandateNotification** schema to include the amend mandate bilateral request, refer to **details** object. Applies when **trigger** code = **MAMC, MAMD** & **MAMX**  
+    - Updated **MandateNotification** schema to include the reason why a bilateral request was declined by the Payer, refer to **resolution_event** object. Applies when **trigger** code = **MAMD & MCRD**  
+    - Updated **RequestQueryNotification** to support migrated DDRs
+
 
 ### [2024-05-13]
 

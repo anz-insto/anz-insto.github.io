@@ -5,13 +5,20 @@ info:
     Fileactive Self-Service Testing API. 
     
     Rate limit is one request per second.
-                
+       
+    #### Release 1.0.3 changes:
+    - Updated **RequestMandateNotification** schema to include new **trigger** codes **MAMC, MAMD** & **MAMX**
+    - Updated **RequestMandateNotification** schema to include the amend mandate bilateral request, refer to **details** object. Applies when **trigger** code = **MAMC, MAMD** & **MAMX**  
+    - Updated **MandateNotification** schema to include the reason why a bilateral request was declined by the Payer, refer to **resolution_event** object. Applies when **trigger** code = **MAMD & MCRD**  
+    - Updated **RequestQueryNotification** to support migrated DDRs
+            
     #### Release 1.0.2 changes:
     - Updated descriptions from "Payee" to "Biller". 
         
     #### Release 1.0.1 changes:
     - List of mandate attributes amended by Payer can be included in **RequestMandateNotification** schema, refer to **details** object.  Applies when **trigger = MAMN**.
-  version: 1.0.2
+  version: 1.0.3
+
 servers:
   - url: https://api.fileactive.uat.anzgcis.com/testingfileactive/v1.0
     description: 'UAT (non-production) environment'
@@ -126,6 +133,74 @@ paths:
             schema:
               $ref: '#/components/schemas/RequestMandateNotification'
             examples:
+              Mandate Amend Confirmed:
+                value:
+                  {
+                    "mps_user_id" : "10002005",
+                    "trigger" : "MAMC",
+                    "mandate_identification" : "247de1c0c3a911edafa10242ac120002",
+                    "mandate_status" : "ACTV",
+                    "action_identification" : "85f28334c3a911edafa10242ac120002",
+                    "action_type" : "AMND",
+                    "action_status" : "CMPL",
+                    "details": {
+                      "bilateral_amendment": {
+                          "resolution_requested_by": "2023-06-10T05:13:03.255Z",
+                          "validity_end_date": "2023-06-10",
+                          "transfer_arrangement": "-",
+                          "automatic_extension_indicator": false,
+                          "payment_information": {
+                              "payment_frequency": "MNTH",
+                              "payment_execute_not_before_time": "00:00:00-00:00",
+                              "first_payment_amount": {
+                                  "currency": "ZZZ"
+                              },
+                              "maximum_amount": {
+                                  "currency": "AUD",
+                                  "amount": "1000.00"
+                              },
+                              "last_payment_date": "1000-01-01"
+                          },
+                          "additional_information": "Updated addtional mandate information"  
+                      }
+                    }
+                  }
+              Mandate Amend Declined:
+                value:
+                  {
+                    "mps_user_id" : "10002005",
+                    "trigger" : "MAMD",
+                    "mandate_identification" : "247de1c0c3a911edafa10242ac120002",
+                    "mandate_status" : "ACTV",
+                    "action_identification" : "85f28334c3a911edafa10242ac120002",
+                    "action_type" : "AMND",
+                    "action_status" : "DECL",
+                    "resolutionEvent": {
+                      "reasonCode": "MD16",
+                      "reasonDescription": "Payer Requested"
+                    },
+                    "details": {
+                      "bilateral_amendment": {
+                          "resolution_requested_by": "2023-06-10T05:13:03.255Z",
+                          "validity_end_date": "2023-06-10",
+                          "transfer_arrangement": "-",
+                          "automatic_extension_indicator": false,
+                          "payment_information": {
+                              "payment_frequency": "MNTH",
+                              "payment_execute_not_before_time": "00:00:00-00:00",
+                              "first_payment_amount": {
+                                  "currency": "ZZZ"
+                              },
+                              "maximum_amount": {
+                                  "currency": "AUD",
+                                  "amount": "1000.00"
+                              },
+                              "last_payment_date": "1000-01-01"
+                          },
+                          "additional_information": "Updated addtional mandate information"  
+                      }
+                    }
+                  }
               Mandate Amended:
                 value:
                   {
@@ -145,6 +220,38 @@ paths:
                             "accountAliasIdentification" : "npp@mail.com"   
                           }
                         }
+                    }  
+                  }
+              Mandate Amend Expired:
+                value:
+                  {
+                    "mps_user_id" : "10002005",
+                    "trigger" : "MAMX",
+                    "mandate_identification" : "247de1c0c3a911edafa10242ac120002",
+                    "mandate_status" : "ACTV",
+                    "action_identification" : "85f28334c3a911edafa10242ac120002",
+                    "action_type" : "AMND",
+                    "action_status" : "TIMO",
+                    "details": {
+                      "bilateral_amendment": {
+                          "resolution_requested_by": "2023-06-10T05:13:03.255Z",
+                          "validity_end_date": "2023-06-10",
+                          "transfer_arrangement": "-",
+                          "automatic_extension_indicator": false,
+                          "payment_information": {
+                              "payment_frequency": "MNTH",
+                              "payment_execute_not_before_time": "00:00:00-00:00",
+                              "first_payment_amount": {
+                                  "currency": "ZZZ"
+                              },
+                              "maximum_amount": {
+                                  "currency": "AUD",
+                                  "amount": "1000.00"
+                              },
+                              "last_payment_date": "1000-01-01"
+                          },
+                          "additional_information": "Updated addtional mandate information"  
+                      }
                     }  
                   }
               Mandate Create Confirmed:
@@ -167,7 +274,11 @@ paths:
                     "mandate_status" : "CNCD",
                     "action_identification" : "85f28334c3a911edafa10242ac120002",
                     "action_type" : "CREA",
-                    "action_status" : "DECL"  
+                    "action_status" : "DECL",
+                    "resolutionEvent": {
+                      "reasonCode": "MD16",
+                      "reasonDescription": "Payer Requested"
+                    }   
                   }
               Mandate Create Expired:
                 value:
@@ -457,6 +568,26 @@ components:
       required: 
         - currency
         - amount    
+    ActiveCurrencyAndAmount2:
+      type: object
+      description: "A number of monetary units specified in an active currency where the unit of currency is explicit and compliant with ISO 4217.\n\n To clear the amount specify `currency` = 'ZZZ' and **don't** specify `amount`."
+      additionalProperties: false
+      properties:
+        currency:
+          type: string
+          description: A code allocated to a currency by a Maintenance Agency under an international identification scheme as described in the latest edition of the international standard ISO 4217 "Codes for the representation of currencies and funds".
+          pattern: ^[A-Z]{3,3}$
+          enum: 
+            - AUD
+            - ZZZ
+          example: "AUD"  
+        amount:
+          type: string
+          maxLength: 19
+          pattern: ^(0|[1-9][0-9]{0,15})\.\d{2}$
+          example: "103.10"
+      required: 
+        - currency
     Frequency6Code:
       type: string
       description: |-
@@ -472,6 +603,31 @@ components:
       - ADHO
       - INDA
       - FRTN
+    MandateActionResolutionEvent1:
+      type: object
+      description: Specification of the resolution event for a mandate action.
+      additionalProperties: false
+      properties:
+        reason_code:
+          type: string
+          description: |-
+            Bilateral action resolution reason code. This will only be present for a bilateral action.
+            Specifies an alphanumeric string with a length of 4 characters.
+          pattern: ^[a-zA-Z0-9]{4}$
+          example: "MD16"
+          externalDocs:
+            description: PayTo Mandate Action Decline Codes
+            url: 'https://anz-insto.github.io/fileactive/event-codes#payto-mandate-action-decline-codes' 
+        reason_description:
+          type: string
+          description: |-
+            Description of the reason for the chosen resolution of the action. This will only be present for a bilateral action.
+            Specifies a character string with a maximum length of 256 characters.
+          minLength: 1
+          maxLength: 256
+          example: "Requested By Customer"
+      required:
+      - reason_code
     MandateActionStatus1Code:
       type: string
       description: |-
@@ -492,7 +648,6 @@ components:
       - STCH
     MandateAmendmentRequest:
       type: object
-      description: "Request to amend the mandate, by Payer."
       additionalProperties: false
       properties:
         amendment:
@@ -501,12 +656,62 @@ components:
       - debtorInformation
     MandateAmendmentRequest1:
       type: object
+      description: "Request to amend the mandate, by Payer."
       additionalProperties: false
       properties:
         debtorInformation:
           $ref: '#/components/schemas/MandatePartyInformation2Debtor'
       required:
       - debtorInformation
+    MandateAmendmentRequestBilat:
+      type: object
+      additionalProperties: false
+      properties:
+        bilateral_amendment:
+          $ref: '#/components/schemas/MandateAmendmentRequestBilat1'
+    MandateAmendmentRequestBilat1:
+      type: object
+      description: "Request to amend a mandate bilaterally.\n\n The following rules apply to this structure:\n\n-  ValidityEndDateRule1: If `validity_end_date` is present then `automatic_extension_indicator` **must** be 'false'.\n\n- ValidityEndDateRule2: If `validity_end_date` is cleared by setting value to `1000-01-01`  then `automatic_extension_indicator` **must** be 'true'.\n\n- BilatClearingRule1: The following attribute **cannot** be cleared; `automatic_extension_indicator`.\n\n- BilatClearingRule2: The following attribute **can** be cleared; `transfer_arrangement` by setting value to `-`.\n\n- AddInfoRule1: Where `establishment_scheme` = 'AUPM' then `additional_information` **can** be modified **or** cleared by setting value to `-`.\n\n- AddInfoRule2: Where `establishment_scheme` = 'MGCR' then `additional_information` **cannot** be modified **or** cleared."
+      additionalProperties: false
+      properties:
+        resolution_requested_by:
+          type: string
+          description: |-
+            Optional time used to indicate by when resolution of a bilateral action is requested from the other party to the mandate. It will be provided in any notification sent to the counterparty. This time is for informational purposes only and does not affect the expiry time imposed by the MMS. <br><br>An ISODateTime whereby all timezoned dateTime values are UTC.<br><br> For an ATTENDED request **resolution_requested_by** should be within 5 minutes, ANZ will default to 5 minutes where not provided or override to 5 minutes where exceeds 5 minutes.<br><br> For an UNATTENDED request **resolution_requested_by** should be within 5 calendar days, ANZ will default to 5 calendar days where not provided or override to 5 calendar days where exceeds 5 calendar days.<br><br>
+          pattern: ^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.[0-9]{1,3})?(?:Z)$
+          example: "2023-06-10T05:13:03.255Z"
+        validity_end_date:
+          type: string
+          description: |-
+            End date of the validity of the mandate. If specified, the mandate is valid until 23:59:59.999 Australia Sydney time on this date.
+            A particular point in the progression of time in a calendar year expressed in the YYYY-MM-DD format. This representation is defined in "XML Schema Part 2: Datatypes Second Edition - W3C Recommendation 28 October 2004" which is aligned with ISO 8601.
+          pattern: ^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)$
+          example: "2024-05-01"
+        transfer_arrangement:
+          type: string
+          description: |-
+            Indication of future transfer date, conditions of sale and requirement to hold funds.
+            Specifies a character string with a maximum length of 140 characters.
+          minLength: 1
+          maxLength: 140
+          example: "Transfer arrangement details"
+        automatic_extension_indicator:
+          type: boolean
+          description: Automatic renewal of a mandate arrangement at the end of the defined period (period start through period end).
+          example: true
+        payment_information:
+          $ref: '#/components/schemas/MandatePaymentInformation2'
+        additional_information:
+          type: string
+          description: |-
+            Additional information, in free text form, to complement the mandate information.
+            Specifies a character string with a maximum length of 140 characters.
+
+            Where the Mandate is a Migrated DDR (`establishment_scheme` is equal to value 'MGCR'), this field is used to denote the existing BECS User ID of the Initiating Party.
+            The format is //BECSID/xxxxxx where xxxxxx is the BECS DD User ID used by the Initiating Party in an existing DDR arrangement.
+          minLength: 1
+          maxLength: 140
+          example: "Addtional mandate information"   
     MandatePartyInformation1Creditor:
       type: object
       description: "Information concerning the creditor party identified in the mandate."
@@ -655,6 +860,58 @@ components:
       required:
       - payment_frequency
       - payment_amount_type
+    MandatePaymentInformation2:
+      type: object
+      description: "Set of characteristics detailing mandate payment information.\n  \n**Property descriptions**:\n - **payment_frequency** - Regularity with which instructions are to be created and processed.\n - **payment_amount_type** - Identifies the mandate payment arrangement.\n - **first_payment_amount** - Amount different from the payment amount, as it includes the costs associated with the first debited amount.\n - **last_payment_amount** - Last payment amount different  to the payment amount.\n - **amount** - Fixed amount to be debited from the debtor's account.\n - **maximum_amount** - Maximum amount that may be paid from the debtor's account, per instruction.\n  \nThe following rules apply to this structure:\n\n- PaymentAmountTypeRule1: If `payment_amount_type` code is equal to value 'FIXE' then `amount` must be present.\n- PaymentAmountTypeRule2: If `payment_amount_type` code is equal to value 'BALN' then `amount` must be present AND (`first_payment amount` OR `last_payment amount`) must be present.\n- PaymentAmountTypeRule3: If `payment_amount_type` code is equal to value 'USGB' then `maximum_amount` must be present.\n- PaymentAmountTypeRule4: If `payment_amount_type` code is equal to value 'VARI' then `maximum_amount` must be present.\n\n\n- FirstPaymentDateRule1: `first_payment_date` **cannot** be before `validity_start_date`.\n- FirstPaymentDateRule2: `first_payment_date` **cannot** be after `validity_end_date`.\n- FirstPaymentDateRule3: If `establishment_scheme` is equal to 'MGCR' then `first_payment_date` **cannot** be present.\n\n\n- LastPaymentDateRule1: `last_payment_date` **cannot** be before `validity_start_date`.\n- LastPaymentDateRule2: `last_payment_date` **cannot** be after `validity_end_date`.\n\n\n- FrequencyInTermsRule1: Both `count_per_period` AND `point_in_time` **cannot** be present.\n\n\n- PaymentAmountRule1: `amount` **cannot** exceed `maximum_amount`.\n- PaymentAmountRule2: `first_payment_amount` **cannot** exceed `maximum_amount`.\n\n- PaymentAmountRule3: `last_payment_amount` **cannot** exceed `maximum_amount`.\n\n- PaymentAmountRule4: If `establishment_scheme` is equal to 'MGCR' then `first_payment_amount` **cannot** be present.\n\n\n- PaymentInfoClearingRule1: The following attributes **cannot** be cleared; `payment_frequency` & `payment_amount_type`\n\n-  PaymentInfoClearingRule2: The following attribute **can** be cleared; `payment_execute_not_before_time` by setting value to `00:00:00-00:00`.\n\n-  PaymentInfoClearingRule3: The following attribute **can** be cleared; `count_per_period` by setting value to `0`.\n\n-  PaymentInfoClearingRule4: The following attribute **can** be cleared; `point_in_time` by setting value to `00`.\n\n-  PaymentInfoClearingRule5: The following attributes **can** be cleared;  `amount`, `first_payment_amount`, `last_payment_amount` & `maximum_amount` by setting `currency` value to `ZZZ` & not specifying the `amount`.\n\n-  PaymentInfoClearingRule6: The following attributes **can** be cleared; `first_payment_date` & `last_payment_date` by setting value to `1000-01-01`."
+      additionalProperties: false
+      properties:
+        payment_frequency:
+          allOf: 
+          - $ref: '#/components/schemas/Frequency6Code'
+          example: "MNTH"
+        payment_execute_not_before_time:
+          type: string
+          description: |-
+            Indicates that each execution of the mandate payment should not occur before a given time of that execution day.
+            An ISO time whereby all timezoned time values are UTC.
+          pattern: ^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.[0-9]{1,3})?(?:Z)|(-)$
+          example: "23:31:14.450Z"
+        count_per_period:
+          type: string
+          pattern: ^(?=.{1,19}$)[0-9]{0,19}(?:\.[0-9]{0,18})?$
+          description: Qualifies the frequency in terms of the number of instructions to be created and processed during the specified period.
+          example: "42"
+        point_in_time:
+          type: string
+          description: |-
+            Qualifies the frequency in terms of an exact point in time or moment within the specified period.
+            Specifies a numeric string with an exact length of 2 digits.
+          pattern: ^[0-9]{2}$
+          example: "12"
+        payment_amount_type:
+          $ref: '#/components/schemas/MandatePaymentType1Code'
+        first_payment_amount:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmount2'
+        last_payment_amount:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmount2'
+        amount:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmount2'
+        maximum_amount:
+          $ref: '#/components/schemas/ActiveCurrencyAndAmount2'
+        first_payment_date:
+          type: string
+          description: |-
+            Date of the first payment predefined in mandate.
+            A particular point in the progression of time in a calendar year expressed in the YYYY-MM-DD format. This representation is defined in "XML Schema Part 2: Datatypes Second Edition - W3C Recommendation 28 October 2004" which is aligned with ISO 8601.
+          pattern: ^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)$
+          example: "2023-07-10"
+        last_payment_date:
+          type: string
+          description: |-
+            Date of the last payment predefined in mandate.
+            A particular point in the progression of time in a calendar year expressed in the YYYY-MM-DD format. This representation is defined in "XML Schema Part 2: Datatypes Second Edition - W3C Recommendation 28 October 2004" which is aligned with ISO 8601.
+          pattern: ^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)$
+          example: "2024-04-01" 
     MandatePaymentType1Code:
       type: string
       description: |-
@@ -732,9 +989,12 @@ components:
       type: string
       description: |-
         Defines events that trigger a notification.
-        <table><tr><th>Code</th><th>Name</th><th>Description</th></tr><tr><td>MAMN</td><td>MandateAmended</td><td>Sent to the counterparty of a unilateral mandate amendment to indicate that action has occurred.</td></tr><tr><td>MCRC</td><td>MandateCreateConfirmed</td><td>Sent to the initiator of a bilateral mandate creation to indicate that the counterparty has confirmed the action.</td></tr><tr><td>MCRD</td><td>MandateCreateDeclined</td><td>Sent to the initiator of a bilateral mandate creation to indicate that the counterparty has declined the action.</td></tr><tr><td>MCRX</td><td>MandateCreateExpired</td><td>Sent to the initiator of a mandate creation action once its expiry time has been reached and the status of the action is set to Timed Out (TIMO). For a bilateral creation action, this notification is also sent to the servicer of the Debtor Account.</td></tr><tr><td>MSCH</td><td>MandateStatusChanged</td><td>Sent to the counterparty of a unilateral mandate status change to indicate that action has occurred.</td></tr></table>
+        <table><tr><th>Code</th><th>Name</th><th>Description</th></tr><tr><td>MAMC</td><td>MandateAmendConfirmed</td><td>Sent to the initiator of a bilateral mandate amendment to indicate that the counterparty has confirmed the action.</td></tr><tr><td>MAMD</td><td>MandateAmendDeclined</td><td>Sent to the initiator of a bilateral mandate amendment to indicate that the counterparty has declined the action.</td></tr><tr><td>MAMN</td><td>MandateAmended</td><td>Sent to the counterparty of a unilateral mandate amendment to indicate that action has occurred.</td></tr><tr><td>MAMX</td><td>MandateAmendExpired</td><td>Sent to the initiator of an amend action once its expiry time has been reached and the status of the action is set to Timed Out (TIMO). For a bilateral amend action, this notification is also sent to the servicer of the Debtor Account.</td></tr><tr><td>MCRC</td><td>MandateCreateConfirmed</td><td>Sent to the initiator of a bilateral mandate creation to indicate that the counterparty has confirmed the action.</td></tr><tr><td>MCRD</td><td>MandateCreateDeclined</td><td>Sent to the initiator of a bilateral mandate creation to indicate that the counterparty has declined the action.</td></tr><tr><td>MCRX</td><td>MandateCreateExpired</td><td>Sent to the initiator of a mandate creation action once its expiry time has been reached and the status of the action is set to Timed Out (TIMO). For a bilateral creation action, this notification is also sent to the servicer of the Debtor Account.</td></tr><tr><td>MSCH</td><td>MandateStatusChanged</td><td>Sent to the counterparty of a unilateral mandate status change to indicate that action has occurred.</td></tr></table>
       enum:
-      - MAMN   
+      - MAMC
+      - MAMD
+      - MAMN
+      - MAMX
       - MCRC
       - MCRD
       - MCRX
@@ -772,7 +1032,7 @@ components:
             <table><tr><th>Code</th><th>Name</th><th>Description</th></tr><tr><td>AUPM</td><td>AuthorisedPaymentMandate</td><td>Established bilaterally as Authorised Payment Mandate.</td></tr><tr><td>MGCR</td><td>MigratedByCreditor</td><td>Established by migration from legacy service by Creditor.</td></tr></table>
           enum:
           - AUPM
-#          - MGCR
+          - MGCR
         mandate_purpose_code:
           type: string
           description: |-
@@ -851,12 +1111,15 @@ components:
           $ref: '#/components/schemas/MandateActionType1Code'
         action_status:
           $ref: '#/components/schemas/MandateActionStatus1Code'
+        resolution_event:
+          $ref: '#/components/schemas/MandateActionResolutionEvent1'
         details:
           type: object
-          description: "Details of an action performed on a mandate by the **Payer** i.e. unilateral changes or MMS in case of mandate timeout. Depending on the type of action, only one of the following objects will be present: Amendment or StatusChange.\n  \n**Property descriptions**:\n - **amendment** - Mandate amendment details provided in the request.\n - **status_change** - Mandate status change details provided in the request."
+          description: "Details of an action performed on a mandate: \n \n - Unilateral Amendment initiated by Payer \n - Bilateral Amendment initiated by Biller \n - Status Change initiated by Payer \n\n**Property descriptions**:\n - **amendment** - Mandate amendment details provided in the request, **trigger** = 'MAMN'.\n - **bilateral_amendment** - Mandate amendment details provided in the request, **trigger** ='MAMC', 'MAMD' & 'MAMX'. \n - **status_change** - Mandate status change details provided in the request, **trigger** ='MSCH'."
           additionalProperties: false
           oneOf:
             - $ref: '#/components/schemas/MandateAmendmentRequest'
+            - $ref: '#/components/schemas/MandateAmendmentRequestBilat'
             - $ref: '#/components/schemas/MandateStatusChangeDetails'
       required:
       - mps_user_id 
