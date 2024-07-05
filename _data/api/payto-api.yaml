@@ -13,7 +13,14 @@ info:
     Payloads are to be encrypted and signed prior to transmitting.
     
     <a href="https://anz-insto.github.io/fileactive/event-codes#payto-api-event-codes">PayTo API Event Codes</a> 
-                        
+                             
+    #### Release 1.1.0 changes:
+    - Updated PayTo endpoints to v1 instead of v1.0
+    - Added account_identification_type_code to Amend Mandate request
+    - Updated clearing value for attribute payment_execute_not_before_time on Amend Mandate request   
+    - Updated Amend Mandate attribute descriptions to indicate more clearly which attributes can be cleared and which ones cannot
+    - Added hyper-links between schema models and PayTo Webhook API
+                   
     #### Release 1.0.4 changes:
     - Updated Amend Mandate examples  
     - Removed **payment_initiator_information** from Create Mandate request
@@ -32,7 +39,7 @@ info:
     - Added link to PayID information page.
     - Updated descriptions from "Payee" to "Biller". 
     - Added required scope for each API operation.
-  version: 1.0.4
+  version: 1.1.0
 servers:
   - url: https://api.fileactive.uat.anzgcis.com
     description: 'UAT (non-production) environment'
@@ -79,12 +86,28 @@ paths:
           $ref: '#/components/responses/504'     
         default:
           $ref: '#/components/responses/default'
-  /payto/v1.0/mandates:
+  /payto/v1/mandates:
     post:
       tags:
       - Mandate
       summary: Create a new mandate.
-      description: "The purpose of this operation is to create a new mandate in the MMS. A mandate is always created by the Payment Initiator. If the Establishment Scheme for the mandate is 'AUPM' then the mandate will be created bilaterally, otherwise it will be created unilaterally. A unilaterally created mandate will have initial status 'Active' and version '1' whereas a bilaterally created mandate will have initial status 'Created' and version '0'. A bilaterally created mandate can only become 'Active' when the Debtor confirms the creation of the mandate, at which moment its' version will also increase to '1'. \n\nA bilateral mandate creation will automatically expire after a fixed time period if the creation action is not completed, declined or recalled. Expiry of a mandate creation will result in the mandate status being set to 'Cancelled'. \n\nThe initial API response indicates if ANZ has accepted or rejected the request, not the processing outcome of the request. The processing outcome of the request will be delivered via the **PayTo Webhook API**.\n\nThe following rules apply to this API:\n- EstablishmentSchemeRule1: If `establishment_scheme` is equal to 'MGCR' then `creditor_information` **must** be present.\n- EstablishmentSchemeRule2: If `establishment_scheme` is equal to 'MGCR' then `additional_information` **must** be populated with the BECS User Id of the Initiating Party.\n-  EstablishmentSchemeRule3: If `establishment_scheme` is  equal to 'MGCR' then `resolution_requested_by` **must** be absent.\n\n-  ValidityEndDateRule1: If `validity_end_date` is present then `automatic_extension_indicator` **must** be 'false'.\n-  ValidityEndDateRule2: If `validity_end_date` is **not** present then `automatic_extension_indicator` **must** be 'true'."
+      description: |-
+        The purpose of this operation is to create a new mandate in the MMS. A mandate is always created by the Payment Initiator. If the Establishment Scheme for the mandate is 'AUPM' then the mandate will be created bilaterally, otherwise it will be created unilaterally. A unilaterally created mandate will have initial status 'Active' and version '1' whereas a bilaterally created mandate will have initial status 'Created' and version '0'. A bilaterally created mandate can only become 'Active' when the Debtor confirms the creation of the mandate, at which moment its' version will also increase to '1'. 
+        
+        A bilateral mandate creation will automatically expire after a fixed time period if the creation action is not completed, declined or recalled. Expiry of a mandate creation will result in the mandate status being set to 'Cancelled'.
+        
+        The initial API response indicates if ANZ has accepted or rejected the request, not the processing outcome of the request. The processing outcome of the request will be delivered via the **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api-webhook#tag/Mandate">PayTo Webhook API - Mandate Processing Outcomes</a>**.
+        
+        The following rules apply to this API:
+        - EstablishmentSchemeRule1: If `establishment_scheme` is equal to 'MGCR' then `creditor_information` **must** be present.
+
+        - EstablishmentSchemeRule2: If `establishment_scheme` is equal to 'MGCR' then `additional_information` **must** be populated with the BECS User Id of the Initiating Party.
+        
+        -  EstablishmentSchemeRule3: If `establishment_scheme` is  equal to 'MGCR' then `resolution_requested_by` **must** be absent.
+        
+        -  ValidityEndDateRule1: If `validity_end_date` is present then `automatic_extension_indicator` **must** be 'false'.
+        
+        -  ValidityEndDateRule2: If `validity_end_date` is **not** present then `automatic_extension_indicator` **must** be 'true'.
       operationId: createMandate
       security:
         - apiKeyAuth: []
@@ -210,7 +233,11 @@ paths:
                       }
                   }
         description: |-
-          Secured resource to create a mandate in the MMS.<br> Refer to Model/Schema **MandateCreationRequest** for unencrypted payload object.<br> Examples are reflective of unencrypted payload.
+          Secured resource to create a mandate in the MMS.
+          
+          Refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api#tag/MandateCreationRequest">MandateCreationRequest</a>** for unencrypted payload object.
+          
+          Examples are reflective of unencrypted payload. 
         required: true
       responses:
         202:
@@ -231,12 +258,22 @@ paths:
           $ref: '#/components/responses/504'     
         default:
           $ref: '#/components/responses/default'
-  /payto/v1.0/mandates/{mandateId}/status:
+  /payto/v1/mandates/{mandateId}/status:
     patch:
       tags:
       - Mandate
       summary: Change the status of a mandate.
-      description: "The purpose of this operation is to change the status of a mandate. A status change is always performed as a unilateral operation. The status can only be changed when the mandate is currently active or suspended. Releasing a suspended mandate can only be performed by the party that suspended the mandate. A status change can be applied when there is a pending amendment and also when porting is in progress. \n\nUpon successful status change the mandate version number will be incremented. \n\nAny notification triggered by this operation will have priority UNATTENDED. \n\nThe initial API response indicates if ANZ has accepted or rejected the request, not the processing outcome of the request. The processing outcome of the request will be delivered via the **PayTo Webhook API**.\n\nThe following rules apply to this API:\n- ChangeAndReasonCodeRule1: When `change` is equal to value 'CNCL' or 'SUSP' then `reason_code` must be present."
+      description: |-
+        The purpose of this operation is to change the status of a mandate. A status change is always performed as a unilateral operation. The status can only be changed when the mandate is currently active or suspended. Releasing a suspended mandate can only be performed by the party that suspended the mandate. A status change can be applied when there is a pending amendment and also when porting is in progress. 
+        
+        Upon successful status change the mandate version number will be incremented. 
+      
+        Any notification triggered by this operation will have priority UNATTENDED. 
+      
+        The initial API response indicates if ANZ has accepted or rejected the request, not the processing outcome of the request. The processing outcome of the request will be delivered via the **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api-webhook#tag/Mandate">PayTo Webhook API - Mandate Processing Outcomes</a>**.  
+
+        The following rules apply to this API:
+        - ChangeAndReasonCodeRule1: When `change` is equal to value 'CNCL' or 'SUSP' then `reason_code` must be present.
       operationId: changeMandateStatus
       security:
         - apiKeyAuth: []
@@ -257,7 +294,10 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SecuredSubmissionResource'
-        description: Secured resource to change the status of a mandate in the MMS. Refer to Model/Schema **MandateStatusChangeRequest** for unencrypted payload object. 
+        description: |-
+          Secured resource to change the status of a mandate in the MMS. 
+        
+          Refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api#tag/MandateStatusChangeRequest">MandateStatusChangeRequest</a>** for unencrypted payload object.         
         required: true
       responses:
         202:
@@ -278,7 +318,7 @@ paths:
           $ref: '#/components/responses/504'     
         default:
           $ref: '#/components/responses/default'
-  /payto/v1.0/mandates/{mandateId}:
+  /payto/v1/mandates/{mandateId}:
     patch:
       tags:
       - Mandate
@@ -292,19 +332,16 @@ paths:
         
         Only a single bilateral amendment can be pending per mandate at any time. 
         
-        Any attempt to amend a mandate that must be performed bilaterally where there is already a pending amendment will fail. 
-        
-        However, unilateral amendments may still be performed where a pending amendment exists. 
+        Any attempt to amend a mandate that must be performed bilaterally where there is already a pending amendment will fail. However, unilateral amendments may still be performed where a pending amendment exists. 
         - For a unilateral amendment the changes will only be applied to the mandate if the amendment does not invalidate the mandate integrity. 
-        - For a bilateral amendment, the integrity of the changes will be verified when the amendment request is received and again at the moment that the action is confirmed. 
-        
-        The rules determining the integrity of the mandate are defined in the **MandateCreationRequest** structure. 
+        - For a bilateral amendment, the integrity of the changes will be verified when the amendment request is received and again at the moment that the action is confirmed.         
+        - The rules determining the integrity of the mandate are defined in the **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api#tag/Mandate/operation/createMandate">PayTo API - Create Mandate</a>**. 
 
-        - A mandate amendment will automatically expire after a fixed time period if the amendment is not completed, declined or recalled. 
+        A mandate amendment will automatically expire after a fixed time period if the amendment is not completed, declined or recalled. 
         
         For a bilateral amendment the mandate version number will only be incremented when the amendment action is successfully completed.
 
-        The initial API response indicates if ANZ has accepted or rejected the request, not the processing outcome of the request. The processing outcome of the request will be delivered via the **PayTo Webhook API**.
+        The initial API response indicates if ANZ has accepted or rejected the request, not the processing outcome of the request. The processing outcome of the request will be delivered via the **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api-webhook#tag/Mandate">PayTo Webhook API - Mandate Processing Outcomes</a>**.
       operationId: amendMandate
       security:
         - apiKeyAuth: []
@@ -341,7 +378,7 @@ paths:
                           "automatic_extension_indicator": false,
                           "payment_information": {
                             "payment_frequency": "MNTH",
-                            "payment_execute_not_before_time": "00:00:00-00:00",
+                            "payment_execute_not_before_time": "-",
                             "first_payment_amount": {
                               "currency": "ZZZ"
                             },
@@ -368,6 +405,7 @@ paths:
                                 "description": "Car purchase plus accessories",
                                 "creditor_information": {
                                     "party_name": "ACME 2",
+                                    "account_identification_type_code": "BBAN",
                                     "account_identification": "013010230008938",
                                     "party_reference": "-"
                                 }
@@ -375,7 +413,12 @@ paths:
                         }
                     }
                   }          
-        description: Secured resource to amend a mandate in the MMS. Refer to Model/Schema **MandateAmendmentRequest** for unencrypted payload object. <br> Examples are reflective of unencrypted payload.
+        description: |-
+          Secured resource to amend a mandate in the MMS. 
+          
+          Refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api#tag/MandateAmendmentRequest">MandateAmendmentRequest</a>** for unencrypted payload object. 
+          
+          Examples are reflective of unencrypted payload.
         required: true
       responses:
         202:
@@ -459,12 +502,26 @@ paths:
           $ref: '#/components/responses/504'     
         default:
           $ref: '#/components/responses/default'
-  /payto/v1.0/mpirs:
+  /payto/v1/mpirs:
     post:
       tags:
       - MPIR
       summary: Create a new MPIR.
-      description: "The purpose of this operation is to create a new mandated payment initiation request (MPIR). The underlying mandate **must** be in an 'Active' state. \n\nThe initial API response indicates if ANZ has accepted or rejected the request, not the MPIR processing outcome of the request. The MPIR processing outcome will be delivered via the **PayTo Webhook API**. \n\nThe following rules apply to this API:\n- MPSUserSchemeRule1: `mps_user_id` **must** be the owner of the provided `mandate_identification` \n- InstructedAmountSchemeRule1: `instructed_amount` **must** not exceed the maximum amount specified in the associated mandate `mandate_identification` \n- CreditorDetailsSchemeRule1: `creditor_information` **must** be present where not provided on the mandate.\n- CreditorDetailsSchemeRule2: `creditor_information` **should** not be present where provided on the mandate.\n- CreditorDetailsSchemeRule3: If `creditor_information` is provided and is also available on the mandate then details **must** be exactly the same."
+      description: |-
+        The purpose of this operation is to create a new mandated payment initiation request (MPIR). The underlying mandate **must** be in an 'Active' state. 
+        
+        The initial API response indicates if ANZ has accepted or rejected the request, not the MPIR processing outcome of the request. The MPIR processing outcome will be delivered via the **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api-webhook#tag/MPIR">PayTo Webhook API - MPIR Processing Outcomes</a>**. 
+        
+        The following rules apply to this API:
+        - MPSUserSchemeRule1: `mps_user_id` **must** be the owner of the provided `mandate_identification`
+
+        - InstructedAmountSchemeRule1: `instructed_amount` **must** not exceed the maximum amount specified in the associated mandate `mandate_identification` 
+        
+        - CreditorDetailsSchemeRule1: `creditor_information` **must** be present where not provided on the mandate.
+        
+        - CreditorDetailsSchemeRule2: `creditor_information` **should** not be present where provided on the mandate.
+        
+        - CreditorDetailsSchemeRule3: If `creditor_information` is provided and is also available on the mandate then details **must** be exactly the same.
       operationId: createMPIR
       security:
         - apiKeyAuth: []
@@ -478,7 +535,10 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SecuredSubmissionResource'
-        description: Secured resource to create a mandate in the MMS. Refer to Model/Schema **MPIRCreationRequest** for unencrypted payload object
+        description: |-
+          Secured resource to create a MPIR. 
+          
+          Refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api#tag/MPIRCreationRequest">MPIRCreationRequest</a>** for unencrypted payload object
         required: true
       responses:
         202:
@@ -499,12 +559,26 @@ paths:
           $ref: '#/components/responses/504'     
         default:
           $ref: '#/components/responses/default'
-  /payto/v1.0/query-resolutions:
+  /payto/v1/query-resolutions:
     post:
       tags:
       - Query
       summary: PayTo query resolution.
-      description: "The purpose of this operation is to provide a resolution to a PayTo query raised by the **Payer's** Financial Institution. Queries are delivered via the **PayTo Query Webhook API**.  \n\nThe following rules apply to this API: \n- CaseDecisionSchemeRule1: `case_decision` = **ACPT** then `reject_reason_code` and `return_transaction_identification` **should not** be provided. \n- CaseDecisionSchemeRule2: `case_decision` = **FINO** then `reject_reason_code` and `return_transaction_identification` **should not** be provided.  \n- CaseDecisionSchemeRule3: `case_decision` = **PEND** then `reject_reason_code`, `return_transaction_identification` **should not** be provided. \n- CaseDecisionSchemeRule4: `case_decision` = **RJCT** then `reject_reason_code` **must** be provided.   \n- RejectReasonSchemeRule1: `reject_reason_code` = **ARDT** then `return_transaction_identification` **must** be provided.  \n- RejectReasonSchemeRule2: `reject_reason_code` = **CUST** then `return_transaction_identification` **must not** be provided."
+      description: |-
+        The purpose of this operation is to provide a resolution to a PayTo query raised by the **Payer's** Financial Institution. Queries are delivered via the **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api-webhook#tag/Query">PayTo Webhook API - PayTo Queries</a>**.  
+        
+        The following rules apply to this API: 
+        - CaseDecisionSchemeRule1: `case_decision` = **ACPT** then `reject_reason_code` and `return_transaction_identification` **should not** be provided. 
+        
+        - CaseDecisionSchemeRule2: `case_decision` = **FINO** then `reject_reason_code` and `return_transaction_identification` **should not** be provided.  
+        
+        - CaseDecisionSchemeRule3: `case_decision` = **PEND** then `reject_reason_code`, `return_transaction_identification` **should not** be provided. 
+        
+        - CaseDecisionSchemeRule4: `case_decision` = **RJCT** then `reject_reason_code` **must** be provided.   
+        
+        - RejectReasonSchemeRule1: `reject_reason_code` = **ARDT** then `return_transaction_identification` **must** be provided.  
+        
+        - RejectReasonSchemeRule2: `reject_reason_code` = **CUST** then `return_transaction_identification` **must not** be provided.
       operationId: queryResolution
       security:
         - apiKeyAuth: []
@@ -518,7 +592,10 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SecuredSubmissionResource'
-        description: Secured resource to create a mandate in the MMS. Refer to Model/Schema **QueryResolutionRequest** for unencrypted payload object
+        description: |- 
+          Secured resource to create a PayTo query resolution. 
+          
+          Refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api#tag/QueryResolutionRequest">QueryResolutionRequest</a>** for unencrypted payload object.
         required: true
       responses:
         202:
@@ -773,7 +850,7 @@ components:
         - amount   
     ActiveCurrencyAndAmount2:
       type: object
-      description: "A number of monetary units specified in an active currency where the unit of currency is explicit and compliant with ISO 4217.\n\n To clear the amount specify `currency` = 'ZZZ' and **don't** specify `amount`."
+      description: A number of monetary units specified in an active currency where the unit of currency is explicit and compliant with ISO 4217.<br><br> This attribute can be cleared by setting `currency` = 'ZZZ' and **not** specifying `amount`.             
       additionalProperties: false
       properties:
         currency:
@@ -885,6 +962,8 @@ components:
       description: |-
         Specifies the regularity of an event.
         <table><tr><th>Code</th><th>Name</th><th>Description</th></tr><tr><td>ADHO</td><td>Adhoc</td><td>Event takes place on request or as necessary.</td></tr><tr><td>DAIL</td><td>Daily</td><td>Event takes place every day.</td></tr><tr><td>FRTN</td><td>Fortnightly</td><td>Event takes place every two weeks.</td></tr><tr><td>INDA</td><td>IntraDay</td><td>Event takes place several times a day.</td></tr><tr><td>MIAN</td><td>SemiAnnual</td><td>Event takes place every six months or two times a year.</td></tr><tr><td>MNTH</td><td>Monthly</td><td>Event takes place every month or once a month.</td></tr><tr><td>QURT</td><td>Quarterly</td><td>Event takes place every three months or four times a year.</td></tr><tr><td>WEEK</td><td>Weekly</td><td>Event takes place once a week.</td></tr><tr><td>YEAR</td><td>Annual</td><td>Event takes place every year or once a year.</td></tr></table>
+
+        This attribute cannot be cleared.
       enum:
       - YEAR
       - MNTH
@@ -1013,7 +1092,10 @@ components:
           type: string
           description: |-
             End date of the validity of the mandate. If specified, the mandate is valid until 23:59:59.999 Australia Sydney time on this date.
+
             A particular point in the progression of time in a calendar year expressed in the YYYY-MM-DD format. This representation is defined in "XML Schema Part 2: Datatypes Second Edition - W3C Recommendation 28 October 2004" which is aligned with ISO 8601.
+
+            This attribute can be cleared by setting value to `1000-01-01`.
           pattern: ^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)$
           example: "2024-05-01"
         transfer_arrangement:
@@ -1021,12 +1103,14 @@ components:
           description: |-
             Indication of future transfer date, conditions of sale and requirement to hold funds.
             Specifies a character string with a maximum length of 140 characters.
+            
+            This attribute can be cleared by setting value to `-`.
           minLength: 1
           maxLength: 140
           example: "Transfer arrangement details"
         automatic_extension_indicator:
           type: boolean
-          description: Automatic renewal of a mandate arrangement at the end of the defined period (period start through period end).
+          description: Automatic renewal of a mandate arrangement at the end of the defined period (period start through period end).<br><br> This attribute cannot be cleared.
           example: true
         payment_information:
           $ref: '#/components/schemas/MandatePaymentInformation2'
@@ -1038,6 +1122,8 @@ components:
 
             Where the Mandate is a Migrated DDR (`establishment_scheme` is equal to value 'MGCR'), this field is used to denote the existing BECS User ID of the Initiating Party.
             The format is //BECSID/xxxxxx where xxxxxx is the BECS DD User ID used by the Initiating Party in an existing DDR arrangement.
+
+            This attribute can be cleared by setting value to `-`, but only if `establishment_scheme` is equal to value 'AUPM'
           minLength: 1
           maxLength: 140
           example: "Addtional mandate information"
@@ -1056,7 +1142,9 @@ components:
           type: string
           description: |-
             Reason for the mandate setup as narrative text.
-            Specifies a character string with a maximum length of 140 ASCII printable characters.
+            Specifies a character string with a maximum length of 140 ASCII printable characters
+            
+            This attribute cannot be cleared.
           pattern: ^[ -~]{1,140}$
           example: "Car purchase"
         creditor_information:
@@ -1481,7 +1569,7 @@ components:
         - party_legal_name
     MandatePartyInformation3Creditor:
       type: object
-      description: "Information concerning the creditor party identified in the mandate.\n\nThe following rules apply to this structure:\n- CreditorPartyClearingRule1: The following attributes **cannot** be cleared; `party_type`, `party_name`, `ultimate_party_name` & `account_identification`.\n\n-  CreditorPartyClearingRule2: The following attributes **can** be cleared; `party_reference` by setting value to `-`."
+      description: "Information concerning the creditor party identified in the mandate.\n\nThe following rules apply to this structure:\n- CreditorPartyClearingRule1: The following attributes **cannot** be cleared; `party_type`, `party_name`, `ultimate_party_name`, `account_identification_type_code` & `account_identification`.\n\n-  CreditorPartyClearingRule2: The following attributes **can** be cleared; `party_reference` by setting value to `-`.\n- CreditorAccountIdentificationTypeRule1: If `account_identification` is present then `account_identification_type_code` must be set to value 'BBAN'.\n- CreditorAccountIdentificationRule1: If `account_identification_type_code` is equal to value 'BBAN' then `account_identification` must be present and start with BSB (bank-state-branch)."
       additionalProperties: false
       properties:
         party_type:
@@ -1493,6 +1581,8 @@ components:
           description: |-
             Name by which the party is known and which is usually used to identify that party.
             Specifies a character string with a maximum length of 140 ASCII printable characters.
+
+            This attribute cannot be cleared.
           pattern: ^[ -~]{1,140}$
           example: "ACME"
         ultimate_party_name:
@@ -1500,11 +1590,26 @@ components:
           description: |-
             Name by which the ultimate party is known and which is usually used to identify that party.
             Specifies a character string with a maximum length of 140 ASCII printable characters.
+            
+            This attribute cannot be cleared.
           pattern: ^[ -~]{1,140}$
           example: "Looney Tunes"
+        account_identification_type_code:
+          type: string
+          description: |- 
+            Type of account identification, in a coded form.
+            
+            Specifies an alphanumeric string with a length of 4 characters.
+            <table><tr><th>Code</th><th>Description</th></tr><tr><td>BBAN</td><td>Australian Bank-State-Branch Code (BSB)</td></tr></table>
+            
+            This attribute cannot be cleared.
+          pattern: ^[a-zA-Z0-9]{4}$
+          enum:
+          - BBAN
+          example: "BBAN"
         account_identification:
           type: string
-          description: "Unique and unambiguous identification of the account between the account owner and the account servicer. For example:\r\n   - Basic Bank Account Number - account number with BSB (Bank-State-Branch) prefix. \n\nSpecifies a character string with a maximum length of 34 ASCII printable characters."
+          description: "Unique and unambiguous identification of the account between the account owner and the account servicer. For example:\r\n   - Basic Bank Account Number - account number with BSB (Bank-State-Branch) prefix. \n\nSpecifies a character string with a maximum length of 34 ASCII printable characters.\n\n This attribute cannot be cleared."
           pattern: ^[ -~]{1,34}$
           example: '013010230008937'
         party_reference:
@@ -1512,6 +1617,8 @@ components:
           description: |-
             Specifies underlying party reference associated with the mandate, for example Customer Reference, Customer Number, Membership Number, Subscription Number, or Name.
             Specifies a character string with a maximum length of 35 ASCII printable characters.
+
+            This attribute can be cleared by setting value to `-`.
           pattern: ^[ -~]{1,35}$
           example: "LOONEYTUNES-01"
     MandatePartyRole2Code:
@@ -1579,7 +1686,7 @@ components:
       - payment_amount_type
     MandatePaymentInformation2:
       type: object
-      description: "Set of characteristics detailing mandate payment information.\n  \n**Property descriptions**:\n - **payment_frequency** - Regularity with which instructions are to be created and processed.\n - **payment_amount_type** - Identifies the mandate payment arrangement.\n - **first_payment_amount** - Amount different from the payment amount, as it includes the costs associated with the first debited amount.\n - **last_payment_amount** - Last payment amount different  to the payment amount.\n - **amount** - Fixed amount to be debited from the debtor's account.\n - **maximum_amount** - Maximum amount that may be paid from the debtor's account, per instruction.\n  \nThe following rules apply to this structure:\n\n- PaymentAmountTypeRule1: If `payment_amount_type` code is equal to value 'FIXE' then `amount` must be present.\n- PaymentAmountTypeRule2: If `payment_amount_type` code is equal to value 'BALN' then `amount` must be present AND (`first_payment amount` OR `last_payment amount`) must be present.\n- PaymentAmountTypeRule3: If `payment_amount_type` code is equal to value 'USGB' then `maximum_amount` must be present.\n- PaymentAmountTypeRule4: If `payment_amount_type` code is equal to value 'VARI' then `maximum_amount` must be present.\n\n\n- FirstPaymentDateRule1: `first_payment_date` **cannot** be before `validity_start_date`.\n- FirstPaymentDateRule2: `first_payment_date` **cannot** be after `validity_end_date`.\n- FirstPaymentDateRule3: If `establishment_scheme` is equal to 'MGCR' then `first_payment_date` **cannot** be present.\n\n\n- LastPaymentDateRule1: `last_payment_date` **cannot** be before `validity_start_date`.\n- LastPaymentDateRule2: `last_payment_date` **cannot** be after `validity_end_date`.\n\n\n- FrequencyInTermsRule1: Both `count_per_period` AND `point_in_time` **cannot** be present.\n\n\n- PaymentAmountRule1: `amount` **cannot** exceed `maximum_amount`.\n- PaymentAmountRule2: `first_payment_amount` **cannot** exceed `maximum_amount`.\n\n- PaymentAmountRule3: `last_payment_amount` **cannot** exceed `maximum_amount`.\n\n- PaymentAmountRule4: If `establishment_scheme` is equal to 'MGCR' then `first_payment_amount` **cannot** be present.\n\n\n- PaymentInfoClearingRule1: The following attributes **cannot** be cleared; `payment_frequency` & `payment_amount_type`\n\n-  PaymentInfoClearingRule2: The following attribute **can** be cleared; `payment_execute_not_before_time` by setting value to `00:00:00-00:00`.\n\n-  PaymentInfoClearingRule3: The following attribute **can** be cleared; `count_per_period` by setting value to `0`.\n\n-  PaymentInfoClearingRule4: The following attribute **can** be cleared; `point_in_time` by setting value to `00`.\n\n-  PaymentInfoClearingRule5: The following attributes **can** be cleared;  `amount`, `first_payment_amount`, `last_payment_amount` & `maximum_amount` by setting `currency` value to `ZZZ` & not specifying the `amount`.\n\n-  PaymentInfoClearingRule6: The following attributes **can** be cleared; `first_payment_date` & `last_payment_date` by setting value to `1000-01-01`."
+      description: "Set of characteristics detailing mandate payment information.\n  \n**Property descriptions**:\n - **payment_frequency** - Regularity with which instructions are to be created and processed.\n - **payment_amount_type** - Identifies the mandate payment arrangement.\n - **first_payment_amount** - Amount different from the payment amount, as it includes the costs associated with the first debited amount.\n - **last_payment_amount** - Last payment amount different  to the payment amount.\n - **amount** - Fixed amount to be debited from the debtor's account.\n - **maximum_amount** - Maximum amount that may be paid from the debtor's account, per instruction.\n  \nThe following rules apply to this structure:\n\n- PaymentAmountTypeRule1: If `payment_amount_type` code is equal to value 'FIXE' then `amount` must be present.\n- PaymentAmountTypeRule2: If `payment_amount_type` code is equal to value 'BALN' then `amount` must be present AND (`first_payment amount` OR `last_payment amount`) must be present.\n- PaymentAmountTypeRule3: If `payment_amount_type` code is equal to value 'USGB' then `maximum_amount` must be present.\n- PaymentAmountTypeRule4: If `payment_amount_type` code is equal to value 'VARI' then `maximum_amount` must be present.\n\n\n- FirstPaymentDateRule1: `first_payment_date` **cannot** be before `validity_start_date`.\n- FirstPaymentDateRule2: `first_payment_date` **cannot** be after `validity_end_date`.\n- FirstPaymentDateRule3: If `establishment_scheme` is equal to 'MGCR' then `first_payment_date` **cannot** be present.\n\n\n- LastPaymentDateRule1: `last_payment_date` **cannot** be before `validity_start_date`.\n- LastPaymentDateRule2: `last_payment_date` **cannot** be after `validity_end_date`.\n\n\n- FrequencyInTermsRule1: Both `count_per_period` AND `point_in_time` **cannot** be present.\n\n\n- PaymentAmountRule1: `amount` **cannot** exceed `maximum_amount`.\n- PaymentAmountRule2: `first_payment_amount` **cannot** exceed `maximum_amount`.\n\n- PaymentAmountRule3: `last_payment_amount` **cannot** exceed `maximum_amount`.\n\n- PaymentAmountRule4: If `establishment_scheme` is equal to 'MGCR' then `first_payment_amount` **cannot** be present.\n\n\n- PaymentInfoClearingRule1: The following attributes **cannot** be cleared; `payment_frequency` & `payment_amount_type`\n\n-  PaymentInfoClearingRule2: The following attribute **can** be cleared; `payment_execute_not_before_time` by setting value to `-`.\n\n-  PaymentInfoClearingRule3: The following attribute **can** be cleared; `count_per_period` by setting value to `0`.\n\n-  PaymentInfoClearingRule4: The following attribute **can** be cleared; `point_in_time` by setting value to `00`.\n\n-  PaymentInfoClearingRule5: The following attributes **can** be cleared;  `amount`, `first_payment_amount`, `last_payment_amount` & `maximum_amount` by setting `currency` value to `ZZZ` & not specifying the `amount`.\n\n-  PaymentInfoClearingRule6: The following attributes **can** be cleared; `first_payment_date` & `last_payment_date` by setting value to `1000-01-01`."
       additionalProperties: false
       properties:
         payment_frequency:
@@ -1591,18 +1698,22 @@ components:
           description: |-
             Indicates that each execution of the mandate payment should not occur before a given time of that execution day.
             An ISO time whereby all timezoned time values are UTC.
+
+            This attribute can be cleared by setting value to `-`.
           pattern: ^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.[0-9]{1,3})?(?:Z)|(-)$
           example: "23:31:14.450Z"
         count_per_period:
           type: string
           pattern: ^(?=.{1,19}$)[0-9]{0,19}(?:\.[0-9]{0,18})?$
-          description: Qualifies the frequency in terms of the number of instructions to be created and processed during the specified period.
+          description: Qualifies the frequency in terms of the number of instructions to be created and processed during the specified period.<br><br> This attribute can be cleared by setting value to `0`.
           example: "42"
         point_in_time:
           type: string
           description: |-
             Qualifies the frequency in terms of an exact point in time or moment within the specified period.
             Specifies a numeric string with an exact length of 2 digits.
+
+            This attribute can be cleared by setting value to `00`.
           pattern: ^[0-9]{2}$
           example: "12"
         payment_amount_type:
@@ -1620,6 +1731,8 @@ components:
           description: |-
             Date of the first payment predefined in mandate.
             A particular point in the progression of time in a calendar year expressed in the YYYY-MM-DD format. This representation is defined in "XML Schema Part 2: Datatypes Second Edition - W3C Recommendation 28 October 2004" which is aligned with ISO 8601.
+
+            This attribute can be cleared by setting value to `1000-01-01`.
           pattern: ^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)$
           example: "2023-07-10"
         last_payment_date:
@@ -1627,6 +1740,8 @@ components:
           description: |-
             Date of the last payment predefined in mandate.
             A particular point in the progression of time in a calendar year expressed in the YYYY-MM-DD format. This representation is defined in "XML Schema Part 2: Datatypes Second Edition - W3C Recommendation 28 October 2004" which is aligned with ISO 8601.
+
+            This attribute can be cleared by setting value to `1000-01-01`.
           pattern: ^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)$
           example: "2024-04-01"
     MandatePaymentType1Code:
@@ -1634,6 +1749,8 @@ components:
       description: |-
         Identifies the mandate payment arrangement.
         <table><tr><th>Code</th><th>Name</th><th>Description</th></tr><tr><td>BALN</td><td>Balloon</td><td>Payment amount is fixed with large first or final payment amount.</td></tr><tr><td>FIXE</td><td>Fixed</td><td>Payment amount is fixed.</td></tr><tr><td>USGB</td><td>UsageBased</td><td>Payment amount is based on usage.</td></tr><tr><td>VARI</td><td>Variable</td><td>Payment amount is variable.</td></tr></table>
+        
+        This attribute cannot be cleared.
       enum:
       - BALN
       - FIXE
@@ -1860,6 +1977,8 @@ components:
       description: |-
         Specifies the type of party involved in the transaction.
         <table><tr><th>Code</th><th>Name</th><th>Description</th></tr><tr><td>ORGN</td><td>Organisation</td><td>Party is an organisation.</td></tr><tr><td>PERS</td><td>Person</td><td>Party is an private individual.</td></tr></table>
+
+        This attribute cannot be cleared.
       enum:
       - ORGN
       - PERS
