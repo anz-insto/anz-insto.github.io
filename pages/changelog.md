@@ -8,6 +8,7 @@ toc: true
 
 ## Contents
 
+- [2024-07-05 - Updates to PayTo APIs](#2024-07-05)
 - [2024-05-24 - Updates to PayTo APIs](#2024-05-24)
 - [2024-05-13 - Updates to PayTo APIs](#2024-05-13)
 - [2024-04-18 - Added PayTo Amend Mandate API](#2024-04-18)
@@ -37,7 +38,24 @@ toc: true
 - [2022-08-19 - Site creation](#2022-08-19)
 
 ---
-<a name="2024-05-13"></a>
+<a name="2024-07-05"></a>
+
+### [2024-07-05]
+
+#### Changes
+
+- Updated PayTo API v1.1.0
+    - Updated PayTo endpoints to v1 instead of v1.0
+    - Added **account_identification_type_code** to Amend Mandate request
+    - Updated clearing value for attribute **payment_execute_not_before_time** on Amend Mandate request   
+    - Updated Amend Mandate attribute descriptions to indicate more clearly which attributes can be cleared and which ones cannot
+    - Added hyper-links between schema models and PayTo Webhook API
+- Updated PayTo API Webhook v1.0.4
+    - Updated example server URLs 
+    - Added hyper-links between schema models and PayTo API
+- Updated PayTo Event Codes for Amend Mandate failures
+
+<a name="2024-05-24"></a>
 
 ### [2024-05-24]
 
@@ -52,6 +70,7 @@ toc: true
     - Updated **MandateNotification** schema to include the reason why a bilateral request was declined by the Payer, refer to **resolution_event** object. Applies when **trigger** code = **MAMD & MCRD**  
     - Updated **RequestQueryNotification** to support migrated DDRs
 
+<a name="2024-05-13"></a>
 
 ### [2024-05-13]
 
