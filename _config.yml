@@ -3,7 +3,7 @@ author: Australia and New Zealand Banking Group Limited (ANZ) 2022 ABN 11 005 35
 email: fileactivesupport@anz.com
 description: >-
   Utilising ANZ's suite of API's, ANZ Wholesale Digital  API will enable your organisation to complete near real-time banking with our Institutional Bank services. 
-baseurl: ""
+baseurl: "/fileactive"
 url: ""
 
 repo: "https://github.com/anz-insto"
