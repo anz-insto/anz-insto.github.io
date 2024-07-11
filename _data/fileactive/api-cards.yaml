@@ -4,33 +4,33 @@
     - title: Payments API
       description: >
         Fileactive Payment API
-      url: /fileactive/api/payment-api
+      url: /api/payment-api
 - title: Receivables
   icon: icon_108-statements_documents-digital-filled-oceanblue.svg
   links:
     - title: Accounts Statement API
       description: > 
         Fileactive Account Statement API
-      url: /fileactive/api/statement-api
+      url: /api/statement-api
     - title: Real Time Notification API
       description: > 
         Fileactive Real Time Notification API
-      url: /fileactive/api/rtn-api
+      url: /api/rtn-api
 - title: Markets
   icon: icon_12-global_international-digital-filled-oceanblue.svg
   links:
     - title: FX API
       description: >
         Fileactive FX API provides consumers the ability to request FX (foreign exchange) quotes and do deals
-      url: /fileactive/api/fx-api
+      url: /api/fx-api
 - title: PayTo Payee
   icon: icon_12-global_international-digital-filled-oceanblue.svg
   links:
     - title: PayTo API
       description: >
         Fileactive PayTo API
-      url: /fileactive/api/payto-api
+      url: /api/payto-api
     - title: PayTo API Webhook
       description: >
         Fileactive PayTo API Webhook
-      url: /fileactive/api/payto-api-webhook
+      url: /api/payto-api-webhook
