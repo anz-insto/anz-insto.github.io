@@ -1,0 +1,543 @@
+openapi: 3.0.1
+info:
+  title: Authentication & Payload
+  description: |-
+    To interact with the ANZ Cash Management Central (ACMC) API, all requests must be authenticated using OAuth 2.0, specifically through the Client Credential Grant process. The API endpoint for obtaining the authentication token is essential for ensuring secure access. Once authenticated, all GraphQL API calls should be directed to the `/graphql` endpoint. This document provides detailed information on the authentication process and the usage of the `/graphql` path for executing API requests.
+  version: 2.4.0
+servers:
+  - url: https://api.acmc.uat.anzgcis.com
+    description: 'UAT (non-production) environment'
+  - url: https://api.acmc.anzgcis.com
+    description: 'Production Environment'
+security:
+  - bearerAuth: []
+    apiKeyAuth: []
+paths:
+  /v1.0/auth:
+    post:
+      security:
+          - apiKeyAuth: []
+            OAuth2: []
+      summary: Obtain authorisation token
+      description: >
+        ANZ use OAuth 2.0 to authenticate inbound token requests, a bearer token is returned as a response which is then used to authorise against ANZ resources
+      tags: 
+      - Authorisation
+      operationId: auth
+      requestBody:
+        description: 'Information and examples of Auth request body'
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AuthTokenRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/200OKAuth'
+        400:
+          $ref: '#/components/responses/400Auth'
+        401:
+          $ref: '#/components/responses/401'
+        429:
+          $ref: '#/components/responses/429'
+        500:
+          $ref: '#/components/responses/500Auth'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503' 
+        504:
+          $ref: '#/components/responses/504'     
+        default:
+          $ref: '#/components/responses/default'
+  /graphql:
+    post:
+      tags:
+      - Graphql Posts
+      summary: Post a graphql query or mutation
+      description: |-
+        All API calls to the ANZ Cash Management Central (ACMC) platform require authentication via OAuth 2.0. Once authenticated, all requests should be made to the /graphql endpoint. This ensures secure and standardized communication with the platform. Detailed examples and instructions on how to authenticate and use the GraphQL API are provided below.
+      security:
+        - apiKeyAuth: []
+          bearerAuth: [GBL.INSTO.GRAPHQL.CREATE]
+      parameters:
+        - $ref: "#/components/parameters/correlationID"
+        - $ref: "#/components/parameters/messageID"
+        - $ref: "#/components/parameters/priority"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecuredSubmissionResource'
+            examples: 
+              Mandate Creation - New DDR: 
+                value: 
+                  {
+                  "data": {
+                      "openAccount": {
+                      "commandId": "Q29tbWFuZDoxMmRkYTEyMi1hNzFkLTRlYWQtODZhZC05NGY3NjVjN2FlY2Q="
+                      }
+                  }
+                  }
+        description: |-
+          Secured payload <br> This is just an example, further examples are show in the relevant areas.
+        required: true
+      responses:
+        202:
+          $ref: '#/components/responses/202'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        429:
+          $ref: '#/components/responses/429'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503' 
+        504:
+          $ref: '#/components/responses/504'     
+        default:
+          $ref: '#/components/responses/default'
+components:
+  securitySchemes:
+    bearerAuth:            
+          type: http
+          scheme: bearer
+          bearerFormat: uuid
+          description: Bearer token obtained during token exchange
+    apiKeyAuth:        
+      type: apiKey
+      in: header
+      name: apikey
+      description: API key to authorize requests.
+    OAuth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.acmc.uat.anzgcis.com/auth
+          scopes:
+            AU.INSTO.PAYTO.MANDATE.WRITE: Create & Maintain Mandate<br>
+            AU.INSTO.PAYTO.MANDATE.READ: Retrieve Mandate Details & Reply to a Query<br>
+            AU.INSTO.PAYTO.MPIR.WRITE: Create Mandated Payment Initiation Request
+  parameters:
+    correlationID:  
+      name: X-Correlation-Id
+      in: header
+      description: Optional correlation ID provided by the data consumer that should
+        be reflected back in the response headers. Can be used for reporting and
+        logging.
+      schema:
+        $ref: '#/components/schemas/UUID'
+    messageID:
+      name: X-Message-Id
+      in: header
+      description: Duplicate check using point to point reference, as assigned by
+        the instructing party, and sent to the next party in the chain to unambiguously
+        identify the message
+      required: true
+      schema:
+        $ref: '#/components/schemas/UUID'
+    requestKey:
+      name: X-RequestKey
+      in: header
+      description: Internal End to End key used for support and reporting purposes
+      schema:
+        $ref: '#/components/schemas/UUID'
+      example: 325ea624-ac19-47e2-94ef-a1ab4e487275
+    priority:
+      name: priority
+      in: header
+      description: Priority (attended/unattended) to be included in any generated notification. This value does not affect the priority for processing within the MMS. It may, depending on topic configuration, influence which topic any generated notification is sent to.
+      required: true
+      schema:
+        $ref: '#/components/schemas/NotificationPriority1Code'
+    priority2:
+      name: priority
+      in: header
+      description: Priority (attended/unattended) to be included in any generated notification. This value does not affect the priority for processing within the MMS. It may, depending on topic configuration, influence which topic any generated notification is sent to. <br><br> Only **UNATTENDED** is supported for this request type.
+      required: true
+      schema:
+        $ref: '#/components/schemas/NotificationPriority2Code'    
+    priority3:
+      name: priority
+      in: header
+      description: MPIR Priority (attended/unattended). Urgency or order of importance that the originator would like the recipient of the payment instruction to apply to the processing of the payment instruction. Will be included in any generated notification. 
+      required: true
+      schema:
+        $ref: '#/components/schemas/NotificationPriority1Code' 
+    priority4:
+      name: priority
+      in: header
+      description: Priority (attended/unattended) to be included in any generated notification. Urgency or order of importance that the originator would like the recipient of the PayTo query resolution to apply to the processing of the query resoluton.<br><br> Only **UNATTENDED** is supported for this request type.
+      required: true
+      schema:
+        $ref: '#/components/schemas/NotificationPriority2Code'               
+  responses:
+    200OKAuth:
+      description: 'Bearer token (Opaque Token) returned after a token request'
+      headers:
+        x-RequestKey:
+          schema:
+            $ref: '#/components/parameters/requestKey'
+      content: 
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AuthTokenResponse'
+    200:
+      description: Information of submitted resource found and returned
+      headers:
+        X-Correlation-Id:
+          schema:
+            $ref: '#/components/schemas/UUID'
+        X-RequestKey:
+          schema:
+            $ref: '#/components/parameters/requestKey'
+      content:
+       application/json:
+          schema:
+            $ref: '#/components/schemas/MandateRetrievalResponse1'
+    202:
+      description: Accepted the request for processing.
+      headers:
+        X-Correlation-Id:
+          schema:
+            $ref: '#/components/schemas/UUID'
+          description: GUID echo'd from customer request
+        X-RequestKey:
+          schema:
+            $ref: '#/components/parameters/requestKey'
+          description: Request Key provided to customer for support and reporting purposes.
+    400Auth:
+      description: Bad Request, message format does not match expected schema
+    400:
+      description: Bad Request
+      headers:
+        X-Correlation-Id:
+          schema:
+            $ref: '#/components/schemas/UUID'
+          description: GUID echo'd from customer request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    401:
+      description: Unauthorised
+    403:
+      description: Forbidden
+      headers:
+        X-Correlation-Id:
+          schema:
+            $ref: '#/components/schemas/UUID'
+          description: GUID echo'd from customer request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    404:
+      description: Not Found
+      headers:
+        X-Correlation-Id:
+          schema:
+            $ref: '#/components/schemas/UUID'
+          description: GUID echo'd from customer request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            MMS:
+              value: 
+                status: 
+                  "severity": "FATL"
+                  "statusCode": "MMS.API.9011"
+                  "statusMessage": "No record found"
+    408:
+      description: Request Timeout
+      headers:
+        X-Correlation-Id:
+          schema:
+            $ref: '#/components/schemas/UUID'
+          description: GUID echo'd from customer request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'     
+    429:
+      description: Too Many Requests
+    429V2:
+      description: Too Many Requests 
+      headers:
+        X-Correlation-Id:
+          schema:
+            $ref: '#/components/schemas/UUID'
+          description: GUID echo'd from customer request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'  
+          examples:
+            ANZ:
+              value: 
+            MMS:
+              value: 
+                status: 
+                  "severity": "TRAN"
+                  "statusCode": "MMS.API.9007"
+                  "statusMessage": "No record found"
+    500Auth:
+      description: Internal Server Error, contact support
+    500:
+      description: Internal Server Error
+      headers:
+        X-Correlation-Id:
+          schema:
+            $ref: '#/components/schemas/UUID'
+          description: GUID echo'd from customer request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    502:
+        description: Bad Gateway
+    503:
+      description: Service Unavailable
+    504:
+      description: Gateway Timeout 
+    default:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    AuthTokenRequest:
+      required:
+      - grant_type
+      - client_assertion_type
+      - scope
+      - client_assertion
+      type: object
+      properties:
+        grant_type:
+          description: Specify the type credential requested
+          type: string
+          example: 'client_credentials'
+        client_assertion_type:
+          description: Describes the type of client assertion provided in the message request
+          type: string
+          example: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'
+        scope:
+          $ref: '#/components/securitySchemes/OAuth2/flows/clientCredentials/scopes'
+        client_assertion:
+          $ref: '#/components/schemas/ClientAssertion'
+    AuthTokenResponse:
+      type: object
+      description: Response to report the status of a customer credit transfer.
+      additionalProperties: false
+      properties:
+        expires_in:
+          description: Indication on how long a token is valid for
+          type: integer
+        token_type: 
+          description: Type of token returned
+          type: string
+        access_token:
+          description: Opaque token returned as part of request, GCIS does not provide the full access token
+          type: string   
+      example:
+        expires_in: 3600
+        token_type: 'Bearer'
+        access_token: 'eaaa13ee-b596-a8cc-b9d4-f778f8bb9377'
+    ClientAssertion:
+        required:
+        - sub
+        - exp
+        - aud
+        type: object
+        properties:
+          sub:
+            type: string
+            description: Customer Code as provided by ANZ onboarding
+            example: 'CUSTOMERA'
+          exp:
+            type: integer
+            description: EPOCH date and time
+            example: '1619658591'
+            maxLength: 10
+            minLength: 10
+          aud:
+            type: string
+            description: Specify the intended audience of the token request
+            example: 'https://api.fileactive.uat.anzgcis.com/auth'
+    ErrorDetail:
+      type: object
+      required: 
+        - severity
+        - code
+        - text
+      properties:
+        severity:
+          type: string
+          description: Severity of the error
+          enum:
+            - Fatal
+            - Transient
+          example: Fatal
+        code:
+          type: string
+          description: |
+            Error code (format: ECxxx_xxx)
+          example: EC004_001
+        text:
+          type: string
+          description: Human readable description of the error
+          example: Internal Server Error, please contact support.
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: object
+          description: Summary of the error
+          $ref: '#/components/schemas/ErrorDetail'
+    UserId:
+      type: string
+      description: |-
+        MPS User Id associated with this create mandate request
+      minLength: 1
+      maxLength: 10
+      example: 10002005  
+    NotificationPriority1Code:
+      type: string
+      description: |-
+        Defines the notification priority.
+        <table><tr><th>Code</th><th>Description</th></tr><tr><td>ATTENDED</td><td> Attended mode of operation.</td></tr><tr><td>UNATTENDED</td><td>Unattended mode of operation.</td></tr></table>
+      enum:
+      - ATTENDED
+      - UNATTENDED
+    NotificationPriority2Code:
+      type: string
+      description: |-
+        Defines the notification priority.
+        <table><tr><th>Code</th><th>Description</th></tr><tr><td>UNATTENDED</td><td>Unattended mode of operation.</td></tr></table>
+      enum:
+      - UNATTENDED
+    PartyType17Code:
+      type: string
+      description: |-
+        Specifies the type of party involved in the transaction.
+        <table><tr><th>Code</th><th>Name</th><th>Description</th></tr><tr><td>ORGN</td><td>Organisation</td><td>Party is an organisation.</td></tr><tr><td>PERS</td><td>Person</td><td>Party is an private individual.</td></tr></table>
+      enum:
+      - ORGN
+      - PERS
+    QueryResolutionRequest:
+      type: object
+      description: |-
+        PayTo Query Resolution
+      additionalProperties: false
+      properties:
+        mps_user_id:
+          type: string
+          description: |-
+            MPS User Id associated with this query resolution request
+          minLength: 1
+          maxLength: 10
+          example: "10002005"
+        request_id:
+          allOf: 
+          - $ref: '#/components/schemas/UUID'            
+          description: |-
+            Request UUID that identifies the query resolution operation to be performed. This must be a Universally Unique IDentifier (UUID). This UUID must be unique amongst all request_ids passed to this end-point by the same MPS User. If a request is encountered with a request ID that has previously been used then a duplicate check will be performed by comparing the digest of the current request with the digest of the previous request. If the digests match then the details of the previous mandate creation will be returned. If the digests do not match then an HTTP 409 will be returned.
+        case_id:
+          type: string
+          description: |-
+            Case Identifier. A unique case reference as assigned by ANZ. To be referenced when providing a Query Resolution.   
+          minLength: 1
+          maxLength: 20  
+          example: ANZAU230821-00002
+        case_decision:
+          type: string
+          description: |-
+            Case Decision.
+            <table><tr><th>Code</th><th>Name</th><th>Case Type</th></tr><tr><td>ACPT</td><td>Accept Payment Return</td><td>Mandate Query Payments</td></tr><tr><td>FINO</td><td>Final Outcome</td><td>Mandate Query Case</td></tr><tr><td>PEND</td><td>Pending Decision</td><td>ANY</td></tr><tr><td>RJCT</td><td>Reject Payment Return</td><td>Mandate Query Payments</td></tr></table>
+          enum:
+            - ACPT
+            - FINO
+            - PEND
+            - RJCT
+        mandate_identification:
+          type: string
+          description: "Unique ID, as assigned by the MMS, to unambiguously identify the mandate. This ID must be used to identify the mandate for all further operations on the mandate.\nUniversally Unique IDentifier (UUID) version 1, as described in IETC RFC 4122 \"Universally Unique IDentifier (UUID) URN Namespace\" without the 4 hyphen separators.\r\nFor example: '00000000000010008000000000000000' instead of  '00000000-0000-1000-8000-000000000000' (without quotes)"
+          pattern: ^[a-f0-9]{12}1[a-f0-9]{3}[89ab][a-f0-9]{15}$
+          example: 247de1c0c3a911edafa10242ac120002
+        reject_reason_code:
+          type: string
+          description: |-
+            Rejection Reason Code.
+            <table><tr><th>Code</th><th>Name</th></tr><tr><td>ARDT</td><td>Already Returned</td></tr><tr><td>CUST</td><td>Customer Decision</td></tr></table>
+            <br>
+            To be provided when case_decision = RJCT.
+          enum:
+            - ARDT
+            - CUST
+        return_transaction_identification:
+          type: string
+          description: >-
+            Unique reference, as assigned by the Biller, to unambiguously identify the return transaction. <br><br>
+            To be provided when reject_reason_code = ARDT.
+          minLength: 1
+          maxLength: 35
+          example: RETURN/123
+        narrative:
+          type: string
+          description: |-
+            Narrative as sent by the Biller. <br><br>
+             When case_decision = ACPT then provide "Accepted", otherwise provide relevant details <br>
+             <br> Specifies a character string with a maximum length of 1500 ASCII printable characters.
+          minLength: 1
+          maxLength: 1500  
+          pattern: ^[ -~]{1,1500}$
+          example: Some text
+      required:
+        - mps_user_id
+        - request_id
+        - case_id
+        - case_decision
+        - mandate_identification
+        - narrative
+    SecuredSubmissionResource:
+      type: object
+      properties:
+        secured_payload:
+          type: string
+          description: Encrypted and secured payload
+          x-jws-signature:
+            algorithm: RS256
+          x-jwe-encryption:
+            algorithm: RSA-OAEP
+            encryption: A256CBC-HS512
+      required:
+        - secured_payload
+      example:
+        secured_payload: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpbnN0cnVjdGlvbl9pZGVudGlmaWNhdGlvbiI6IlRDMTIxLzE0NzE4NzM4MjMiLCJlbmRfdG9fZW5kX2lkZW50aWZpY2F0aW9uIjoiTk9UUFJPVklERUQiLCJjcmVhdGlvbl9kYXRlX3RpbWUiOiIyMDE4LTA5LTE3VDA5OjQ1OjQ3WiIsImluaXRpYXRpbmdfcGFydHlfbmFtZSI6IkN1c3RvbWVyQSIsInJlcXVlc3RlZF9leGVjdXRpb25fZGF0ZSI6IjIwMTgtMDktMTciLCJkZWJ0b3JfbmFtZSI6IkJJTEJPIEJBR0dJTlMiLCJkZWJ0b3JfYWNjb3VudF9pZGVudGlmaWNhdGlvbiI6IjAxMzQyMTIzNDU2NyIsImRlYnRvcl9hY2NvdW50X3R5cGUiOiJCQkFOIiwiaW5zdHJ1Y3RlZF9hbW91bnQiOnsiY3VycmVuY3kiOiJBVUQiLCJhbW91bnQiOiI1NjIuODkifSwiY3JlZGl0b3JfbmFtZSI6IlNBTVdJU0UgR0FNR0VFIiwiY3JlZGl0b3JfYWNjb3VudF9pZGVudGlmaWNhdGlvbiI6IjAxMDE2OTg3NjU0MzIxIiwiY3JlZGl0b3JfYWNjb3VudF90eXBlIjoiQkJBTiIsImNyZWRpdG9yX2FnZW50X2JpYyI6Ik5PVFBST1ZJREVEIiwicmVtaXR0YW5jZV9pbmZvcm1hdGlvbl91bnN0cnVjdHVyZWQiOlsiRklSU1QgTElORSIsIlNFQ09ORCBMSU5FIl19.aR2RMEVTuOOI1YuUCf2Ppo3Bwtf2_91WMvLd3IIA0ToHBDn0II36FumIz2RrwiUNHBMZo41Qmjv_zt9TQbq61csx2lRZcQNNsstAXKZWI4oZjlBaenj3HvY2_ztxS2IPNZNlVUQrw8A51-1dm-EeVTsqwhxs-Ir6d1FCee5SaNBrhtfaDBGAwjtXolPJuyYve0J3F8X-JwKPLBUaQH5LgGlTOSasC0vsKqhfpZOc-3rS39UA7q0jHQyqcJKrhinEyWlTFU9PcOh2W4-0hXiPaLJ_PA-_EkY5kYBnBvUWofVy35ZnB_u0wv0gxvVVDYKLGUpOGblaWRUY09SHx52Njw'
+    UUID:
+      type: string
+      example: '71d6fb19-7515-40dc-b045-e17550b67600'
+      pattern: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+tags:
+  - name: Authorisation
+    description: Operations related to authentication & authorisation.
+  - name: AuthTokenRequest
+    description: <SchemaDefinition schemaRef="#/components/schemas/AuthTokenRequest" />
+  - name: Mutation
+    description: Operations related to mandates.
+x-tagGroups:
+  - name: Paths
+    tags: 
+      - Authorisation
+      - Graphql Posts
+  - name: Models
+    tags: 
+      - AuthTokenRequest

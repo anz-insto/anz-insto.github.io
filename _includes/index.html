@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+    {% include head.html %}
+
+    <body class="d-flex flex-column">
+        <a name="top"></a>
+        {% include header.html %}
+        <div class="container-fluid px-0">
+            <main role="main">
+                <div class="row mx-0 hero-row">
+                    <div id="hero" class="px-0 w-100">
+                        <img src="{{ site.baseurl }}/assets/img/{{ page.hero-image }}" />
+                        <div class="hero-text-container">
+                            <div class="hero-text">
+                                <h1>{{ site.title }}</h1>
+                                <p>{{ page.description }}</p>
+                                <div class="hero-links">
+                                    <a href="{{ site.baseurl }}/fileactive">Go to Fileactive</a>
+                                    <a href="{{ site.baseurl }}/acmc">Go to ACMC</a>
+                                </div>
+                                <a href="#getting-started" id="hero-scroll" title="getting started section"><span class="down-arrow"></span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="sections-container">
+                {{ content }}
+                </div>
+            </main>
+        </div>
+
+        {% include footer.html %}
+    </body>
+    {% include scripts.html %}
+    {% if page.toc %}
+        {% include toc-script.html %}
+    {% endif %}
+    <script>
+        $(document).ready(function() {
+            const scrollOffset = 100;
+            $(document).on('click', 'a[href*="#"]', function (event) {
+                var ref = $.attr(this, 'href')
+                var id = ref.substr(ref.indexOf("#"));
+                event.preventDefault();
+                $('html, body').animate({
+                    scrollTop: $(id).offset().top - scrollOffset
+                }, 100);
+            });
+        });
+    </script>
+</html>

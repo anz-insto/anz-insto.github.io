@@ -1,0 +1,25 @@
+introspection:
+  schemaFile: ccm.graphql
+  queryNameStrategy: capitalizeFirst
+  fieldExpansionDepth: 2
+  removeTrailingPeriodFromDescriptions: false
+  scrollPaddingTopPx: 100
+  x-hidePoweredBy: false
+  x-showExtensions: false
+  displayAllServers: true
+extensions:
+  graphqlScalarExamples: true
+
+info:
+  description: "Full schema of ACMC, refer to the rest of the site for examples"
+  baseurl: "/gcis/docs"  # Matches the 'baseurl' in your Jekyll config
+
+servers:
+  - url: "https://api.acmc.uat.anzgcis.com"
+    description: "Test server"
+    production: false"
+  - url: "https://api.acmc.anzgcis.com"
+    description: "Production server"
+    production: true"
+
+

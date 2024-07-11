@@ -3,6 +3,7 @@ title: Fileactive Accounts Statement API
 description: |-
     This page details the Accounts Statement request and the relevant response.   
     **Pre-Requisite:** All the account intended to be used for fetching account statement, must be requested to be registered prior.
+navigation: fileactive
 ---
 
 <!--page content-->

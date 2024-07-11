@@ -1,6 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
-{{ content }}
+<head>
+  <!-- Include general head elements like meta tags, common stylesheets, etc. -->
+  {% include head-api.html %}
+  
+  <!-- Conditional stylesheet for GraphQL-specific styling -->
+  {% if page.api-type == "graphql-api" %}
+  <link rel="stylesheet" href="{{ '/assets/css/graphql-specific.css' | relative_url }}">
+  {% endif %}
+</head>
+
+<body class="{{ page.api-type }}">
+  {% include header.html %}
+
+  <!-- Main content of the page -->
+  {{ content }}
+
+  {% include footer.html %}
+  
+  <!-- Common scripts -->
+  {% include scripts.html %}
+  
+  <!-- Conditional JavaScript for GraphQL-specific functionality -->
+  {% if page.api-type == "graphql-api" %}
+  <script src="{{ '/assets/js/graphql-specific.js' | relative_url }}"></script>
+  {% endif %}
+</body>
 
 </html>

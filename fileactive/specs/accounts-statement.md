@@ -2,6 +2,7 @@
 layout: default
 title: Fileactive - Intraday Statement Report | CAMT.052
 description: Intraday Statement Report - camt.052.001.06
+navigation: fileactive
 ---
 
 # Intraday Statement Report

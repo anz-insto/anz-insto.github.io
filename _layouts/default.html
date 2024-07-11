@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="no-js">
     {% include head.html %}
-
     <body class="td-section d-flex flex-column min-vh-100">
         <a name="top"></a>
         {% include header.html %}
@@ -9,7 +8,7 @@
             <main role="main">
                 <div class="row mx-0 hero-row">
                     <div id="split-hero" class="col-12 px-0 mx-auto anz-body-container">
-                {% if page.hero %}
+                        {% if page.hero %}
                         <div class="hero-right hero-section col-12 col-xl-6">
                             <img src="{{ site.baseurl }}/assets/img/{{ page.hero-image }}" />
                         </div>
@@ -19,32 +18,28 @@
                                 <p>{% if page.description %}{{ page.description | markdownify }}{% endif %}</p>
                             </div>
                         </div>
-                {% else %}
+                        {% else %}
                         <h1 id="page-title">{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</h1>
                         <p>{% if page.description %}{{ page.description | markdownify }}{% endif %}</p>
-                {% endif %}
+                        {% endif %}
                     </div>
                 </div>
-                <div class="row flex-xl-nowrap mx-auto min-vh-100 anz-body-container">   
+                <div class="row flex-xl-nowrap mx-auto min-vh-100 anz-body-container">
                     {% if page.toc %}
-                        {% include toc.html %}
-                        <div class="col-12 col-xl-9 px-0">
-                    {% else %}
+                    {% include toc.html %}
+                    <div class="col-12 col-xl-9 px-0">
+                        {% else %}
                         <div class="w-100 col-12 px-0">
-                    {% endif %}
+                            {% endif %}
 
+                            {{ content }}
 
-                {{ content }}
-
-
-                    </div>            
-                </div>  
-
+                        </div>
+                    </div>
             </main>
         </div>
-
         {% include footer.html %}
+        {% include scripts.html %}
+        {% include toc-script.html %}
     </body>
-    {% include scripts.html %}
-    {% include toc-script.html %}
 </html>
