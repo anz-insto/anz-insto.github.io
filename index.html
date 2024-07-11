@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wholesale Digital Developer Portal</title>
+    <link rel="icon" type="image/png" href="assets/img/icon/ANZ_DIGITAL_favicon_flat_16.png">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .text-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            z-index: 2;
+        }
+
+        .text-container h1 {
+            margin: 0;
+            padding: 10px 20px;
+            font-size: 3.25em;
+            font-weight: bold;
+        }
+
+        .line {
+            width: 100%;
+            max-width: 1000px;
+            height: 2px;
+            background-color: white;
+            margin: 0 auto;
+        }
+
+        .arrow {
+            display: inline-block;
+            margin-top: 10px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid white;
+        }
+
+        .links-container {
+            position: absolute;
+            top: 800px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 100px;
+        }
+
+        .link-box {
+            background-color: #595f67;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .link-box:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="assets/img/ANZ_Insto_Image_B_W_221-2559x1200.jpg" alt="Descriptive Alt Text" class="image">
+        <div class="text-container">
+            <div class="line"></div>
+            <br>
+            <h1>Wholesale Digital Developer Portal</h1>
+            <br>
+            <div class="line"></div>
+        </div>
+        <div class="links-container">
+            <a href="fileactive" class="link-box">Fileactive</a>
+            <a href="acmc" class="link-box">ACMC</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,8 +1,9 @@
 ---
 title: Change Log
 description: All notable changes to the ANZ Fileactive solution will be documented here.
-permalink: /change-log
+permalink: /fileactive/change-log
 layout: default
+navigation: fileactive
 toc: true
 ---
 

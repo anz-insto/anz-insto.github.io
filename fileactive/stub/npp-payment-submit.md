@@ -2,6 +2,7 @@
 title: NPP Payment Submit
 description: |-
     Fileactive NPP Payment API Submit Stub Specification. This page details the different test scenarios of Fileactive NPP Payment API Submit requests and the corresponding initial response.
+navigation: fileactive
 ---
 
 <a name="top"></a>

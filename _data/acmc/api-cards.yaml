@@ -1,0 +1,30 @@
+- title: ACMC
+  icon: icon_57-transfer-digital-filled-oceanblue.svg
+  links:
+    - title: Authentication & Payloads
+      description: All APIs for ACMC use OAuth tokens for authentication and authorization
+      url: /acmc/api/authentication
+    - title: Account Management
+      description: Information on how to manage accounts
+      url: /acmc/api/account-management-api
+    - title: Allocation Process
+      description: Information on how to manage the allocation process
+      url: /acmc/api/allocations-api
+    - title: Client (Beneficiary) & Party Management
+      description: Information on how to manage clients and parties
+      url: /acmc/api/client-and-party-management-api
+    - title: Payment Creation
+      description: How to create payments
+      url: /acmc/api/payments-api
+    - title: Product Details
+      description: View and create Products
+      url: /acmc/api/products-api
+    - title: Transactions
+      description: View and query Transactions
+      url: /acmc/api/transactions-api
+    - title: General Queries
+      description: General Queries required to interact with ACMC
+      url: /acmc/api/general-queries-api
+    - title: Full GraphQL Scehma
+      description: A html version of the full GraphQL schema
+      url: /acmc/pages/graphql

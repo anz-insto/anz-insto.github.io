@@ -1,6 +1,6 @@
 <div id="faq-accordion-container">
 {% assign position = 0 %}
-{% for section in site.data.faq %}
+{% for section in site.data.fileactive.faq %}
 <div id="faq-accordion-{{ section.section }}" class="accordion" markdown="1">
 
 ### {{ section.section }}

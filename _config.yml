@@ -1,9 +1,9 @@
-title: Fileactive Developer Portal
+title: Wholesale Digital  Developer Portal
 author: Australia and New Zealand Banking Group Limited (ANZ) 2022 ABN 11 005 357 522.
 email: support@anzgcis.com
 description: >-
-  Utilising ANZ's suite of API's, ANZ Fileactive API will enable your organisation to complete near real-time banking with our Institutional Bank services. 
-baseurl: "/fileactive"
+  Utilising ANZ's suite of API's, ANZ Wholesale Digital  API will enable your organisation to complete near real-time banking with our Institutional Bank services. 
+baseurl: "/gcis/docs"
 url: ""
 
 repo: "https://github.com/anz-insto"
@@ -41,7 +41,7 @@ defaults:
       type: "pages"
     values:
       layout: "default"
-      title: Fileactive Developer Portal
+      title: Wholesale Digital Developer Portal
 
 # Collections
 collections:

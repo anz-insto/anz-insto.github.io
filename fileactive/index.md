@@ -1,10 +1,12 @@
 ---
-layout: index
+title: Fileactive
+layout: default
 description: Utilising the Fileactive suite of API's will enable your organisation to complete near real-time banking with ANZ.
-permalink: /
+permalink: /fileactive/
 toc: false
-hero: true
+hero: false
 hero-image: ANZ_Insto_Image_B_W_221-2559x1200.jpg
+navigation: fileactive
 ---
 
 <div class="row flex-xl-nowrap mx-auto anz-body-container">   
@@ -39,7 +41,7 @@ hero-image: ANZ_Insto_Image_B_W_221-2559x1200.jpg
 
 ## API Catalogue
 
-{% include catalogue.html %}
+{% include fileactive/catalogue.html %}
 
 </div>            
 </div> 
@@ -48,7 +50,7 @@ hero-image: ANZ_Insto_Image_B_W_221-2559x1200.jpg
 <div class="w-100 col-12 anz-page-section" markdown="1">
 ### Coming Soon
 <p>APIs under development.</P>
-{% include catalogue-comingsoon.html %}
+{% include fileactive/catalogue-comingsoon.html %}
 </div>            
 </div> 
 -->
@@ -58,7 +60,7 @@ hero-image: ANZ_Insto_Image_B_W_221-2559x1200.jpg
 
 ## Testing and Development Resources
 
-{% include catalogue-additional-resources.html %}
+{% include fileactive/catalogue-additional-resources.html %}
 
 </div>            
 </div> 
@@ -68,7 +70,7 @@ hero-image: ANZ_Insto_Image_B_W_221-2559x1200.jpg
 
 ## FAQ
 
-{% include faq.html %}
+{% include fileactive/faq.html %}
 
 </div>            
 </div> 

@@ -3,6 +3,7 @@ title: NPP Payment Status
 description: |-
     Fileactive NPP Payment API Enquire Stub Specification. This page details the Fileactive NPP Payment API Status enquiry request and the relevant responses.
     **NOTE:** `transaction_identification` used in the request URL's are to be retrieved from the "Submit-Payment" response 'Location' header.
+navigation: fileactive
 ---
 
 <!--page content-->

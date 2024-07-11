@@ -1,7 +1,8 @@
 ---
 title: Stub Specifications
 description: Fileactive Stub Specifications document predefined values for triggering specific outcomes and behaviours during testing. 
-permalink: /stub-specs
+permalink: /fileactive/stub-specs
+navigation: fileactive
 ---
 
 ## Payment

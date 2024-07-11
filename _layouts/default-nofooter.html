@@ -24,21 +24,27 @@
                         {% endif %}
                     </div>
                 </div>
-                <div class="row flex-xl-nowrap mx-auto min-vh-100 anz-body-container">
+                <div class="row flex-xl-nowrap mx-auto min-vh-100 anz-body-container">   
                     {% if page.toc %}
                     {% include toc.html %}
                     <div class="col-12 col-xl-9 px-0">
-                        {% else %}
-                        <div class="w-100 col-12 px-0">
-                            {% endif %}
+                    {% else %}
+                    <div class="w-100 col-12 px-0">
+                    {% endif %}
 
-                            {{ content }}
+                    {% if page.iframe %}
+                        <iframe src="{{ page.iframe }}" style="width: 100%; height: 80vh; border: none;"></iframe>
+                    {% else %}
+                        {{ content }}
+                    {% endif %}
 
-                        </div>
-                    </div>
+                    </div>            
+                </div>  
             </main>
         </div>
+
         {% include footer.html %}
+        <script src="{{ site.baseurl }}/assets/js/copy-code.js"></script>
         {% include scripts.html %}
         {% include toc-script.html %}
     </body>

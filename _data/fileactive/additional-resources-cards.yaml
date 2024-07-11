@@ -7,16 +7,16 @@
     - title: Stub Specification
       description: >
         Fileactive Stub Specifications
-      url: /stub-specs
+      url: /fileactive/stub-specs
 - title: Miscellaneous
   icon: icon_130-information-digital-filled-oceanblue.svg
   links:
     - title: Event Codes
       description: Fileactive API event and error codes
-      url: /event-codes
+      url: /fileactive/event-codes
     - title: Additional RTN Information
       description: RTN FAQs and NPP Payment Return Codes
-      url: /rtn-info
+      url: /fileactive/rtn-info
     - title: PayID Alias Processing
       description: Detail and information on Alias Processing for NPP
-      url: /alias-processing
+      url: /fileactive/alias-processing

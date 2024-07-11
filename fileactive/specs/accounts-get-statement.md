@@ -2,6 +2,7 @@
 layout: default
 title: Fileactive - Priorday Statement | CAMT.053
 description: Priorday Statement - camt.053.001.06
+navigation: fileactive
 ---
 
 # Priorday Statement
