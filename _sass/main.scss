@@ -173,6 +173,15 @@ header {
     max-width: $max-screen-wdith;
 }
 
+// Adjust the scroll position for anchor links
+:target::before {
+    content: "";
+    display: block;
+    height: 80px; /* Same height as your fixed navigation bar */
+    margin: -80px 0 0; /* Offset to account for the height */
+    visibility: hidden; /* Hide the pseudo-element */
+  }
+
 // Search
 .search-results {
     position: absolute;
@@ -537,6 +546,8 @@ table {
 
 pre.highlight {
     padding: $code-block-padding;
+    background-color: $code-block-background; // Using a variable from variable.scss
+    color: $code-text-color; // Using a variable from variable.scss
 }
 
 // FAQ Accordion

@@ -11,7 +11,10 @@ info:
     Payloads will be encrypted and signed prior to transmitting. Customers will need to decrypt the payload and verify the signature prior to processing the Processing Outcome or Notification.<br>
     
     Processing Outcomes and Notifications may arrive out of sequence and may be delivered more than once. ANZ will attempt to deliver each Processing Outcome and Notification at least once.
-      
+          
+    #### Release 1.0.5 changes:
+    - Updated hyper-links between schema models and PayTo API
+  
     #### Release 1.0.4 changes:
     - Updated example server URLs 
     - Added hyper-links between schema models and PayTo API
@@ -29,7 +32,7 @@ info:
 
     #### Release 1.0.1 changes:
     - List of mandate attributes amended by Payer will be included in **MandateNotification** schema, refer to **details** object. Applies when **trigger = MAMN**.  
-  version: 1.0.4
+  version: 1.0.5
 servers:
   - url: 'https://api.uat.example.com/v1'
     description: UAT Environment
@@ -44,7 +47,7 @@ paths:
       - Mandate
       summary: Mandate Processing Outcomes.
       description: |-
-        The purpose of this operation is to provide the processing outcome of the following mandate actions initiated by the **Biller** via the **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api#tag/Mandate">PayTo API - Mandate</a>**:<br>
+        The purpose of this operation is to provide the processing outcome of the following mandate actions initiated by the **Biller** via the **<a href="https://anz-insto.github.io/fileactive/api/payto-api#tag/Mandate">PayTo API - Mandate</a>**:<br>
         - Amend Mandate
         - Change Mandate Status
         - Create Mandate<br>
@@ -61,7 +64,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SecuredSubmissionResource'
-        description: Secured resource, refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api-webhook#tag/MandateActionOutcome">MandateActionOutcome</a>** for unencrypted payload object
+        description: Secured resource, refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/api/payto-api-webhook#tag/MandateActionOutcome">MandateActionOutcome</a>** for unencrypted payload object
         required: true
       responses:
         200:
@@ -111,7 +114,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SecuredSubmissionResource'
-        description: Secured resource, refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api-webhook#tag/MandateNotification">MandateNotification</a>** for unencrypted payload object
+        description: Secured resource, refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/api/payto-api-webhook#tag/MandateNotification">MandateNotification</a>** for unencrypted payload object
         required: true
       responses:
         200:
@@ -142,7 +145,7 @@ paths:
       - MPIR
       summary: MPIR Processing Outcomes.
       description: |-
-        The purpose of this operation is to provide the processing outcome of the following MPIR actions initiated by the **Biller** via the **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api#tag/MPIR">PayTo API - MPIR</a>**:<br>
+        The purpose of this operation is to provide the processing outcome of the following MPIR actions initiated by the **Biller** via the **<a href="https://anz-insto.github.io/fileactive/api/payto-api#tag/MPIR">PayTo API - MPIR</a>**:<br>
         - Create MPIR
 
         If MPIR is processed same day and successfully settles then `transaction_status_reason_code` will be **ACSC** Settlement Completed.<br>
@@ -167,7 +170,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SecuredSubmissionResource'
-        description: Secured resource, refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api-webhook#tag/MPIRActionOutcome ">MPIRActionOutcome </a>** for unencrypted payload object
+        description: Secured resource, refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/api/payto-api-webhook#tag/MPIRActionOutcome ">MPIRActionOutcome </a>** for unencrypted payload object
         required: true
       responses:
         200:
@@ -202,7 +205,7 @@ paths:
         - Mandate Query
         - Mandate Query Payment
 
-        The **Biller** should respond to the PayTo Query via the **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api#tag/Query">PayTo API - Query</a>**
+        The **Biller** should respond to the PayTo Query via the **<a href="https://anz-insto.github.io/fileactive/api/payto-api#tag/Query">PayTo API - Query</a>**
         
         Duplicate checking should be based on **ANZ** assigined identfier `case_id` and `reminder_count` and `re_open_case_indication`
       operationId: mandateQueries
@@ -214,7 +217,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SecuredSubmissionResource'
-        description: Secured resource, refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api-webhook#tag/QueryNotification">QueryNotification</a>** for unencrypted payload object
+        description: Secured resource, refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/api/payto-api-webhook#tag/QueryNotification">QueryNotification</a>** for unencrypted payload object
         required: true
       responses:
         200:

@@ -13,7 +13,10 @@ info:
     Payloads are to be encrypted and signed prior to transmitting.
     
     <a href="https://anz-insto.github.io/fileactive/event-codes#payto-api-event-codes">PayTo API Event Codes</a> 
-                             
+                               
+    #### Release 1.1.1 changes:
+    - Updated hyper-links between schema models and PayTo Webhook API
+                  
     #### Release 1.1.0 changes:
     - Updated PayTo endpoints to v1 instead of v1.0
     - Added account_identification_type_code to Amend Mandate request
@@ -39,7 +42,7 @@ info:
     - Added link to PayID information page.
     - Updated descriptions from "Payee" to "Biller". 
     - Added required scope for each API operation.
-  version: 1.1.0
+  version: 1.1.1
 servers:
   - url: https://api.fileactive.uat.anzgcis.com
     description: 'UAT (non-production) environment'
@@ -96,7 +99,7 @@ paths:
         
         A bilateral mandate creation will automatically expire after a fixed time period if the creation action is not completed, declined or recalled. Expiry of a mandate creation will result in the mandate status being set to 'Cancelled'.
         
-        The initial API response indicates if ANZ has accepted or rejected the request, not the processing outcome of the request. The processing outcome of the request will be delivered via the **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api-webhook#tag/Mandate">PayTo Webhook API - Mandate Processing Outcomes</a>**.
+        The initial API response indicates if ANZ has accepted or rejected the request, not the processing outcome of the request. The processing outcome of the request will be delivered via the **<a href="https://anz-insto.github.io/fileactive/api/payto-api-webhook#tag/Mandate">PayTo Webhook API - Mandate Processing Outcomes</a>**.
         
         The following rules apply to this API:
         - EstablishmentSchemeRule1: If `establishment_scheme` is equal to 'MGCR' then `creditor_information` **must** be present.
@@ -235,7 +238,7 @@ paths:
         description: |-
           Secured resource to create a mandate in the MMS.
           
-          Refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api#tag/MandateCreationRequest">MandateCreationRequest</a>** for unencrypted payload object.
+          Refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/api/payto-api#tag/MandateCreationRequest">MandateCreationRequest</a>** for unencrypted payload object.
           
           Examples are reflective of unencrypted payload. 
         required: true
@@ -270,7 +273,7 @@ paths:
       
         Any notification triggered by this operation will have priority UNATTENDED. 
       
-        The initial API response indicates if ANZ has accepted or rejected the request, not the processing outcome of the request. The processing outcome of the request will be delivered via the **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api-webhook#tag/Mandate">PayTo Webhook API - Mandate Processing Outcomes</a>**.  
+        The initial API response indicates if ANZ has accepted or rejected the request, not the processing outcome of the request. The processing outcome of the request will be delivered via the **<a href="https://anz-insto.github.io/fileactive/api/payto-api-webhook#tag/Mandate">PayTo Webhook API - Mandate Processing Outcomes</a>**.  
 
         The following rules apply to this API:
         - ChangeAndReasonCodeRule1: When `change` is equal to value 'CNCL' or 'SUSP' then `reason_code` must be present.
@@ -297,7 +300,7 @@ paths:
         description: |-
           Secured resource to change the status of a mandate in the MMS. 
         
-          Refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api#tag/MandateStatusChangeRequest">MandateStatusChangeRequest</a>** for unencrypted payload object.         
+          Refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/api/payto-api#tag/MandateStatusChangeRequest">MandateStatusChangeRequest</a>** for unencrypted payload object.         
         required: true
       responses:
         202:
@@ -335,13 +338,13 @@ paths:
         Any attempt to amend a mandate that must be performed bilaterally where there is already a pending amendment will fail. However, unilateral amendments may still be performed where a pending amendment exists. 
         - For a unilateral amendment the changes will only be applied to the mandate if the amendment does not invalidate the mandate integrity. 
         - For a bilateral amendment, the integrity of the changes will be verified when the amendment request is received and again at the moment that the action is confirmed.         
-        - The rules determining the integrity of the mandate are defined in the **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api#tag/Mandate/operation/createMandate">PayTo API - Create Mandate</a>**. 
+        - The rules determining the integrity of the mandate are defined in the **<a href="https://anz-insto.github.io/fileactive/api/payto-api#tag/Mandate/operation/createMandate">PayTo API - Create Mandate</a>**. 
 
         A mandate amendment will automatically expire after a fixed time period if the amendment is not completed, declined or recalled. 
         
         For a bilateral amendment the mandate version number will only be incremented when the amendment action is successfully completed.
 
-        The initial API response indicates if ANZ has accepted or rejected the request, not the processing outcome of the request. The processing outcome of the request will be delivered via the **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api-webhook#tag/Mandate">PayTo Webhook API - Mandate Processing Outcomes</a>**.
+        The initial API response indicates if ANZ has accepted or rejected the request, not the processing outcome of the request. The processing outcome of the request will be delivered via the **<a href="https://anz-insto.github.io/fileactive/api/payto-api-webhook#tag/Mandate">PayTo Webhook API - Mandate Processing Outcomes</a>**.
       operationId: amendMandate
       security:
         - apiKeyAuth: []
@@ -416,7 +419,7 @@ paths:
         description: |-
           Secured resource to amend a mandate in the MMS. 
           
-          Refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api#tag/MandateAmendmentRequest">MandateAmendmentRequest</a>** for unencrypted payload object. 
+          Refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/api/payto-api#tag/MandateAmendmentRequest">MandateAmendmentRequest</a>** for unencrypted payload object. 
           
           Examples are reflective of unencrypted payload.
         required: true
@@ -510,7 +513,7 @@ paths:
       description: |-
         The purpose of this operation is to create a new mandated payment initiation request (MPIR). The underlying mandate **must** be in an 'Active' state. 
         
-        The initial API response indicates if ANZ has accepted or rejected the request, not the MPIR processing outcome of the request. The MPIR processing outcome will be delivered via the **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api-webhook#tag/MPIR">PayTo Webhook API - MPIR Processing Outcomes</a>**. 
+        The initial API response indicates if ANZ has accepted or rejected the request, not the MPIR processing outcome of the request. The MPIR processing outcome will be delivered via the **<a href="https://anz-insto.github.io/fileactive/api/payto-api-webhook#tag/MPIR">PayTo Webhook API - MPIR Processing Outcomes</a>**. 
         
         The following rules apply to this API:
         - MPSUserSchemeRule1: `mps_user_id` **must** be the owner of the provided `mandate_identification`
@@ -538,7 +541,7 @@ paths:
         description: |-
           Secured resource to create a MPIR. 
           
-          Refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api#tag/MPIRCreationRequest">MPIRCreationRequest</a>** for unencrypted payload object
+          Refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/api/payto-api#tag/MPIRCreationRequest">MPIRCreationRequest</a>** for unencrypted payload object
         required: true
       responses:
         202:
@@ -565,7 +568,7 @@ paths:
       - Query
       summary: PayTo query resolution.
       description: |-
-        The purpose of this operation is to provide a resolution to a PayTo query raised by the **Payer's** Financial Institution. Queries are delivered via the **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api-webhook#tag/Query">PayTo Webhook API - PayTo Queries</a>**.  
+        The purpose of this operation is to provide a resolution to a PayTo query raised by the **Payer's** Financial Institution. Queries are delivered via the **<a href="https://anz-insto.github.io/fileactive/api/payto-api-webhook#tag/Query">PayTo Webhook API - PayTo Queries</a>**.  
         
         The following rules apply to this API: 
         - CaseDecisionSchemeRule1: `case_decision` = **ACPT** then `reject_reason_code` and `return_transaction_identification` **should not** be provided. 
@@ -595,7 +598,7 @@ paths:
         description: |- 
           Secured resource to create a PayTo query resolution. 
           
-          Refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/fileactive/api/payto-api#tag/QueryResolutionRequest">QueryResolutionRequest</a>** for unencrypted payload object.
+          Refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/api/payto-api#tag/QueryResolutionRequest">QueryResolutionRequest</a>** for unencrypted payload object.
         required: true
       responses:
         202:
@@ -1263,7 +1266,6 @@ components:
       - establishment_scheme
       - mandate_purpose_code
       - description
-      - short_description
       - validity_start_date
       - automatic_extension_indicator
       - debtor_information
