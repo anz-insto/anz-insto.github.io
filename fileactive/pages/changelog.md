@@ -9,6 +9,8 @@ toc: true
 
 ## Contents
 
+- [2024-08-08 - Added PayTo Lump Sum Settlement Report File Spec](#2024-08-08)
+- [2024-08-06 - Updates to Fileactive Payment API](#2024-08-06)
 - [2024-07-05 - Updates to PayTo APIs](#2024-07-05)
 - [2024-05-24 - Updates to PayTo APIs](#2024-05-24)
 - [2024-05-13 - Updates to PayTo APIs](#2024-05-13)
@@ -39,6 +41,30 @@ toc: true
 - [2022-08-19 - Site creation](#2022-08-19)
 
 ---
+<a name="2024-08-08"></a>
+
+### [2024-08-08]
+
+#### Changes
+
+- Added PayTo Lump Sum Settlement file specification
+- Updated PayTo API v1.1.1
+    - Updated hyper-links between schema models and PayTo Webhook API
+- Updated PayTo API Webhook v1.0.5
+    - Updated hyper-links between schema models and PayTo API
+
+<a name="2024-08-06"></a>
+
+### [2024-08-06]
+
+#### Changes
+
+- Updated NPP status API
+    - Include 404 Not found error response to status end point
+- Updated all other end points including asia pacific regions
+    - Include 404 Not found error response to status end point
+- Removed PAYNOW refernces for SG, as it is merged with FAST payment type
+
 <a name="2024-07-05"></a>
 
 ### [2024-07-05]

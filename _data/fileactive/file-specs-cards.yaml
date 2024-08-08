@@ -1,0 +1,14 @@
+- title: PayTo-File-Specifications
+  links:
+#    - title: Bulk MPIR
+#      description: > 
+#        Fileactive PayTo Bulk MPIR File Specification 
+#      url: /fileactive
+#    - title: Bulk MPIR Processing Outcome
+#      description: >
+#        Fileactive PayTo Bulk MPIR Processing Outcome File Specification
+#      url: /fileactive
+    - title: Lump Sum Settlement Report
+      description: >
+        Fileactive PayTo Lump Sum Settlement Report File Specification
+      url: /fileactive/specs/lump-sum-settlement

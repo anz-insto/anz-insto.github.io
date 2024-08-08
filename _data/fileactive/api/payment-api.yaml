@@ -127,6 +127,8 @@ paths:
           description: Unauthorized
         "403":
           description: Forbidden
+        '404':
+          $ref: '#/components/responses/404NotFound'
         "429":
           description: Too many requests
         "500":
@@ -203,6 +205,8 @@ paths:
           $ref: '#/components/responses/400BadRequest'
         '401':
           $ref: '#/components/responses/401Unauthorised'
+        '404':
+          $ref: '#/components/responses/404NotFound'
         '403':
           $ref: '#/components/responses/403Forbidden'
         '429':
@@ -281,6 +285,8 @@ paths:
           $ref: '#/components/responses/400BadRequest'
         '401':
           $ref: '#/components/responses/401Unauthorised'
+        '404':
+          $ref: '#/components/responses/404NotFound'
         '403':
           $ref: '#/components/responses/403Forbidden'
         '429':
@@ -359,6 +365,8 @@ paths:
           $ref: '#/components/responses/400BadRequest'
         '401':
           $ref: '#/components/responses/401Unauthorised'
+        '404':
+          $ref: '#/components/responses/404NotFound'
         '403':
           $ref: '#/components/responses/403Forbidden'
         '429':
@@ -437,6 +445,8 @@ paths:
           $ref: '#/components/responses/400BadRequest'
         '401':
           $ref: '#/components/responses/401Unauthorised'
+        '404':
+          $ref: '#/components/responses/404NotFound'
         '403':
           $ref: '#/components/responses/403Forbidden'
         '429':
@@ -515,6 +525,8 @@ paths:
           $ref: '#/components/responses/400BadRequest'
         '401':
           $ref: '#/components/responses/401Unauthorised'
+        '404':
+          $ref: '#/components/responses/404NotFound'
         '403':
           $ref: '#/components/responses/403Forbidden'
         '429':
@@ -593,6 +605,8 @@ paths:
           $ref: '#/components/responses/400BadRequest'
         '401':
           $ref: '#/components/responses/401Unauthorised'
+        '404':
+          $ref: '#/components/responses/404NotFound'
         '403':
           $ref: '#/components/responses/403Forbidden'
         '429':
@@ -671,6 +685,8 @@ paths:
           $ref: '#/components/responses/400BadRequest'
         '401':
           $ref: '#/components/responses/401Unauthorised'
+        '404':
+          $ref: '#/components/responses/404NotFound'
         '403':
           $ref: '#/components/responses/403Forbidden'
         '429':
@@ -749,6 +765,8 @@ paths:
           $ref: '#/components/responses/400BadRequest'
         '401':
           $ref: '#/components/responses/401Unauthorised'
+        '404':
+          $ref: '#/components/responses/404NotFound'
         '403':
           $ref: '#/components/responses/403Forbidden'
         '429':
@@ -827,84 +845,8 @@ paths:
           $ref: '#/components/responses/400BadRequest'
         '401':
           $ref: '#/components/responses/401Unauthorised'
-        '403':
-          $ref: '#/components/responses/403Forbidden'
-        '429':
-          $ref: '#/components/responses/429TooManyRequests'
-        '500':
-          $ref: '#/components/responses/500InternalError'
-        '502':
-          $ref: '#/components/responses/502BadGateway'
-        '503':
-          $ref: '#/components/responses/503Unavailable'
-        '504':
-          $ref: '#/components/responses/504Timeout'
-        default:
-          $ref: '#/components/responses/default'
-      security:
-        - apiKey: []
-          bearerAuth: [SG.INSTO.PAYMENT.READ]
-  /payment/sg/v1.0/paynow:
-    post:
-      summary: SG PAYNOW Submit
-      description: |-
-        Singapore PAYNOW API using pain.001.001.09 derived json message format. Payment Initiation request using Singapore PAYNOW  service from single debtor to single or multiple creditors.   
-        Refer to **CustomerCreditTransferInitiationV09_ASIA_PAYNOW** for unencrypted payload object.
-      tags:
-        - Singapore Payments
-      operationId: submitSgPaynow
-      parameters:
-        - $ref: '#/components/parameters/correlationID'
-        - $ref: '#/components/parameters/messageID'
-      requestBody:
-        description: >-
-          Secured resource to instruct movement of funds from the debtor account
-          to creditor.
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SecuredPaymentSubmissionResource'
-        required: true
-      responses:
-        '201':
-          $ref: '#/components/responses/201Created'
-        '400':
-          $ref: '#/components/responses/400BadRequest'
-        '401':
-          $ref: '#/components/responses/401Unauthorised'
-        '429':
-          $ref: '#/components/responses/429TooManyRequests'
-        '500':
-          $ref: '#/components/responses/500InternalError'
-        '502':
-          $ref: '#/components/responses/502BadGateway'
-        '503':
-          $ref: '#/components/responses/503Unavailable'
-        '504':
-          $ref: '#/components/responses/504Timeout'
-        default:
-          $ref: '#/components/responses/default'
-      security:
-        - apiKey: []
-          bearerAuth: [SG.INSTO.PAYMENT.PAYNOW.CREATE]
-  /payment/sg/v1.0/paynow/{x-Message-Id}:  
-    get:
-      summary: SG PAYNOW Status
-      description: |
-        Retrieve and return the status of a submited message. 
-      tags:
-        - Singapore Payments
-      operationId: getSgPaynowStatus
-      parameters:
-        - $ref: '#/components/parameters/id'
-        - $ref: '#/components/parameters/correlationID'
-      responses:
-        '200':
-          $ref: '#/components/responses/200OK'
-        '400':
-          $ref: '#/components/responses/400BadRequest'
-        '401':
-          $ref: '#/components/responses/401Unauthorised'
+        '404':
+          $ref: '#/components/responses/404NotFound'
         '403':
           $ref: '#/components/responses/403Forbidden'
         '429':
@@ -983,6 +925,8 @@ paths:
           $ref: '#/components/responses/400BadRequest'
         '401':
           $ref: '#/components/responses/401Unauthorised'
+        '404':
+          $ref: '#/components/responses/404NotFound'
         '403':
           $ref: '#/components/responses/403Forbidden'
         '429':
@@ -1061,6 +1005,8 @@ paths:
           $ref: '#/components/responses/400BadRequest'
         '401':
           $ref: '#/components/responses/401Unauthorised'
+        '404':
+          $ref: '#/components/responses/404NotFound'
         '403':
           $ref: '#/components/responses/403Forbidden'
         '429':
@@ -1109,8 +1055,7 @@ components:
             HK.INSTO.PAYMENT.READ: Retrieve information for specific payment resource   
             SG.INSTO.PAYMENT.ACH.CREATE: Create Singapore ACH Payment Resource   
             SG.INSTO.PAYMENT.FAST.CREATE: Create Singapore FAST Payment Resource   
-            SG.INSTO.PAYMENT.RTGS.CREATE: Create Singapore RTGS Payment Resource  
-            SG.INSTO.PAYMENT.PAYNOW.CREATE: Create Singapore PAYNOW Payment Resource 
+            SG.INSTO.PAYMENT.RTGS.CREATE: Create Singapore RTGS Payment Resource
             SG.INSTO.PAYMENT.CBFT.CREATE: Create Singapore CBFT Payment Resource  
             SG.INSTO.PAYMENT.READ: Retrieve information for specific payment resource   
             VN.INSTO.PAYMENT.ACH.CREATE: Create Vietnam ACH Payment Resource    
@@ -1279,7 +1224,7 @@ components:
       description: Action is not authorised using current authentication credentils
       content: {}
     404NotFound:
-      description: Not Found
+      description: No record found
       content: {}
     429TooManyRequests:
       description: Action exceeds allocated limits
@@ -2847,293 +2792,6 @@ components:
                   remittance_information_unstructured:
                     - REM
       additionalProperties: false
-    CustomerCreditTransferInitiationV09_ASIA_PAYNOW:
-      description: |
-          Payment initiation ASIA PAYNOW. Request to instruct movement of funds from the debtor account to creditor.   
-          Countries in scope for Asia PAYNOW:   
-          - SG   
-      type: object
-      properties:
-        creation_date_time:
-          description: Date and time at which the request was created.
-          example: '2020-12-17T00:00:00'
-          $ref: '#/components/schemas/ISODateTime'
-        number_of_transactions:
-          description: The number of transactions contained in the request
-          example: '1'
-          $ref: '#/components/schemas/Max15NumericText'
-        control_sum:
-          description: The sum of the transaction amounts in the request
-          example: 1.23'
-          $ref: '#/components/schemas/DecimalNumber'
-        initiating_party_name:
-          description: Party that initiates the payment.
-          example: ANZ Sample
-          $ref: '#/components/schemas/Max140Text'
-        initiating_party_bic:
-          description: Code allocated to organisations by the ISO 9362 Registration
-            Authority, under an international identification scheme, as described in
-            the latest version of the standard ISO 9362 Banking (Banking
-            telecommunication messages, Bank Identifier Codes).
-          $ref: "#/components/schemas/AnyBICIdentifier"
-        initiating_party_identification:
-          description: Unique identification of an organisation, as assigned by an
-            institution, using an identification scheme.
-          $ref: "#/components/schemas/Max35Text"
-        payment_information:
-          description: Information related to the individual payments with a single API submission.
-          type: array
-          minItems: 1
-          items:
-            description: >-
-              Set of characteristics that applies to the debit side of the payment
-              transactions included in the credit transfer initiation.
-            type: object
-            properties:
-              payment_information_identification:
-                description: Unique identification, as assigned by a sending party, to
-                  unambiguously identify the payment batch within the message.
-                example: BATCH REF
-                type: string
-                minLength: 1
-                maxLength: 20               
-              batch_booking:
-                $ref: "#/components/schemas/BatchBookingIndicator"
-              category_purpose:
-                description: Specifies the high level purpose of the instruction based on a set
-                  of pre-defined categories
-                example: OTHR
-                $ref: "#/components/schemas/ExternalCategoryPurpose1Code"
-              requested_execution_date:
-                description: Date at which the initiating party requests the clearing agent to
-                  process the payment.
-                example: 2020-12-17
-                $ref: "#/components/schemas/ISODate"
-              debtor_name:
-                description: Name by which a party is known and which is usually used to
-                  identify that party.
-                example: Payer Name
-                $ref: "#/components/schemas/Max140Text"
-              debtor_account_identification:
-                description: Unique and unambiguous identification for the account between the
-                  account owner and the account servicer.
-                example: "012001999888777"
-                $ref: "#/components/schemas/Max34Text"
-              debtor_agent_member_identification:
-                $ref: "#/components/schemas/Max35Text"
-              credit_transfer_transaction_information:
-                description: Information related to the individual transaction within a payment.
-                type: array
-                minItems: 1
-                items:
-                  description: Information related to the individual transactions within a payment.
-                  type: object
-                  properties:
-                    instruction_identification:
-                      description: >-
-                        Unique identification as assigned by an instructing party for an
-                        instructed party to unambiguously identify the instruction.
-                      example: SENDER REF
-                      type: string
-                      minLength: 1
-                      maxLength: 20
-                    end_to_end_identification:
-                      description: >-
-                        Unique identification assigned by the initiating party to
-                        unambiguously identify the transaction. This identification is passed
-                        on, unchanged, throughout the entire end-to-end chain. 
-                      type: string
-                      minLength: 1
-                      maxLength: 20
-                      example: TRANSACTION REF
-                    instructed_amount:
-                      description: Amount of money to be moved between the debtor and creditor, before
-                        deduction of charges, expressed in the currency as ordered by the
-                        initiating party.
-                      example: "1.23"
-                      $ref: "#/components/schemas/ActiveOrHistoricCurrencyAndAmount"
-                      additionalProperties: false
-                    creditor_agent_name:
-                      description: Name of financial institution servicing an account for the creditor.
-                      example: ABC Bank
-                      $ref: "#/components/schemas/Max140Text"
-                    creditor_agent_bicfi:
-                      description: SWIFT BIC of the financial institution servicing an account for the creditor. Mandatory for PAYNOW payments.
-                      $ref: "#/components/schemas/BICFIDec2014Identifier"
-                    creditor_agent_postal_address:
-                      $ref: "#/components/schemas/PostalAddress24"
-                    creditor_organisation_identification:
-                      description: Unique and unambiguous way to identify an organisation.
-                      $ref: "#/components/schemas/OrganisationIdentification29"
-                    creditor_private_identification:
-                      description: Unique and unambiguous way to identify an organisation/party.
-                      $ref: "#/components/schemas/PersonIdentification13"
-                    creditor_account_identification:
-                      description: |
-                        Unique and unambiguous identification for the account between the account owner and the account servicer.
-                        Must provide one of:
-                        - creditor_account_identification
-                        - creditor_account_proxy
-                      example: "012999111222333"
-                      $ref: "#/components/schemas/Max34Text"
-                    remittance_information_unstructured:
-                      description: Information supplied to enable the matching/reconciliation of an
-                        entry with the items that the payment is intended to settle, such as
-                        commercial invoices in an accounts' receivable system, in an
-                        unstructured form.
-                      type: array
-                      minItems: 1
-                      maxItems: 1
-                      items:
-                        $ref: "#/components/schemas/Max140Text"
-                  required:
-                    - instruction_identification
-                    - end_to_end_identification
-                    - instructed_amount
-                  additionalProperties: false
-            required:
-              - payment_information_identification
-              - requested_execution_date
-              - debtor_name
-              - debtor_account_identification
-              - credit_transfer_transaction_information
-            additionalProperties: false
-      required:
-        - creation_date_time
-        - number_of_transactions
-        - initiating_party_name
-        - payment_information
-      example:
-        - creation_date_time: 2021-12-16T00:00:00.00
-          number_of_transactions: "1"
-          control_sum: "1.23"
-          initiating_party_name: ANZ Sample
-          payment_information:
-            - payment_information_identification: SG-PAYNOW-PMTINFID-1
-              batch_booking: true
-              category_purpose: SALA
-              requested_execution_date: 2021-12-16
-              debtor_name: SG PAYNOW Payer
-              debtor_account_identification: "999999999"
-              credit_transfer_transaction_information:
-                - instruction_identification: SG-PAYNOW-INSTRID-1
-                  end_to_end_identification: SG-PAYNOW-E2EID-1
-                  instructed_amount:
-                    amount: "1.23"
-                    currency: SGD
-                  creditor_agent_name: ABC Bank
-                  creditor_agent_postal_address:
-                    country: "SG"
-                  creditor_agent_bicfi: ABCDSG22XXX
-                  creditor_organisation_identification:
-                    identification: BENE12345
-                    scheme_name: BENEFICARY CODE
-                  remittance_information_unstructured:
-                    - REM
-        - creation_date_time: 2021-12-16T00:00:00.00
-          number_of_transactions: "1"
-          control_sum: "1.23"
-          initiating_party_name: ANZ Sample
-          payment_information:
-            - payment_information_identification: SG-PAYNOW-PMTINFID-1
-              batch_booking: false
-              requested_execution_date: 2021-12-16
-              debtor_name: SG PAYNOW Payer
-              debtor_account_identification: "999999999"
-              credit_transfer_transaction_information:
-                - instruction_identification: SG-PAYNOW-INSTRID-1
-                  end_to_end_identification: SG-PAYNOW-E2EID-1
-                  instructed_amount:
-                    amount: "1.23"
-                    currency: SGD
-                  creditor_agent_name: ABC Bank
-                  creditor_agent_postal_address:
-                    country: "SG"
-                  creditor_agent_bicfi: ABCDSG22XXX
-                  creditor_account_identification: "111222333"
-                  creditor_private_identification:
-                    identification: BENE12345
-                    scheme_name: BENEFICARY CODE
-                  remittance_information_unstructured:
-                    - REM
-        - creation_date_time: 2021-12-16T00:00:00.00
-          number_of_transactions: "1"
-          control_sum: "1.23"
-          initiating_party_name: ANZ Sample
-          payment_information:
-            - payment_information_identification: SG-PAYNOW-PMTINFID-1
-              batch_booking: true
-              category_purpose: SALA
-              requested_execution_date: 2021-12-16
-              debtor_name: SG PAYNOW Payer
-              debtor_account_identification: "999999999"
-              credit_transfer_transaction_information:
-                - instruction_identification: SG-PAYNOW-INSTRID-1
-                  end_to_end_identification: SG-PAYNOW-E2EID-1
-                  instructed_amount:
-                    amount: "1.23"
-                    currency: SGD
-                  creditor_agent_name: ABC Bank
-                  creditor_agent_postal_address:
-                    country: "SG"
-                  creditor_agent_bicfi: ABCDSG22XXX
-                  creditor_account_identification: "111222333"
-                  creditor_private_identification:
-                    identification: BENE12345
-                    scheme_name: BENEFICARY CODE
-                  remittance_information_unstructured:
-                    - REM
-        - creation_date_time: 2021-12-07T00:00:00.00
-          number_of_transactions: "1"
-          control_sum: "1.23"
-          initiating_party_name: ANZ Sample
-          payment_information:
-            - payment_information_identification: SG-PAYNOW-PMTINFID-1
-              batch_booking: false
-              requested_execution_date: 2021-12-07
-              debtor_name: SG PAYNOW Payer
-              debtor_account_identification: "12345678901"
-              credit_transfer_transaction_information:
-                - instruction_identification: SG-PAYNOW-INSTRID-1
-                  end_to_end_identification: SG-PAYNOW-E2EID-1
-                  instructed_amount:
-                    amount: "1.23"
-                    currency: SGD
-                  creditor_agent_name: The Singapore and Shanghai Banking Corp L
-                  creditor_agent_postal_address:
-                    country: "SG"
-                  creditor_agent_bicfi: HSBCSGHHSGH
-                  creditor_account_identification: "111222333"
-                  creditor_organisation_identification:
-                    identification: BENE12345
-                    scheme_name: BENEFICARY CODE
-                  remittance_information_unstructured:
-                    - REM
-        - creation_date_time: 2021-12-07T00:00:00.00
-          number_of_transactions: "1"
-          control_sum: "200"
-          initiating_party_name: ANZ Sample
-          payment_information:
-            - payment_information_identification: SG-PAYNOW-PMTINFID-2
-              requested_execution_date: 2021-12-07
-              debtor_name: SG PAYNOW Payer
-              debtor_account_identification: "12345678901"
-              credit_transfer_transaction_information:
-                - instruction_identification: SG-PAYNOW-INSTRID-2
-                  end_to_end_identification: SG-PAYNOW-E2EID-2
-                  instructed_amount:
-                    amount: "200"
-                    currency: CNY
-                  creditor_agent_name: The Singapore and Shanghai Banking Corp L
-                  creditor_agent_bicfi: HSBCSGHHSGH
-                  creditor_agent_member_identification: "004002"
-                  creditor_organisation_identification:
-                    identification: BENE12345
-                    scheme_name: BENEFICARY CODE
-                  creditor_account_identification: "111222333"
-                  remittance_information_unstructured:
-                    - REM
-      additionalProperties: false
     CustomerCreditTransferInitiationV09_ASIA_CBFT:
       description: |
           Payment initiation ASIA CBFT. Request to instruct movement of funds from the debtor account to creditor.   
@@ -4346,9 +4004,6 @@ tags:
   - name: CustomerCreditTransferInitiationV09_ASIA_RTGS
     description: <SchemaDefinition schemaRef="#/components/schemas/CustomerCreditTransferInitiationV09_ASIA_RTGS" />
     x-displayName: CustomerCreditTransferInitiationV09_ASIA_RTGS
-  - name: CustomerCreditTransferInitiationV09_ASIA_PAYNOW
-    description: <SchemaDefinition schemaRef="#/components/schemas/CustomerCreditTransferInitiationV09_ASIA_PAYNOW" />
-    x-displayName: CustomerCreditTransferInitiationV09_ASIA_PAYNOW
   - name: CustomerCreditTransferInitiationV09_ASIA_CBFT
     description: <SchemaDefinition schemaRef="#/components/schemas/CustomerCreditTransferInitiationV09_ASIA_CBFT" />
     x-displayName: CustomerCreditTransferInitiationV09_ASIA_CBFT
@@ -4381,6 +4036,5 @@ x-tagGroups:
       - CustomerCreditTransferInitiationV09_ASIA_ACH
       - CustomerCreditTransferInitiationV09_ASIA_FAST
       - CustomerCreditTransferInitiationV09_ASIA_RTGS
-      - CustomerCreditTransferInitiationV09_ASIA_PAYNOW
       - CustomerCreditTransferInitiationV09_ASIA_CBFT
       - CustomerCreditTransferInitiationV09_AU_CBFT

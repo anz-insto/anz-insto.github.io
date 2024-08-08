@@ -58,6 +58,18 @@ navigation: fileactive
 <div class="row flex-xl-nowrap mx-auto anz-body-container">   
 <div class="w-100 col-12 anz-page-section" markdown="1">
 
+## File Specifications
+
+### PayTo
+
+{% include fileactive/catalogue-file-specs.html %}
+
+</div>
+</div>
+
+<div class="row flex-xl-nowrap mx-auto anz-body-container">   
+<div class="w-100 col-12 anz-page-section" markdown="1">
+
 ## Testing and Development Resources
 
 {% include fileactive/catalogue-additional-resources.html %}
