@@ -355,10 +355,6 @@ paths:
 
         The initial API response indicates if ANZ has accepted or rejected the request, not the processing outcome of the request. The processing outcome of the request will be delivered via the **<a href="https://anz-insto.github.io/fileactive/api/payto-api-webhook#tag/Mandate">PayTo Webhook API - Mandate Processing Outcomes</a>**.
 
-=======
-        
-
-
       operationId: amendMandate
       security:
         - apiKeyAuth: []
