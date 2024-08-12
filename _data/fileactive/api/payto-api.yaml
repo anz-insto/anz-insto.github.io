@@ -20,7 +20,7 @@ info:
     #### Release 1.1.0 changes:
     - Updated PayTo endpoints to v1 instead of v1.0
     - Added account_identification_type_code to Amend Mandate request
-    - Updated clearing value for attribute payment_execute_not_before_time on Amend Mandate request   
+    - Updated clearing value for attribute payment_execute_not_before_time on Amend Mandate request
     - Updated Amend Mandate attribute descriptions to indicate more clearly which attributes can be cleared and which ones cannot
     - Added hyper-links between schema models and PayTo Webhook API
                    
@@ -95,6 +95,7 @@ paths:
       - Mandate
       summary: Create a new mandate.
       description: |-
+
         The purpose of this operation is to create a new mandate in the MMS. A mandate is always created by the Payment Initiator. If the Establishment Scheme for the mandate is 'AUPM' then the mandate will be created bilaterally, otherwise it will be created unilaterally. A unilaterally created mandate will have initial status 'Active' and version '1' whereas a bilaterally created mandate will have initial status 'Created' and version '0'. A bilaterally created mandate can only become 'Active' when the Debtor confirms the creation of the mandate, at which moment its' version will also increase to '1'. 
         
         A bilateral mandate creation will automatically expire after a fixed time period if the creation action is not completed, declined or recalled. Expiry of a mandate creation will result in the mandate status being set to 'Cancelled'.
@@ -111,6 +112,9 @@ paths:
         -  ValidityEndDateRule1: If `validity_end_date` is present then `automatic_extension_indicator` **must** be 'false'.
         
         -  ValidityEndDateRule2: If `validity_end_date` is **not** present then `automatic_extension_indicator` **must** be 'true'.
+
+        For detailed information on the PayTo Mandate Creation process, refer [Create Mandate flow](../payto-flow#create-mandate-flow)
+
       operationId: createMandate
       security:
         - apiKeyAuth: []
@@ -267,6 +271,7 @@ paths:
       - Mandate
       summary: Change the status of a mandate.
       description: |-
+
         The purpose of this operation is to change the status of a mandate. A status change is always performed as a unilateral operation. The status can only be changed when the mandate is currently active or suspended. Releasing a suspended mandate can only be performed by the party that suspended the mandate. A status change can be applied when there is a pending amendment and also when porting is in progress. 
         
         Upon successful status change the mandate version number will be incremented. 
@@ -277,6 +282,9 @@ paths:
 
         The following rules apply to this API:
         - ChangeAndReasonCodeRule1: When `change` is equal to value 'CNCL' or 'SUSP' then `reason_code` must be present.
+
+        For detailed information on the Change mandate status process, refer [Change mandate status - by biller](../payto-flow#change-mandate-status---by-biller) and [Change mandate status - by payer](../payto-flow#change-mandate-status---by-payer)
+
       operationId: changeMandateStatus
       security:
         - apiKeyAuth: []
@@ -300,7 +308,7 @@ paths:
         description: |-
           Secured resource to change the status of a mandate in the MMS. 
         
-          Refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/api/payto-api#tag/MandateStatusChangeRequest">MandateStatusChangeRequest</a>** for unencrypted payload object.         
+          Refer to Model/Schema **<a href="https://anz-insto.github.io/fileactive/api/payto-api#tag/MandateStatusChangeRequest">MandateStatusChangeRequest</a>** for unencrypted payload object.
         required: true
       responses:
         202:
@@ -327,6 +335,7 @@ paths:
       - Mandate
       summary: Amend mandate
       description: |
+
         The purpose of this operation is to amend an existing mandate. 
 
         The MMS will determine if the amendment is to be performed unilaterally or bilaterally based on the party role of the caller and the fields being amended. 
@@ -345,6 +354,11 @@ paths:
         For a bilateral amendment the mandate version number will only be incremented when the amendment action is successfully completed.
 
         The initial API response indicates if ANZ has accepted or rejected the request, not the processing outcome of the request. The processing outcome of the request will be delivered via the **<a href="https://anz-insto.github.io/fileactive/api/payto-api-webhook#tag/Mandate">PayTo Webhook API - Mandate Processing Outcomes</a>**.
+
+=======
+        
+
+
       operationId: amendMandate
       security:
         - apiKeyAuth: []
@@ -525,6 +539,9 @@ paths:
         - CreditorDetailsSchemeRule2: `creditor_information` **should** not be present where provided on the mandate.
         
         - CreditorDetailsSchemeRule3: If `creditor_information` is provided and is also available on the mandate then details **must** be exactly the same.
+
+        For detailed information on the Payment initiation process, refer [API MPIR flow with lump-sum settlement options](../payto-flow#api-mpir-flow-with-lump-sum-settlement-options) and [Bulk MPIR flow with lump-sum settlement options](../payto-flow#bulk-mpir-flow-with-lump-sum-settlement-options)
+
       operationId: createMPIR
       security:
         - apiKeyAuth: []
@@ -582,6 +599,10 @@ paths:
         - RejectReasonSchemeRule1: `reject_reason_code` = **ARDT** then `return_transaction_identification` **must** be provided.  
         
         - RejectReasonSchemeRule2: `reject_reason_code` = **CUST** then `return_transaction_identification` **must not** be provided.
+
+          For detailed information on the PayTo query notification and resolution process, refer [Query notification and resolution
+          ](../payto-flow#query-notification-and-resolution)
+
       operationId: queryResolution
       security:
         - apiKeyAuth: []

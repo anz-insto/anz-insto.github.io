@@ -544,11 +544,11 @@ table {
 
 }
 
-pre.highlight {
-    padding: $code-block-padding;
-    background-color: $code-block-background; // Using a variable from variable.scss
-    color: $code-text-color; // Using a variable from variable.scss
-}
+//pre.highlight {
+//    padding: $code-block-padding;
+//    background-color: $code-block-background; // Using a variable from variable.scss
+//    color: $code-text-color; // Using a variable from variable.scss
+//}
 
 // FAQ Accordion
 .faq-card {

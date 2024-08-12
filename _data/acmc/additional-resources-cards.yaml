@@ -1,0 +1,6 @@
+- title: Miscellaneous
+  icon: icon_130-information-digital-filled-oceanblue.svg
+  links:
+    - title: Payload Signing and Encryption
+      description: Sample plugin to sign and encrypt payloads
+      url: /fileactive/test-sign-encrypt
