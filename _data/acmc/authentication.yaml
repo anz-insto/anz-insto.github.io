@@ -59,28 +59,43 @@ paths:
         All API calls to the ANZ Cash Management Central (ACMC) platform require authentication via OAuth 2.0. Once authenticated, all requests should be made to the /graphql endpoint. This ensures secure and standardized communication with the platform. Detailed examples and instructions on how to authenticate and use the GraphQL API are provided below.
       security:
         - apiKeyAuth: []
-          bearerAuth: [GBL.INSTO.GRAPHQL.CREATE]
-      parameters:
-        - $ref: "#/components/parameters/correlationID"
-        - $ref: "#/components/parameters/messageID"
-        - $ref: "#/components/parameters/priority"
+          bearerAuth: [GBL.INSTO.GRAPHQL.CREATE,GBL.INSTO.GRAPHQL.READ]
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SecuredSubmissionResource'
-            examples: 
-              Mandate Creation - New DDR: 
-                value: 
-                  {
-                  "data": {
-                      "openAccount": {
-                      "commandId": "Q29tbWFuZDoxMmRkYTEyMi1hNzFkLTRlYWQtODZhZC05NGY3NjVjN2FlY2Q="
+              $ref: '#/components/schemas/GraphQLRequest'
+            examples:
+              queryExample:
+                summary: "Example GraphQL Query"
+                value:
+                  query: |
+                    query GetResource($id: ID!) {
+                      getResource(id: $id) {
+                        id
+                        name
+                        description
                       }
-                  }
-                  }
+                    }
+                  variables:
+                    id: "12345"
+              mutationExample:
+                summary: "Example GraphQL Mutation"
+                value:
+                  query: |
+                    mutation CreateResource($input: ResourceInput!) {
+                      createResource(input: $input) {
+                        id
+                        name
+                        description
+                      }
+                    }
+                  variables:
+                    input:
+                      name: "New Resource"
+                      description: "This is a new resource."
         description: |-
-          Secured payload <br> This is just an example, further examples are show in the relevant areas.
+          GraphQL queries / mutations go in here, refer to the rest of the site for examples.
         required: true
       responses:
         202:
@@ -117,11 +132,10 @@ components:
       type: oauth2
       flows:
         clientCredentials:
-          tokenUrl: https://api.acmc.uat.anzgcis.com/auth
+          tokenUrl: https://api.acmc.uat.anzgcis.com/v1.0/auth
           scopes:
-            AU.INSTO.PAYTO.MANDATE.WRITE: Create & Maintain Mandate<br>
-            AU.INSTO.PAYTO.MANDATE.READ: Retrieve Mandate Details & Reply to a Query<br>
-            AU.INSTO.PAYTO.MPIR.WRITE: Create Mandated Payment Initiation Request
+            GBL.INSTO.GRAPHQL.CREATE: Execute GraphQL APIs that will create a resource<br>
+            GBL.INSTO.GRAPHQL.READ: Execute GraphQL APIs that will retrieve a resource<br>
   parameters:
     correlationID:  
       name: X-Correlation-Id
@@ -371,7 +385,7 @@ components:
           aud:
             type: string
             description: Specify the intended audience of the token request
-            example: 'https://api.fileactive.uat.anzgcis.com/auth'
+            example: 'https://api.acmc.uat.anzgcis.com/auth'
     ErrorDetail:
       type: object
       required: 
@@ -522,6 +536,18 @@ components:
         - secured_payload
       example:
         secured_payload: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpbnN0cnVjdGlvbl9pZGVudGlmaWNhdGlvbiI6IlRDMTIxLzE0NzE4NzM4MjMiLCJlbmRfdG9fZW5kX2lkZW50aWZpY2F0aW9uIjoiTk9UUFJPVklERUQiLCJjcmVhdGlvbl9kYXRlX3RpbWUiOiIyMDE4LTA5LTE3VDA5OjQ1OjQ3WiIsImluaXRpYXRpbmdfcGFydHlfbmFtZSI6IkN1c3RvbWVyQSIsInJlcXVlc3RlZF9leGVjdXRpb25fZGF0ZSI6IjIwMTgtMDktMTciLCJkZWJ0b3JfbmFtZSI6IkJJTEJPIEJBR0dJTlMiLCJkZWJ0b3JfYWNjb3VudF9pZGVudGlmaWNhdGlvbiI6IjAxMzQyMTIzNDU2NyIsImRlYnRvcl9hY2NvdW50X3R5cGUiOiJCQkFOIiwiaW5zdHJ1Y3RlZF9hbW91bnQiOnsiY3VycmVuY3kiOiJBVUQiLCJhbW91bnQiOiI1NjIuODkifSwiY3JlZGl0b3JfbmFtZSI6IlNBTVdJU0UgR0FNR0VFIiwiY3JlZGl0b3JfYWNjb3VudF9pZGVudGlmaWNhdGlvbiI6IjAxMDE2OTg3NjU0MzIxIiwiY3JlZGl0b3JfYWNjb3VudF90eXBlIjoiQkJBTiIsImNyZWRpdG9yX2FnZW50X2JpYyI6Ik5PVFBST1ZJREVEIiwicmVtaXR0YW5jZV9pbmZvcm1hdGlvbl91bnN0cnVjdHVyZWQiOlsiRklSU1QgTElORSIsIlNFQ09ORCBMSU5FIl19.aR2RMEVTuOOI1YuUCf2Ppo3Bwtf2_91WMvLd3IIA0ToHBDn0II36FumIz2RrwiUNHBMZo41Qmjv_zt9TQbq61csx2lRZcQNNsstAXKZWI4oZjlBaenj3HvY2_ztxS2IPNZNlVUQrw8A51-1dm-EeVTsqwhxs-Ir6d1FCee5SaNBrhtfaDBGAwjtXolPJuyYve0J3F8X-JwKPLBUaQH5LgGlTOSasC0vsKqhfpZOc-3rS39UA7q0jHQyqcJKrhinEyWlTFU9PcOh2W4-0hXiPaLJ_PA-_EkY5kYBnBvUWofVy35ZnB_u0wv0gxvVVDYKLGUpOGblaWRUY09SHx52Njw'
+    GraphQLRequest:
+      type: object
+      properties:
+        query:
+          type: string
+          description: "The GraphQL query or mutation string"
+        variables:
+          type: object
+          additionalProperties: true
+          description: "Variables used in the GraphQL query or mutation"
+      required:
+        - query
     UUID:
       type: string
       example: '71d6fb19-7515-40dc-b045-e17550b67600'
