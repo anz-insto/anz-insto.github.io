@@ -11,7 +11,10 @@ info:
     Payloads will be encrypted and signed prior to transmitting. Customers will need to decrypt the payload and verify the signature prior to processing the Processing Outcome or Notification.<br>
     
     Processing Outcomes and Notifications may arrive out of sequence and may be delivered more than once. ANZ will attempt to deliver each Processing Outcome and Notification at least once.
-          
+              
+    #### Release 1.0.6 changes:
+    - Updated attributes to be used for duplicate checking of MPIR Processing Outcomes
+      
     #### Release 1.0.5 changes:
     - Updated hyper-links between schema models and PayTo API
   
@@ -32,7 +35,7 @@ info:
 
     #### Release 1.0.1 changes:
     - List of mandate attributes amended by Payer will be included in **MandateNotification** schema, refer to **details** object. Applies when **trigger = MAMN**.  
-  version: 1.0.5
+  version: 1.0.6
 servers:
   - url: 'https://api.uat.example.com/v1'
     description: UAT Environment
@@ -148,18 +151,18 @@ paths:
         The purpose of this operation is to provide the processing outcome of the following MPIR actions initiated by the **Biller** via the **<a href="https://anz-insto.github.io/fileactive/api/payto-api#tag/MPIR">PayTo API - MPIR</a>**:<br>
         - Create MPIR
 
-        If MPIR is processed same day and successfully settles then `transaction_status_reason_code` will be **ACSC** Settlement Completed.<br>
+        If MPIR is processed same day and successfully settles then `transaction_status` will be **ACSC** Settlement Completed.<br>
 
-        If MPIR is future dated then `transaction_status_reason_code` will be **PDNG** Warehoused. This will be followed by the settlement processing outcome once `requested_execution_date` is reached.<br> 
+        If MPIR is future dated then `transaction_status` will be **PDNG** Warehoused. This will be followed by the settlement processing outcome once `requested_execution_date` is reached.<br> 
         
-        If MPIR settlement is delayed then `transaction_status_reason_code` will be **ACSP** Settlement Pending. This will be followed by the settlement processing outcome.<br> 
+        If MPIR settlement is delayed then `transaction_status` will be **ACSP** Settlement Pending. This will be followed by the settlement processing outcome.<br> 
 
-        If MPIR is invalid or fails settlement then `transaction_status_reason_code` will be **RJCT** Rejected. The `transaction_status_reason_code` will incidcate the reason for rejection.<br><br>
+        If MPIR is invalid or fails settlement then `transaction_status` will be **RJCT** Rejected. The `transaction_status_reason_code` will indicate the reason for rejection.<br><br>
 
-        Duplicate checking should be based on **Biller** assigined identfier `instruction_identification`/ `uetr` and `transaction_status_reason_code` <br><br>
+        Duplicate checking should be based on **Biller** assigined identfier `instruction_identification`/ `uetr` and `transaction_status` <br><br>
 
         Biller should also consider Processing Outcomes for the same MPIR arrving out of sequence.
-      operationId: mandateOutcomes
+      operationId: mpirOutcomes
       parameters:
         - $ref: "#/components/parameters/requestKey"
         - $ref: "#/components/parameters/messageID"

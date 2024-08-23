@@ -8,10 +8,11 @@ toc: true
 <a name="top"></a>
 ## Contents
 
-- [Description](#description)
-- [Specification](#spec)
-- [Sample](#sample1)
-- [Schema](#xsd)
+- [Contents](#contents)
+  - [Description](#description)
+  - [Specification](#specification)
+  - [Sample](#sample)
+  - [Schema](#schema)
 
 <a name="desc"></a>
 ### Description
@@ -53,7 +54,7 @@ The Lump Sum Settlement (LSS) report will be provided in the ISO20022 format CAM
 |  2.1  | Notification Identification    | /Document/BkToCstmrDbtCdtNtfctn/Ntfctn/Id                                         | String(35)     |    [1..1]    | Unique identification as assigned by the account servicer, to unambiguously identify the account notification                                                                   |
 |  2.2  | Account Identification         | /Document/BkToCstmrDbtCdtNtfctn/Ntfctn/Acct/Id/Othr/Id                            | String(34)     |    [1..1]    | Identification of the account to which credit entries are made, prefixed with BSB (Bank-State-Branch)                                                                           |
 |  2.3  | Scheme Code                    | /Document/BkToCstmrDbtCdtNtfctn/Ntfctn/Acct/Id/Othr/SchmeNm/Cd                    | CodeSet        |    [1..1]    | Type of account identification<br><br> BBAN - Basic Bank Account Number, account number with BSB (Bank-State-Branch) prefix.                                                    |
-|  2.4  | Servicer                       | /Document/BkToCstmrDbtCdtNtfctn/Ntfctn/Acct/Svcr/FinInstnId/BICFI                 | String(11)     |    [1..1]    | Party that manages the account on behalf of the account owner, represented as a Business Identifier Code (BIC)                                                                  |
+|  2.4  | Servicer                       | /Document/BkToCstmrDbtCdtNtfctn/Ntfctn/Acct/Svcr/FinInstnId/BICFI                 | String(11)     |    [1..1]    | Party that manages the account on behalf of the account owner, represented as a Business Identifier Code (BIC), i.e. ANZBAU3LXXX                                                |
 |  3.0  | **Transaction Summary**        | /Document/BkToCstmrDbtCdtNtfctn/Ntfctn/TxsSummry                                  | Aggregate      |    [1..1]    | Provides summary information on entries                                                                                                                                         |
 |  3.1  | Total Number of Entries        | /Document/BkToCstmrDbtCdtNtfctn/Ntfctn/TxsSummry/TtlNtries/NbOfNtries             | Numeric(15)    |    [1..1]    | Total number of entries being reported                                                                                                                                          |
 |  3.2  | Total Sum of Entries           | /Document/BkToCstmrDbtCdtNtfctn/Ntfctn/TxsSummry/TtlNtries/Sum                    | Decimal(18,17) |    [1..1]    | Total value of entries being reported                                                                                                                                           |
