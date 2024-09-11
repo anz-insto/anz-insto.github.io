@@ -2,7 +2,7 @@
   questions:
     - title: How do I access ANZ's Client Money Central's APIs?
       answer: |-
-        Contact your ANZ Account Manager to discuss requirements and arrange for access. A technical consultant will be assigned to provide advice and assitance throughout the process. 
+        Contact your ANZ Account Manager to discuss requirements and arrange for access. A technical consultant will be assigned to provide advice and assitance throughout the process.
     - title: Are ACMC's APIs subject to rate limits or throttling?
       answer: |-
         By default the following rate limits are applied:   
@@ -12,7 +12,7 @@
         | Authorisation                 | 10                          | 2                             |
         | GraphQL calls                 | 10000                       | 5                             |
 
-        Non-default limits will be considered on request. Please discuss with your ANZ account or relationship manager to request a non-default limit. Temporary limits may also be requested for specific ad hoc use cases.  
+        Non-default limits will be considered on request. Please discuss with your ANZ account or relationship manager to request a non-default limit. Temporary limits may also be requested for specific ad hoc use cases.
     - title: Which rate limiting algorithms do you use?
       answer: |-
         For most use cases one of two algorithms is implemented for rate limiting:   
@@ -39,7 +39,7 @@
             This exceeds the 100 tph limit so further requests would return an HTTP `429` (Too Many Requests) status code until the weighted request rate is below the agreed limit.
           - By **14:45**, no further requests have been made. This is 75% (45 minutes) through window 2.   
             Request rate is *75 (current window) + 20 (25% weighted average from previous window) = 95 requests*.    
-            As this is below the 100 tph limit further requests will be accepted. 
+            As this is below the 100 tph limit further requests will be accepted.
     - title: Where are changes to the site and specifications documented?
       answer: |-
         Significant changes to the site and documentation will be listed in the [Change Log](change-log).
@@ -126,8 +126,8 @@
     - title: What is a JWT?
       answer: |-
         A [JSON Web Token](https://jwt.io) or JWT, pronouced jot is an internet standard RFC 7519 used to transfer claims from a server to a client in a secured and URL-safe means. 
-        Clients are then authorised to access claims as specified in the scope specified by the client in the `Client Credential Grant Request`. 
-    - title: How to constuct a valid JWT?
+        Clients are then authorised to access claims as specified in the scope specified by the client in the `Client Credential Grant Request`.
+    - title: How to constuct a valid JWT (for Client Credential Grant)?
       answer: |-
         Refer to [jwt.io](https://jwt.io) for detailed information.   
 
@@ -167,6 +167,52 @@
 
         ```plaintext
         eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.ewoJInN1YiI6ICJDVVNUT01FUkNPREUiLAogICJleHAiOiAiMTY2MjUzMDkwMiIsCiAgImF1ZCI6ICJodHRwczovL2FwaS5maWxlYWN0aXZlLnVhdC5hbnpnY2lzLmNvbS9hdXRoIgp9.ewWggi_ti3LyCc_X84XbeHDh1GU-J2uVx-vC_jZN2ZnO_CjwrUlAC3LXwEh2DX6IPTeP2jpX1IdWt-IaQlzendnfBYmq7YqxAWKhJiZATNM15YxSqQH67Z3Ic3UscXNMvRPClnfHBuIfalSnBAVOzm-WhQ9gboEpSGJ9-wQB7qN5pBXR4IiWUy6NX2wWLXGdLnQozg_A1nTp0Wwr_xQO4_qcIAUnAxG7SaJ1zlOq_QLMMdvczgHt1_DCTnIYetH5Wy4Y47Jyb0GrzfcTjcIR1z6jS-e4gcMyom6hOO-QH5vWFW3t5hhCaM8la7o8LhEhYzXoXXUYCO7Q7qfMK-vBVg
+        ```
+    - title: What is a GCIS Delegation Grant?
+      answer: |-
+        A GCIS Delegation Grant (know also as 3rd party access) is a different type of access grant which permits a delegate (or 3rd Party) to "act" on behalf of a primary client.
+
+    - title: How to constuct a valid JWT (for GCIS Delegation Grant)?
+      answer: |-
+        Refer to [jwt.io](https://jwt.io) for detailed information.   
+
+        JWT consists of three parts:
+        * Header
+        * Payload
+        * Signature
+
+        The three parts are encoded using `Base64url Encoding` and concatenated. Each part is seperated using a period `.`   
+        JWT = header.payload.signature   
+
+        **Header**   
+        JWT Header is only two fields, these fields contain fixed values:
+
+        | Field | Name       | Description                                       |  Value  |
+        |:------|:-----------|:--------------------------------------------------|:-------:|
+        | alg   | alogorithm | Identifies the algorithm is used in the signature | `RS256` |
+        | typ   | JWT        | Identifies the token type                         |  `jwt`  |
+
+
+        **Payload**
+
+        | Field | Name       | Description                                                                                | Value                                         | Example                                     |
+        |:------|:-----------|:-------------------------------------------------------------------------------------------|:---------------------------------------------:|:--------------------------------------------|
+        | sub   | subscriber | ANZ provided Customer Code, ALL CAPS                                                       | PROVIDED VALUE                                | CUSTOMERCODE                                |
+        | exp   | JWT expiry | Set the time, using UNIX EPOCH, after which the token cannot be accepted for processing    | GENERATED EPOCH VALUE                         | 1662530902                                  |
+        | aud   | audience   | provides an identification of the intended recipient. Token cannot be processed            | `https://api.acmc.uat.anzgcis.com/auth`       | https://api.acmc.uat.anzgcis.com/auth       |
+        | act   | actor      | ANZ provided Customer Code of the intended delegate (3rd Party), ALL CAPS                  | PROVIDED VALUE                                | {"SUB": "THIRDPARTYCUSTOMERCODE"}           |
+
+        **Signature**
+          
+        JWT signatures are used to generate a Message Authentication Code (MAC) to verify that the message is correct and true. 
+        ANZ verifies the signature of a JWT using a `public key` as provided by the **customer**. Customers must generate the signature/MAC value using the corresponding `Private Key`
+
+        **Example JWT**
+
+        Example JWT with signed and encoded content:
+
+        ```plaintext
+        eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.ewogICAgInN1YiI6ICJDVVNUT01FUkNPREUiLAogICAgImV4cCI6ICIxNzI1OTM1NDU3IiwKICAgICJhdWQiOiAiaHR0cHM6Ly9hcGkuYWNtYy51YXQuYW56Z2Npcy5jb20vYXV0aCIsCiAgICAiYWN0IjogewoJCQkic3ViIjogIlRISVJEUEFSVFlDVVNUT01FUkNPREUiCgkJfQp9.HqHCBR2zty4VH_DMCvcZlg6FLMqPBCsso4OyDXtwcHkuu8Us2b3A4-OAxV8IzeIGj6kipf27JJJbxPfIvoTDOvMOW0o5HKzo5CRPFjDJz75IQwTdGsDPVOvLFZdajUPGrx6nPELWQi7tPav8Cd8MacQgny0osOxCRwf_KV78ouBCrAUjoWjYNvsxcNIyhn0yvIXg6aB17BdMm-5XoXO4j-0vJXUDne68_sRAbpHA59MdQnrGzpIzLdxwd3xKkkkDjyV3qsG0uDXNsnHBgeEivpniFDrq9u5U4bnzz1T6pdS6w6LV_TzuwMqA3R-Ucmmi8Qd2hrkf5W-RDjeV45X7j770nThrVpRM-ubsiIna1WWtWZh81X5GQnEDJcuPn4BFj4cMJfbSbmVgH76mb9T1X5HeJqaY2O5NJ62bLhTY4QyYfyphux8309lQzzvv-Mz6f8FO8-_QYFBxxpW3pn9gaaQj5oD8Ayzxmr01e4bUqVRbIJzifd3p2K8-ZKuNTWj_YpTOeCtrIJJwLF9XqmlPYjrYEN0rzaKIuR8G9Qo6Ww9xpVgrvdvyli-YpTR4vCNb7kvg1nC-1fwMVWJH5qH0vBAKw5MFXRkehtFFRO9tqYFOzyEKsYaNOT2IBo_uifoRopOQAwRKmafaNEwtiZ4XAoEnkRXjPGAAf9yEcdlbMF0&=&=
         ```
     - title: What is a Bearer Token?
       answer: |-
